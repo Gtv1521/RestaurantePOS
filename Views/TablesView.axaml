@@ -1,0 +1,153 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:MiComanderaApp.ViewModels"
+             xmlns:models="using:MiComanderaApp.Models"
+             mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="768"
+             x:Class="MiComanderaApp.Views.TablesView"
+             x:DataType="vm:TablesViewModel">
+
+    <UserControl.Styles>
+        <Style Selector="Button.btn-salir">
+            <Setter Property="Background" Value="#D32F2F"/>         <Setter Property="Foreground" Value="White"/>           <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.2"/>
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <Style Selector="Button.btn-salir:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#FFCDD2"/>    <Setter Property="Foreground" Value="Black"/>
+        </Style>
+
+        <Style Selector="Button.btn-new-order">
+            <Setter Property="Background" Value="#2F55D3"/>         <Setter Property="Foreground" Value="White"/>           <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.2"/>
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button.btn-new-order:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#3D6EE0"/>    <Setter Property="Foreground" Value="Black"/>
+        </Style>
+
+        <!-- Cualquier boton -->
+        <Style Selector="Button.btn-comun">
+            <Setter Property="Background" Value="#5BB058"/>         <Setter Property="Foreground" Value="#180E0E"/>           <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.2"/>
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button.btn-comun:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#38863E"/>    <Setter Property="Foreground" Value="Black"/>
+        </Style>
+
+
+        <!-- Cualquier boton -->
+        <Style Selector="Button.btn-todas-mesas">
+            <Setter Property="Background" Value="#22EA1B"/>         <Setter Property="Foreground" Value="#180E0E"/>           <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.2"/>
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button.btn-todas-mesas:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#34DE42"/>    <Setter Property="Foreground" Value="Black"/>
+        </Style>
+
+    </UserControl.Styles>
+
+    <UserControl.Resources>
+
+        <DataTemplate x:Key="MesaTemplate" DataType="{x:Type vm:TableViewModel}">
+
+            <Border Width="150"
+                    Height="120"
+                    CornerRadius="8"
+                    Padding="10"
+                    BorderThickness="2">
+
+                <Border.Styles>
+                    <Style Selector="Border">
+                        <Setter Property="Background" Value="{Binding Status, Converter={x:Static vm:TableViewModel.StatusToClassConverter}}" />
+
+                        <Setter Property="BorderBrush" Value="{Binding Status, Converter={x:Static vm:TableViewModel.StatusToClassConverter}}" />
+                    </Style>
+                </Border.Styles>
+
+                <Button Width="120"
+                        Height="100"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        CornerRadius="8">
+
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Mesa"
+                                   HorizontalAlignment="Center"
+                                   FontSize="14"
+                                   Opacity="0.7"/>
+
+                        <TextBlock Text="{Binding TableNumber}"
+                                   HorizontalAlignment="Center"
+                                   FontSize="28"
+                                   FontWeight="Bold"/>
+                    </StackPanel>
+                </Button>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid ColumnDefinitions="*, 250" Background="#F5F5F5">
+        <DockPanel Grid.Column="0" Margin="10">
+            <TextBlock Text="{Binding ViewTitle}" DockPanel.Dock="Top" FontSize="28" FontWeight="Bold" Margin="10"/>
+            <ScrollViewer>
+                <ItemsControl ItemsSource="{Binding Tables}" ItemTemplate="{StaticResource MesaTemplate}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Margin="10" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
+        </DockPanel>
+
+        <Border Grid.Column="1" Background="White" BorderBrush="#E0E0E0" BorderThickness="1,0,0,0">
+            <StackPanel Margin="15" Spacing="10">
+                <TextBlock Text="Opciones" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,10"/>
+
+                <TextBlock Text="Vistas" FontWeight="Medium"/>
+                <Button Content="Todas las Mesas" HorizontalAlignment="Stretch" Classes="btn-todas-mesas"/>
+
+                <Separator Margin="0,15"/>
+
+                <TextBlock Text="Funciones" FontWeight="Medium"/>
+                <Button Content="Nueva Orden" HorizontalAlignment="Stretch" Classes="btn-new-order" Command="{Binding AbirNuevaOrdenCommand}"/>
+                <Button Content="Unir Mesas" HorizontalAlignment="Stretch" Classes="btn-comun"/>
+                <Button Content="Transferir" HorizontalAlignment="Stretch" Classes="btn-comun"/>
+                <Button Content="Corte de Caja" HorizontalAlignment="Stretch" Classes="btn-comun"/>
+                <Button Content="Reportes" HorizontalAlignment="Stretch" Classes="btn-comun"/>
+                <Button Content="Salir" HorizontalAlignment="Stretch" Classes="btn-salir"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

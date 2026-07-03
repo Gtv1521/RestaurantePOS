@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:MiComanderaApp.ViewModels.Orders"
+             mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="750"
+             x:Class="MiComanderaApp.Views.Orders.NewOrderView"
+             x:DataType="vm:NewOrderViewModel">
+
+  <Grid Background="#F5F5F5">
+    <TextBlock Text="Welcome to the New Order View!"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               FontSize="24"
+               FontWeight="SemiBold"/>
+  </Grid>
+
+</UserControl>
