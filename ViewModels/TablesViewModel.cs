@@ -54,7 +54,15 @@ public partial class TablesViewModel : ViewModelBase
         // Aquí puedes implementar la lógica para abrir una nueva orden.
         // Por ejemplo, podrías navegar a otra vista o mostrar un diálogo.
         System.Console.WriteLine("Abriendo nueva orden...");
-        await Task.Delay(200); // Simula un retraso
+        // await Task.Delay(200); // Simula un retraso
         _navigationService.NavigateTo<NewOrderViewModel>();
+    }
+
+    [RelayCommand]
+    public void Salir()
+    {
+        // Aquí puedes implementar la lógica para salir de la aplicación.
+        System.Console.WriteLine("Saliendo de la aplicación...");
+        _navigationService.NavigateTo<LoginViewModel>();
     }
 }

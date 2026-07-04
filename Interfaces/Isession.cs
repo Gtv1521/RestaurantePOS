@@ -7,7 +7,7 @@ namespace MiComanderaApp.Interfaces
 {
     public interface ISession<R>
     {
-        Task<R> LoginAsync(string pinCode);
+        Task<R?> LoginAsync(string pinCode);
         Task<bool> LogoutAsync();
     }
 }

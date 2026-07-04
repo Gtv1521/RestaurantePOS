@@ -8,6 +8,11 @@ using MiComanderaApp.ViewModels.Orders;
 using Avalonia.ReactiveUI;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Services.Routing;
+using MiComanderaApp.Models;
+using MiComanderaApp.Services.Conections;
+using System.Net.Http;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace MiComanderaApp;
 
@@ -23,31 +28,30 @@ sealed class Program
     {
         // 1. Inicializamos el Host de .NET y registramos todos los servicios
         AppHost = Host.CreateDefaultBuilder(args)
+            .ConfigureAppConfiguration((context, config) =>
+            {
+                // Aseguramos que lea el archivo appsettings.json en la raíz
+                config.SetBasePath(Directory.GetCurrentDirectory());
+                config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            })
             .ConfigureServices((hostContext, services) =>
             {
-
+                services.Configure<ApiSettings>(hostContext.Configuration.GetSection("ApiSettings"));
                 services.AddSingleton<Func<Type, ViewModelBase>>(provider =>
                     type => (ViewModelBase)provider.GetRequiredService(type));
                 services.AddSingleton<INavigationService, NavigationService>();
 
                 // 🖥️ 2. Ventana principal
                 services.AddSingleton<MainWindowViewModel>();
-                
-                // 📂 CONFIGURACIONES (Lee automáticamente appsettings.json si existe)
-                // services.Configure<RestauranteConfig>(hostContext.Configuration.GetSection("RestauranteConfig"));
-
-                // 🛠️ SERVICIOS (Singletons para conexiones e infraestructura global)
-                // services.AddSingleton<ISignalRService, SignalRService>();
-                // services.AddSingleton<IPrinterService, ThermalPrinterService>(); 
-
-                // 🖥️ VIEWMODELS PRINCIPALES (Singletons porque controlan estados globales)
-                // services.AddSingleton<MainWindowViewModel>();
                 services.AddSingleton<LoginViewModel>();
 
-                // 📄 VIEWMODELS DE PANTALLAS (Transients para que se limpien al entrar/salir)
                 services.AddTransient<TablesViewModel>();
                 services.AddTransient<NewOrderViewModel>();
-                // services.AddTransient<OrderViewModel>();
+
+                // 🖥️ 3. Servicios
+                services.AddSingleton<HttpClient>();
+                services.AddScoped<ISession<SessionModel>, SessionService>();
+
             })
             .Build();
 

@@ -7,8 +7,9 @@ namespace MiComanderaApp.Models
 {
     public class SessionModel
     {
+        public int UserId { get; set; } = 0;
         public string Token { get; set; } = string.Empty;
-        public string UserId { get; set; } = string.Empty;
-        public int UserRoleId { get; set; }
+        public string TokenRefresh { get; set; } = string.Empty;
+        public int RolId { get; set; }
     }
 }

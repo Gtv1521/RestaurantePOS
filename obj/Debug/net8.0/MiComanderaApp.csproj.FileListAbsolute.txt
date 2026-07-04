@@ -117,3 +117,4 @@
 /home/gustavo/Desarrollo/C#/RestorantePOS/MiComanderaApp/bin/Debug/net8.0/ReactiveUI.dll
 /home/gustavo/Desarrollo/C#/RestorantePOS/MiComanderaApp/bin/Debug/net8.0/Splat.dll
 /home/gustavo/Desarrollo/C#/RestorantePOS/MiComanderaApp/bin/Debug/net8.0/System.Reactive.dll
+/home/gustavo/Desarrollo/C#/RestorantePOS/MiComanderaApp/obj/Debug/net8.0/MiComanderaApp.sourcelink.json

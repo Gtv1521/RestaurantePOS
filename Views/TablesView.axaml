@@ -146,7 +146,7 @@
                 <Button Content="Transferir" HorizontalAlignment="Stretch" Classes="btn-comun"/>
                 <Button Content="Corte de Caja" HorizontalAlignment="Stretch" Classes="btn-comun"/>
                 <Button Content="Reportes" HorizontalAlignment="Stretch" Classes="btn-comun"/>
-                <Button Content="Salir" HorizontalAlignment="Stretch" Classes="btn-salir"/>
+                <Button Content="Salir" HorizontalAlignment="Stretch" Classes="btn-salir" Command="{Binding SalirCommand}"/>
             </StackPanel>
         </Border>
     </Grid>

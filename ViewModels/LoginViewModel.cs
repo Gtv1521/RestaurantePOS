@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MiComanderaApp.Interfaces;
+using MiComanderaApp.Models;
 using System;
 using System.Threading.Tasks;
 
@@ -9,7 +10,12 @@ namespace MiComanderaApp.ViewModels;
 public partial class LoginViewModel : ViewModelBase
 {
     private readonly INavigationService _navigation;
-    public LoginViewModel(INavigationService navigation) => _navigation = navigation;
+    private readonly ISession<SessionModel> _sessionService;
+    public LoginViewModel(INavigationService navigation, ISession<SessionModel> sessionService)
+    {
+        _navigation = navigation;
+        _sessionService = sessionService;
+    }
 
     [ObservableProperty]
     private string _pinCode = string.Empty;
@@ -39,17 +45,20 @@ public partial class LoginViewModel : ViewModelBase
     [RelayCommand]
     private async Task Login()
     {
-        ErrorMessage = null;
-        // TODO: Reemplaza "1234" con tu lógica de validación de PIN real.
-        if (PinCode == "1234")
+        try
         {
-            // Simula una pequeña espera como si estuviera verificando
-            await Task.Delay(250);
-            _navigation.NavigateTo<TablesViewModel>();
+            ErrorMessage = null;
+            var session = await _sessionService.LoginAsync(PinCode);
+            if (session?.UserId != null)
+            {
+                _navigation.NavigateTo<TablesViewModel>();
+                PinCode = string.Empty;
+            }
+
         }
-        else
+        catch (System.Exception ex)
         {
-            ErrorMessage = "PIN incorrecto. Inténtalo de nuevo.";
+            ErrorMessage = ex.Message;
             PinCode = string.Empty;
         }
     }
