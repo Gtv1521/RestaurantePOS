@@ -2,35 +2,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="MiComanderaApp.App"
              xmlns:local="using:MiComanderaApp.Services.Routing"
-             xmlns:vm="using:MiComanderaApp.ViewModels"
-             xmlns:views="using:MiComanderaApp.Views"
              RequestedThemeVariant="Light">
-    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
-
+    
     <Application.DataTemplates>
         <local:ViewLocator />
     </Application.DataTemplates>
 
     <Application.Styles>
         <FluentTheme />
-        <!-- Estilos para una apariencia moderna -->
-        <Style Selector="Button">
-            <Setter Property="FontSize" Value="24"/>
-            <Setter Property="FontWeight" Value="Medium"/>
-            <Setter Property="CornerRadius" Value="8"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Background" Value="#F0F0F0"/>
-            <Setter Property="BorderBrush" Value="#CCCCCC"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="MinHeight" Value="60"/>
-        </Style>
-        <Style Selector="Button:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="#E0E0E0"/>
-        </Style>
-        <Style Selector="Button.accent">
-            <Setter Property="Background" Value="#007AFF"/>
-            <Setter Property="Foreground" Value="White"/>
-        </Style>
+        
+        <!-- Incluir los estilos y recursos del tema -->
+        <StyleInclude Source="avares://MiComanderaApp/Styles/NaviTheme.axaml"/>
     </Application.Styles>
+    
 </Application>

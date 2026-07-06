@@ -1,4 +1,19 @@
 is_global = true
+build_property.AvaloniaNameGeneratorIsEnabled = true
+build_property.AvaloniaNameGeneratorBehavior = InitializeComponent
+build_property.AvaloniaNameGeneratorDefaultFieldModifier = internal
+build_property.AvaloniaNameGeneratorFilterByPath = *
+build_property.AvaloniaNameGeneratorFilterByNamespace = *
+build_property.AvaloniaNameGeneratorViewFileNamingStrategy = NamespaceAndClassName
+build_property.AvaloniaNameGeneratorAttachDevTools = true
+build_property.AvaloniaUseCompiledBindingsByDefault = true
+build_property.AvaloniaMainPackageVersion = 11.3.18
+build_property.AvaloniaPreviewerNetCoreToolPath = /home/dvn/.nuget/packages/avalonia/11.3.18/buildTransitive//../tools/netstandard2.0/designer/Avalonia.Designer.HostApp.dll
+build_property.MvvmToolkitEnableINotifyPropertyChangingSupport = true
+build_property._MvvmToolkitIsUsingWindowsRuntimePack = false
+build_property.CsWinRTComponent = 
+build_property.CsWinRTAotOptimizerEnabled = 
+build_property.CsWinRTAotWarningLevel = 
 build_property.TargetFramework = net8.0
 build_property.TargetPlatformMinVersion = 
 build_property.UsingMicrosoftNETSdkWeb = 
@@ -11,3 +26,30 @@ build_property.RootNamespace = MiComanderaApp
 build_property.ProjectDir = /home/dvn/Documents/Development/C#/RestaurantePOS/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
+
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/App.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Styles/NaviTheme.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Views/LoginView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Views/MainContentView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Views/MainWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Views/Orders/NewOrderView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Views/Orders/OrderView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Views/TablesView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Assets/avalonia-logo.ico]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaResource

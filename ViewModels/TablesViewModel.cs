@@ -51,6 +51,7 @@ public partial class TablesViewModel : ViewModelBase
     [RelayCommand]
     public async Task AbirNuevaOrden()
     {
+        await Task.Delay(200); // Simula un retraso
         // Aquí puedes implementar la lógica para abrir una nueva orden.
         // Por ejemplo, podrías navegar a otra vista o mostrar un diálogo.
         System.Console.WriteLine("Abriendo nueva orden...");
