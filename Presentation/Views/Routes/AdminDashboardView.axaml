@@ -1,0 +1,66 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="https://github.com/projektanker/icons.avalonia"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:lvcLogic="using:LiveChartsCore.SkiaSharpView"
+             xmlns:vm="using:MiComanderaApp.ViewModels.Routes"
+             xmlns:models="using:MiComanderaApp.Models"
+             xmlns:vmTables="using:MiComanderaApp.ViewModels.Components.Admin"
+             xmlns:views="using:MiComanderaApp.Views.Components.Admin"
+             mc:Ignorable="d" d:DesignWidth="1400" d:DesignHeight="900"
+             Background="{DynamicResource FondoPrincipal}"
+             x:Class="MiComanderaApp.Views.Routes.AdminDashboardView"
+             x:DataType="vm:AdminDashboardViewModel">
+
+  <UserControl.DataTemplates>
+    <DataTemplate DataType="{x:Type vmTables:EstadisticasComponentViewModel}">
+      <views:EstadisticasComponent />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vmTables:MenuComponentViewModel}">
+      <views:MenuComponent />
+    </DataTemplate>
+  </UserControl.DataTemplates>
+
+  <UserControl.Styles>
+    <Style Selector="Border.DashboardCard">
+      <Setter Property="Background" Value="{DynamicResource FondoTarjeta}" />
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="Padding" Value="20" />
+    </Style>
+    <Style Selector="TextBlock.CardTitle">
+      <Setter Property="FontSize" Value="14" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Foreground" Value="{DynamicResource TextoColor}" />
+    </Style>
+  </UserControl.Styles>
+
+  <Grid RowDefinitions="Auto,*">
+
+    <Border Grid.Row="0" Background="{DynamicResource FondoTarjeta}" Height="60" Padding="20,0">
+      <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto">
+        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="8">
+          <i:Icon Value="fa-solid fa-fire" Foreground="#E06A28" FontSize="20"/>
+          <TextBlock Text="RESTROPOS" Foreground="{DynamicResource TextoColor}" FontWeight="Bold" VerticalAlignment="Center" LetterSpacing="1"/>
+        </StackPanel>
+
+        <Button Grid.Column="1" Content="DASHBOARD" Classes.Active="{Binding IsInicio}" Classes="NavBtn"  Command="{Binding ChangeViewCommand}"  CommandParameter="Inicio"/>
+        <Button Grid.Column="2" Content="CONFIGURAR MENÚ" Classes.Active="{Binding IsMenu}" Classes="NavBtn" Command="{Binding ChangeViewCommand}" CommandParameter="Menu" />
+        <Button Grid.Column="3" Content="Mesas" Classes="NavBtn" Command="{Binding IrAMesasCommand}" />
+
+        <StackPanel Grid.Column="4" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
+          <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right">
+            <TextBlock Text="{Binding User.NombreCompleto}" Foreground="{DynamicResource TextoColor}" FontWeight="SemiBold" FontSize="13"/>
+            <TextBlock Text="{Binding User.Rol}" Foreground="{DynamicResource TextoColor}" FontSize="11" HorizontalAlignment="Right"/>
+          </StackPanel>
+          <Button i:Attached.Icon="fa-solid fa-right-from-bracket" Foreground="#0A202D" FontSize="16" Cursor="Hand" Command="{Binding SalirCommand}"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <Grid Grid.Row="1">
+      <ContentControl Grid.Row="1" Content="{Binding VistaActual}" />
+    </Grid>
+  </Grid>
+</UserControl>

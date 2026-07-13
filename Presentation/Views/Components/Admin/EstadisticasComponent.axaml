@@ -1,0 +1,148 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:i="using:Projektanker.Icons.Avalonia"
+             xmlns:lvcLogic="using:LiveChartsCore.SkiaSharpView"
+             xmlns:vm="using:MiComanderaApp.ViewModels.Components.Admin"
+             xmlns:models="using:MiComanderaApp.Models"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MiComanderaApp.Views.Components.Admin.EstadisticasComponent"
+             x:DataType="vm:EstadisticasComponentViewModel">
+
+
+  <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <Grid RowDefinitions="Auto,Auto,*" Margin="25" RowSpacing="10">
+
+      <ItemsControl ItemsSource="{Binding SalesCards}"
+                    HorizontalAlignment="Stretch"
+                    Margin="0,0,-10,5"> <ItemsControl.ItemsPanel>
+                      <ItemsPanelTemplate>
+                        <UniformGrid Rows="1" HorizontalAlignment="Stretch"/>
+                      </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+        <ItemsControl.ItemTemplate>
+          <DataTemplate DataType="{x:Type models:SalesCardModel}">
+            <Border Classes="DashboardCard"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Margin="0,0,10,0"> <StackPanel Spacing="2" HorizontalAlignment="Stretch">
+                      <TextBlock Text="{Binding Title}"
+                                 Classes="CardTitle"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center"/>
+
+                      <TextBlock Text="{Binding Amount}"
+                                 Foreground="{DynamicResource Subtitle}"
+                                 FontSize="28"
+                                 FontWeight="Bold"
+                                 HorizontalAlignment="Center"/>
+
+                      <TextBlock Text="{Binding PercentageText}"
+                                 Foreground="#34A853"
+                                 FontSize="12"
+                                 HorizontalAlignment="Center"/>
+
+                      <lvc:CartesianChart Height="40"
+                                          Series="{Binding ChartSeries}"
+                                          HorizontalAlignment="Stretch"
+                                          Margin="0,10,0,0">
+                        <lvc:CartesianChart.XAxes>
+                          <lvcLogic:Axis IsVisible="False" />
+                        </lvc:CartesianChart.XAxes>
+                        <lvc:CartesianChart.YAxes>
+                          <lvcLogic:Axis IsVisible="False" />
+                        </lvc:CartesianChart.YAxes>
+                      </lvc:CartesianChart>
+                    </StackPanel>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+
+      <Border Grid.Row="1" Classes="DashboardCard">
+        <Grid RowDefinitions="Auto,*">
+          <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="5" Margin="0,0,0,10">
+            <i:Icon Value="fa-solid fa-users" Foreground="#E06A28" FontSize="16"/>
+            <TextBlock Text="Rendimiento de Meseros" Foreground="{DynamicResource TextoColor}" FontSize="15" FontWeight="SemiBold"/>
+            <TextBlock Text="—  por volumen de ventas" Foreground="{DynamicResource TextoBrush}" FontSize="10" VerticalAlignment="Bottom" Margin="0,0,0,0"/>
+          </StackPanel>
+
+          <ItemsControl Grid.Row="1" ItemsSource="{Binding WaitersPerformance}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Spacing="1"/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="models:WaiterPerformanceModel">
+                <Grid ColumnDefinitions="130,Auto,*">
+
+                  <TextBlock Grid.Column="0"
+                             Text="{Binding Name}"
+                             Foreground="{DynamicResource TextoColor}"
+                             VerticalAlignment="Center"
+                             FontWeight="SemiBold"/>
+
+                  <Border Grid.Column="1"
+                          Width="1"
+                          Background="#222A35"
+                          Margin="10,2,20,2"
+                          Height="16"
+                          VerticalAlignment="Center"/>
+
+                  <ProgressBar Grid.Column="2"
+                               Value="{Binding Percentage}"
+                               Height="8"
+                               Background="Transparent"
+                               Foreground="{DynamicResource Estadistica}"
+                               CornerRadius="3"
+                               VerticalAlignment="Center"/>
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </Grid>
+      </Border>
+
+      <Grid Grid.Row="2" ColumnDefinitions="*,*">
+
+        <Border Grid.Column="0" Classes="DashboardCard" Margin="0,0,5,0">
+          <Grid RowDefinitions="Auto,Auto,*">
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8">
+              <i:Icon Value="fa-solid fa-chart-line" Foreground="#34A853" FontSize="16"/>
+              <TextBlock Text="Top 10 Más Vendidos" Foreground="{DynamicResource TextoBrush}" FontSize="15" FontWeight="SemiBold"/>
+            </StackPanel>
+            <TextBlock Grid.Row="1" Text="Con margen de ganancia real" Foreground="{DynamicResource TextoColor}" FontSize="12" Margin="0,4,0,15"/>
+
+            <Grid Grid.Row="2" ColumnDefinitions="50,*,80,80" Margin="0,5">
+              <TextBlock Grid.Column="0" Text="#PRODUCTO" Foreground="{DynamicResource TextoColor}" FontSize="11" FontWeight="Bold"/>
+              <TextBlock Grid.Column="2" Text="VEND." Foreground="{DynamicResource TextoColor}" FontSize="11" FontWeight="Bold" HorizontalAlignment="Right"/>
+              <TextBlock Grid.Column="3" Text="MARGEN" Foreground="{DynamicResource TextoColor}" FontSize="11" FontWeight="Bold" HorizontalAlignment="Right"/>
+            </Grid>
+
+          </Grid>
+        </Border>
+
+        <Border Grid.Column="1" Classes="DashboardCard" Margin="5,0,0,0">
+          <Grid RowDefinitions="Auto,Auto,*">
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8">
+              <i:Icon Value="fa-solid fa-box-open" Foreground="#EA4335" FontSize="16"/>
+              <TextBlock Text="Menos Vendidos / Estancados" Foreground="{DynamicResource TextoColor}" FontSize="15" FontWeight="SemiBold"/>
+            </StackPanel>
+            <TextBlock Grid.Row="1" Text="Candidatos para revisión de menú" Foreground="{DynamicResource TextoBrush}" FontSize="12" Margin="0,4,0,15"/>
+
+            <Grid Grid.Row="2" ColumnDefinitions="*,80,80,90" Margin="0,5">
+              <TextBlock Grid.Column="0" Text="PRODUCTO" Foreground="{DynamicResource TextoColor}" FontSize="11" FontWeight="Bold"/>
+              <TextBlock Grid.Column="1" Text="VEND." Foreground="{DynamicResource TextoColor}" FontSize="11" FontWeight="Bold" HorizontalAlignment="Right"/>
+              <TextBlock Grid.Column="2" Text="MARGEN" Foreground="{DynamicResource TextoColor}" FontSize="11" FontWeight="Bold" HorizontalAlignment="Right"/>
+            </Grid>
+          </Grid>
+        </Border>
+      </Grid>
+    </Grid>
+  </ScrollViewer>
+</UserControl>

@@ -1,6 +1,9 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Styling;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.ViewModels;
 using MiComanderaApp.Views;
@@ -10,12 +13,10 @@ namespace MiComanderaApp;
 
 public partial class App : Application
 {
-
-
-
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
+        LiveCharts.Configure(config => config.AddSkiaSharp());
     }
 
     public override void OnFrameworkInitializationCompleted()

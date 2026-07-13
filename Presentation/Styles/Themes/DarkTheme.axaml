@@ -1,0 +1,18 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- Add Resources Here -->
+  <SolidColorBrush x:Key="FondoPrincipal" Color="#0F0F10"/>
+  <SolidColorBrush x:Key="FondoTarjeta" Color="#97393A3C"/>
+  <SolidColorBrush x:Key="TextoColor" Color="#DCE3E9"/>
+  <SolidColorBrush x:Key="Resalto" Color="#98A2B3"/>
+  <SolidColorBrush x:Key="TextBrush" Color="#3B4A5A"/>
+  <SolidColorBrush x:Key="Subtitle" Color="#E5EFA2"/>
+  <SolidColorBrush x:Key="Estadistica" Color="#A36431"/>
+
+
+  <SolidColorBrush x:Key="NumBotton" Color="#2BAFBFD0"/>
+  <SolidColorBrush x:Key="SaveBotton" Color="#F7E1E7EC"/>
+  <SolidColorBrush x:Key="TextBotton" Color="#FA111317"/>
+
+
+</ResourceDictionary>

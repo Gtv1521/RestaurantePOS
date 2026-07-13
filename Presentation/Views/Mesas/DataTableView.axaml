@@ -1,0 +1,275 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mesas="using:MiComanderaApp.ViewModels.Mesas"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MiComanderaApp.Views.Mesas.DataTableView"
+             x:DataType="mesas:DataTableViewModel"
+             Background="{DynamicResource FondoPrincipal}"
+             x:Name="Root"
+             >
+
+  <Grid ColumnDefinitions="2*, 8*" Margin="15">
+
+    <Grid Grid.Column="0" RowDefinitions="Auto, *, Auto" Margin="0,0,15,0">
+
+      <StackPanel Grid.Row="0" Spacing="8" Margin="0,0,0,15">
+
+        <!-- <Grid ColumnDefinitions="*, Auto">
+        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="5">
+        <TextBlock Text="MESA" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextoColor}" LetterSpacing="1"/>
+        <TextBlock Text="{Binding NumeroMesa}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource Estadistica}" LetterSpacing="1"/>
+        </StackPanel>
+
+        <TextBlock Grid.Column="1"
+        Text="{Binding NombreMesaCustom}"
+        FontSize="16"
+        FontWeight="SemiBold"
+        Foreground="#E0E6ED"
+        VerticalAlignment="Bottom"
+        IsVisible="{Binding NombreMesaCustom, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+        </Grid> -->
+
+        <Grid ColumnDefinitions="*,Auto">
+
+          <!-- Izquierda -->
+          <StackPanel Grid.Column="0"
+                      Orientation="Horizontal"
+                      Spacing="5">
+
+            <TextBlock Text="MESA"
+                       FontSize="22"
+                       FontWeight="Bold"
+                       Foreground="{DynamicResource TextoColor}"/>
+
+            <TextBlock Text="{Binding NumeroMesa}"
+                       FontSize="22"
+                       FontWeight="Bold"
+                       Foreground="{DynamicResource Estadistica}"/>
+
+          </StackPanel>
+
+          <!-- Derecha -->
+          <StackPanel Grid.Column="1"
+                      Orientation="Horizontal"
+                      Spacing="15"
+                      HorizontalAlignment="Right">
+
+            <TextBlock Text="{Binding NombreMesaCustom}"
+                       FontSize="16"
+                       FontWeight="SemiBold"
+                       Foreground="#E0E6ED"
+                       VerticalAlignment="Center"
+                       IsVisible="{Binding NombreMesaCustom, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+
+            <Border CornerRadius="12"
+                    Padding="8,3"
+                    VerticalAlignment="Center">
+
+              <TextBlock Text="{Binding CantidadProd}"
+                         Foreground="{DynamicResource TextoBrush}"
+                         FontWeight="Bold"/>
+
+            </Border>
+
+          </StackPanel>
+
+        </Grid>
+
+        <!-- Datos secundarios (Mesero y Hora) -->
+        <Grid ColumnDefinitions="*, *">
+          <TextBlock Grid.Column="0" Text="{Binding NombreMesero, StringFormat='Mesero: {0}'}" FontSize="13" Foreground="#98A2B3"/>
+          <TextBlock Grid.Column="1" Text="{Binding CantidadPax, StringFormat='Pax: {0}'}" FontSize="13" Foreground="#98A2B3"/>
+          <TextBlock Grid.Column="2" Text="{Binding HoraApertura, StringFormat='Hora: {0:HH:mm}'}" FontSize="13" Foreground="#98A2B3" HorizontalAlignment="Right"/>
+        </Grid>
+
+        <Separator Background="#2D3139" Height="1" Margin="0,5,0,0"/>
+      </StackPanel>
+
+      <ListBox Grid.Row="1"
+               x:Name="ProductosList"
+               ItemsSource="{Binding ProductosPedidos}"
+               Background="{DynamicResource FondoTarjeta}"
+               BorderBrush="#2D3139"
+               BorderThickness="1"
+               CornerRadius="8"
+               Padding="5"
+               SelectionMode="Single"
+               >
+        <ListBox.ItemTemplate>
+          <DataTemplate>
+            <Grid ColumnDefinitions="*, Auto, Auto" Margin="8,5">
+              <TextBlock Grid.Column="0" Text="{Binding Nombre}" Foreground="{DynamicResource TextoColor}" FontWeight="Medium" VerticalAlignment="Center"/>
+              <TextBlock Grid.Column="1" Text="{Binding Cantidad, StringFormat='x{0}'}" Margin="15,0" Foreground="{DynamicResource Estadistica}" FontWeight="Bold" VerticalAlignment="Center"/>
+              <TextBlock Grid.Column="2" Text="{Binding TotalProducto, StringFormat='${0:N0}'}" Foreground="{DynamicResource Resalto}" VerticalAlignment="Center"/>
+            </Grid>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+
+      <Border Grid.Row="2" Background="{DynamicResource FondoTarjeta}" BorderBrush="#2D3139" BorderThickness="1" CornerRadius="18" Padding="15" Margin="0,15,0,0">
+        <!-- Cambiamos a un Grid de 3 filas para el desglose y el Total -->
+        <Grid RowDefinitions="Auto, Auto, Auto" ColumnDefinitions="*, Auto">
+
+          <!-- 1. Fila de Impuesto al Consumo -->
+          <TextBlock Grid.Row="0" Grid.Column="0" Text="IPOCONSUMO" FontSize="13" Foreground="{DynamicResource Resalto}" FontWeight="Medium" Margin="10,2,0,2"/>
+          <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding TotalIpoconsumo, StringFormat='${0:N0}'}" FontSize="14" Foreground="{DynamicResource Resalto}" HorizontalAlignment="Right" Margin="0,2,10,2"/>
+
+          <!-- 2. Fila de Valor del Servicio (Propina voluntaria calculada sobre la base) -->
+          <TextBlock Grid.Row="1" Grid.Column="0" Text="SERVICIO (PROPINA)" FontSize="13" Foreground="{DynamicResource Resalto}" FontWeight="Medium" Margin="10,2,0,10"/>
+          <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding TotalServicio, StringFormat='${0:N0}'}" FontSize="14" Foreground="{DynamicResource Resalto}" HorizontalAlignment="Right" Margin="0,2,10,10"/>
+
+          <!-- Línea divisoria sutil antes del gran total -->
+          <Separator Grid.Row="2" Grid.ColumnSpan="2" Background="{DynamicResource Resalto}" Height="1" VerticalAlignment="Top" Margin="10,0,10,10"/>
+
+          <!-- 3. Fila del Total General -->
+          <TextBlock Grid.Row="2" Grid.Column="0" Text="TOTAL A PAGAR" FontSize="15" Foreground="{DynamicResource TextoColor}" FontWeight="Bold" VerticalAlignment="Center" Margin="10,5,0,0"/>
+          <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding TotalCuenta, StringFormat='${0:N0}'}" FontSize="24" FontWeight="Black" Foreground="{DynamicResource TextoColor}" VerticalAlignment="Center" Margin="0,5,10,0"/>
+
+        </Grid>
+      </Border>
+    </Grid>
+
+    <Grid Grid.Column="1" RowDefinitions="7*,3*">
+
+      <Grid Grid.Row="0"
+            ColumnDefinitions="*,210"
+            ColumnSpacing="5">
+
+        <!-- Panel Productos -->
+        <Border Grid.Column="0"
+                Background="{DynamicResource FondoTarjeta}"
+                BorderBrush="#2D3139"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="10">
+
+          <Grid RowDefinitions="Auto,*">
+
+            <TextBlock Grid.Row="0"
+                       Text="PRODUCTOS DISPONIBLES"
+                       FontSize="13"
+                       FontWeight="Bold"
+                       Foreground="{DynamicResource TextoBrush}"
+                       Margin="5,0,5,10"/>
+
+            <ScrollViewer Grid.Row="1">
+
+              <ItemsControl ItemsSource="{Binding ProductosCatalogo}">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal"/>
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <Button Width="210"
+                            Height="55"
+                            Margin="6"
+                            Classes="btn-verde"
+                            Content="{Binding Nombre}"
+                            Command="{Binding #Root.DataContext.AgregarProductoCommand}"
+                            CommandParameter="{Binding}"/>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+
+              </ItemsControl>
+
+            </ScrollViewer>
+
+          </Grid>
+
+        </Border>
+
+        <!-- Panel Categorías -->
+        <Border Grid.Column="1"
+                Background="{DynamicResource Panel}"
+                BorderBrush="#2D3139"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="10">
+
+          <Grid RowDefinitions="Auto,*">
+
+            <TextBlock Grid.Row="0"
+                       Text="CATEGORÍAS"
+                       FontSize="13"
+                       FontWeight="Bold"
+                       Foreground="{DynamicResource TextoBrush}"
+                       Margin="5,0,5,10"/>
+
+            <ScrollViewer Grid.Row="1"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+
+              <ItemsControl ItemsSource="{Binding Categorias}">
+
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Vertical"/>
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <Button Width="180"
+                            Height="70"
+                            Margin="5"
+                            Classes="btn-azul"
+                            Content="{Binding Nombre}"
+                            Command="{Binding #Root.DataContext.ChangeCategoriaCommand}"
+                            CommandParameter="{Binding Id}"/>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+          </Grid>
+        </Border>
+      </Grid>
+
+      <Border Grid.Row="1" Background="{DynamicResource FondoTarjeta}" BorderBrush="#2D3139" BorderThickness="1" CornerRadius="8" Padding="10" Margin="0,8,0,0">
+        <Grid ColumnDefinitions="*,300" RowDefinitions="Auto,*">
+          <TextBlock Grid.Row="0"
+                     Grid.Column="0"
+                     Text="ACCIONES"
+                     FontSize="13"
+                     FontWeight="Bold"
+                     Foreground="{DynamicResource TextoBrush}"
+                     Margin="5,0,5,10"/>
+
+          <Button Content="{Binding TextoBotonAnular}"
+                  Command="{Binding AnularCommand}"
+                  Classes="btn-rojo"/>
+
+          <Grid Grid.Row="0"
+                Grid.RowSpan="2"
+                Grid.Column="1"
+                Margin="10,0,0,0"
+                RowDefinitions="*,*,*,*"
+                ColumnDefinitions="*,*,*">
+
+            <Button Grid.Row="0" Grid.Column="0" Classes="KeypadBtn" Command="{Binding TecladoCommand}" CommandParameter="1" Content="1"  />
+            <Button Grid.Row="0" Grid.Column="1" Classes="KeypadBtn" Command="{Binding TecladoCommand}" CommandParameter="2" Content="2"/>
+            <Button Grid.Row="0" Grid.Column="2" Classes="KeypadBtn" Command="{Binding TecladoCommand}" CommandParameter="3" Content="3"/>
+
+            <Button Grid.Row="1" Grid.Column="0" Classes="KeypadBtn" Command="{Binding TecladoCommand}" CommandParameter="4" Content="4"/>
+            <Button Grid.Row="1" Grid.Column="1" Classes="KeypadBtn" Command="{Binding TecladoCommand}" CommandParameter="5" Content="5"/>
+            <Button Grid.Row="1" Grid.Column="2" Classes="KeypadBtn" Command="{Binding TecladoCommand}" CommandParameter="6" Content="6"/>
+
+            <Button Grid.Row="2" Grid.Column="0" Classes="KeypadBtn" Command="{Binding TecladoCommand}" CommandParameter="7" Content="7"/>
+            <Button Grid.Row="2" Grid.Column="1" Classes="KeypadBtn" Command="{Binding TecladoCommand}" CommandParameter="8" Content="8"/>
+            <Button Grid.Row="2" Grid.Column="2" Classes="KeypadBtn" Command="{Binding TecladoCommand}" CommandParameter="9" Content="9"/>
+
+            <Button Grid.Row="3" Grid.Column="0" Classes="KeypadBtn" Content=""/>
+            <Button Grid.Row="3" Grid.Column="1" Classes="KeypadBtn" Command="{Binding TecladoCommand}" CommandParameter="0" Content="0"/>
+            <Button Grid.Row="3" Grid.Column="2" Classes="KeypadBtn" Command="{Binding BorrarNumeroCommand}" Content="⌫"/>
+          </Grid>
+
+        </Grid>
+      </Border>
+
+    </Grid>
+  </Grid>
+</UserControl>
