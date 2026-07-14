@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -57,6 +58,8 @@ public partial class DataTableViewModel : ViewModelBase
     [ObservableProperty] private int? _cantidadProd;
     [ObservableProperty] private bool _modoAnulacion;
     [ObservableProperty] private ProductoPedidoItem? _productoSeleccionado;
+    [ObservableProperty] private SelectionMode _modoSeleccion = SelectionMode.Single;
+    [ObservableProperty] private bool _esSeleccionMultiple;
 
 
 
@@ -130,7 +133,7 @@ public partial class DataTableViewModel : ViewModelBase
     }
 
     public string TextoBotonAnular =>
-    ModoAnulacion ? "CONFIRMAR ANULACIÓN" : "ANULAR";
+    ModoSeleccion == SelectionMode.Multiple ? "CONFIRMAR ANULACIÓN" : "ANULAR";
 
     private void ActualizarTotalCuenta()
     {
@@ -184,28 +187,39 @@ public partial class DataTableViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void Anular()
+    private void AlternarModoSeleccion()
     {
-        if (!ModoAnulacion)
+        if (ModoSeleccion == SelectionMode.Single)
         {
-            // Primer click: activar selección
-            ModoAnulacion = true;
-            OnPropertyChanged(nameof(TextoBotonAnular));
-            return;
+            // 🚨 Combinamos con 'Toggle' para que en la tablet funcione con toques individuales
+            ModoSeleccion = SelectionMode.Multiple | SelectionMode.Toggle;
+            EsSeleccionMultiple = true;
         }
-
-
-        // Segundo click: borrar seleccionados
-
-        foreach (var item in ProductosSeleccionados.ToList())
+        else
         {
-            ProductosPedidos.Remove(item);
+            if (ProductoSeleccionado != null && ProductosSeleccionados.Count > 0)
+            {
+                // Convertimos la lista genérica a nuestro tipo de dato real
+                var productosParaEliminar = ProductosSeleccionados
+                    .Cast<ProductoPedidoItem>()
+                    .ToList();
+
+                // Eliminamos cada producto seleccionado de la comanda principal
+                foreach (var producto in productosParaEliminar)
+                {
+                    ProductosPedidos.Remove(producto);
+                }
+
+                // Limpiamos la lista de selección para que no queden fantasmas en memoria
+                ProductosSeleccionados.Clear();
+
+                // Volvemos a calcular el valor del Ipoconsumo, Servicio y Total general
+                ActualizarTotalCuenta();
+            }
+
+            ModoSeleccion = SelectionMode.Single;
+            EsSeleccionMultiple = false;
         }
-
-        ProductosSeleccionados.Clear();
-
-        ModoAnulacion = false;
-        OnPropertyChanged(nameof(TextoBotonAnular));
     }
 
 }

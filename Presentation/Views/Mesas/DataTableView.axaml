@@ -88,15 +88,17 @@
       </StackPanel>
 
       <ListBox Grid.Row="1"
-               x:Name="ProductosList"
+               x:Name="ListaPedidos"
                ItemsSource="{Binding ProductosPedidos}"
+               SelectionMode="{Binding ModoSeleccion}"
+               SelectedItems="{Binding ProductosSeleccionados, Mode=TwoWay}"
                Background="{DynamicResource FondoTarjeta}"
                BorderBrush="#2D3139"
                BorderThickness="1"
                CornerRadius="8"
                Padding="5"
-               SelectionMode="Single"
                >
+
         <ListBox.ItemTemplate>
           <DataTemplate>
             <Grid ColumnDefinitions="*, Auto, Auto" Margin="8,5">
@@ -240,7 +242,7 @@
                      Margin="5,0,5,10"/>
 
           <Button Content="{Binding TextoBotonAnular}"
-                  Command="{Binding AnularCommand}"
+                  Command="{Binding AlternarModoSeleccionCommand}"
                   Classes="btn-rojo"/>
 
           <Grid Grid.Row="0"
