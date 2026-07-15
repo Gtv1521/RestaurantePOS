@@ -34,9 +34,13 @@
             <StackPanel Grid.Row="2" HorizontalAlignment="Center" Spacing="16" Margin="0,0,0,20">
                 <TextBlock Text="{Binding FechaActual}" Foreground="#718096" FontSize="14" HorizontalAlignment="Center" FontWeight="Medium"/>
 
-                <Border Background="{DynamicResource SaveBotton}" CornerRadius="16" Padding="18,7" HorizontalAlignment="Center">
+                <Border Background="White" CornerRadius="16" Padding="18,7" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal" Spacing="8">
-                        <TextBlock Text="{Binding Connection}" Foreground="{DynamicResource TextBotton}" FontSize="12" FontWeight="Medium" VerticalAlignment="Center"/>
+                        <Ellipse Width="14"
+                                 Height="14"
+                                 Fill="{Binding Color}"
+                                 VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Connection}" Foreground="Black" FontSize="14" FontWeight="Medium" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Border>
             </StackPanel>
@@ -96,6 +100,48 @@
                 HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="30">
             <TextBlock Text="?" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
         </Button>
+        <Border Grid.ColumnSpan="2"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="0,20,30,0"
+                Background="#75FFFFFF"
+                CornerRadius="20"
+                Padding="10,6">
+
+            <StackPanel Orientation="Horizontal" Spacing="10">
+
+                <!-- Tema Claro -->
+                <Button Width="22"
+                        Height="22"
+                        CornerRadius="11"
+                        Background="White"
+                        BorderBrush="#473D3D"
+                        BorderThickness="1"
+                        Command="{Binding ChangeThemeCommand}"
+                        CommandParameter="Light"/>
+
+                <!-- Tema Oscuro -->
+                <Button Width="22"
+                        Height="22"
+                        CornerRadius="11"
+                        Background="#2D3748"
+                        BorderBrush="#4A5568"
+                        BorderThickness="1"
+                        Command="{Binding ChangeThemeCommand}"
+                        CommandParameter="Dark"/>
+
+                <!-- Tema Azul Oscuro -->
+                <Button Width="22"
+                        Height="22"
+                        CornerRadius="11"
+                        Background="#1E3A5F"
+                        BorderBrush="#2C5282"
+                        BorderThickness="1"
+                        Command="{Binding ChangeThemeCommand}"
+                        CommandParameter="Blue"/>
+
+            </StackPanel>
+        </Border>
 
     </Grid>
 </UserControl>

@@ -1,4 +1,6 @@
-﻿using Avalonia.Threading;
+﻿using Avalonia;
+using Avalonia.Markup.Xaml.Styling;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MiComanderaApp.Core.Infrastructure.SignalR;
@@ -6,7 +8,9 @@ using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
 using MiComanderaApp.ViewModels.Routes;
 using System;
+using System.Drawing;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace MiComanderaApp.ViewModels;
@@ -46,6 +50,9 @@ public partial class LoginViewModel : ViewModelBase
     [ObservableProperty] private string _segundos = "00";
     [ObservableProperty] private string _fechaActual = string.Empty;
     [ObservableProperty] private string _connection = string.Empty;
+    [ObservableProperty] private string _color = string.Empty;
+
+
 
     [RelayCommand]
     private void AddDigit(string digit)
@@ -107,9 +114,55 @@ public partial class LoginViewModel : ViewModelBase
 
     private void ConnectionServer()
     {
-        _signalR.Connected += () => Connection = "🟢 Servidor conectado de forma segura";
-        _signalR.Reconnecting += () => Connection = "🔵 Reconectando a servidor";
-        _signalR.Disconnected += () => Connection = "🔴 Servidor desconectado";
+        _signalR.Connected += () => { Connection = "Servidor conectado de forma segura"; Color = "green"; };
+        _signalR.Reconnecting += () => { Connection = "Reconectando a servidor"; Color = "blue"; };
+        _signalR.Disconnected += () => { Connection = "Servidor desconectado"; Color = "red"; };
+    }
+
+    [RelayCommand]
+    private void ChangeTheme(string? theme)
+    {
+        var app = Application.Current!;
+
+        ResourceInclude nuevoTema;
+
+        switch (theme)
+        {
+            case "Light":
+                // Cambiar al tema claro
+                nuevoTema = new ResourceInclude(new Uri("avares://MiComanderaApp"))
+                {
+                    Source = new Uri("avares://MiComanderaApp/Presentation/Styles/Themes/LigthTheme.axaml")
+                };
+                break;
+
+            case "Dark":
+                // Cambiar al tema oscuro
+                nuevoTema = new ResourceInclude(new Uri("avares://MiComanderaApp"))
+                {
+                    Source = new Uri("avares://MiComanderaApp/Presentation/Styles/Themes/DarkTheme.axaml")
+                };
+                break;
+
+            case "Blue":
+                // Cambiar al tema azul oscuro
+                nuevoTema = new ResourceInclude(new Uri("avares://MiComanderaApp"))
+                {
+                    Source = new Uri("avares://MiComanderaApp/Presentation/Styles/Themes/BlueTheme.axaml")
+                };
+                break;
+
+            default:
+                // Tema predeterminado
+                nuevoTema = new ResourceInclude(new Uri("avares://MiComanderaApp"))
+                {
+                    Source = new Uri("avares://MiComanderaApp/Presentation/Styles/Themes/LightTheme.axaml")
+                };
+                break;
+        }
+
+        app.Resources.MergedDictionaries[1] = nuevoTema;
+
     }
 
 }

@@ -14,5 +14,8 @@
   <SolidColorBrush x:Key="SaveBotton" Color="#F7E1E7EC"/>
   <SolidColorBrush x:Key="TextBotton" Color="#FAF2F3F6"/>
 
+  <SolidColorBrush x:Key="BotonCeleste" Color="#99C0F3"/>
+  <SolidColorBrush x:Key="BotonGreen" Color="#D060BC65"/>
+
 
 </ResourceDictionary>

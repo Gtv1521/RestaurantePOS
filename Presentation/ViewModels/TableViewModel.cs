@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
+using MiComanderaApp.Presentation.States;
 using MiComanderaApp.ViewModels.Mesas;
 using MiComanderaApp.ViewModels.Orders;
 
@@ -16,21 +17,24 @@ namespace MiComanderaApp.ViewModels;
 
 public partial class TableViewModel : ViewModelBase
 {
-    [ObservableProperty] private TableStatus _status;
-    [ObservableProperty] private int _tableNumber;
-    private TableModel? _table;
     private readonly INavigationService _navigationService;
     private readonly IViewModelFactory _factory;
+    private readonly TableState _dataTable;
 
-    public TableViewModel(INavigationService navigationService, IViewModelFactory factory)
+    public TableViewModel(INavigationService navigationService, IViewModelFactory factory, TableState dataTable)
     {
         _navigationService = navigationService;
+        _dataTable = dataTable;
         _factory = factory;
     }
 
+    [ObservableProperty] private TableStatus _status;
+    [ObservableProperty] private int _tableNumber;
+    [ObservableProperty] private TableModel? _table;
+
     public void Initialize(TableModel table)
     {
-        _table = table;
+        Table = table;
         Status = table.Status;
         TableNumber = table.TableNumber;
     }
@@ -49,12 +53,14 @@ public partial class TableViewModel : ViewModelBase
     {
         if (Status == TableStatus.Ocupada)
         {
+            _dataTable.DataTable = Table;
             var vm = _factory.Create<DataTableViewModel>();
-            vm.Initialize(TableNumber, 2);
+            vm.Initialize(TableNumber, Table?.Pax ?? 0);
             _navigationService.NavigateTo(vm);
         }
         else
         {
+            _dataTable.DataTable = Table;
             var vm = _factory.Create<CantidadPaxViewModel>();
             vm.Initialize(TableNumber);
             _navigationService.NavigateTo(vm);

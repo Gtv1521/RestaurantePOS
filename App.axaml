@@ -8,7 +8,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="avares://MiComanderaApp/Presentation/Styles/DataTemplates.axaml" />
-                <ResourceInclude Source="avares://MiComanderaApp/Presentation/Styles/Themes/LigthTheme.axaml"/>
+                <ResourceInclude Source="avares://MiComanderaApp/Presentation/Styles/Themes/DarkTheme.axaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

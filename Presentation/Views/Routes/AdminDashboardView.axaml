@@ -39,7 +39,7 @@
   <Grid RowDefinitions="Auto,*">
 
     <Border Grid.Row="0" Background="{DynamicResource FondoTarjeta}" Height="60" Padding="20,0">
-      <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto">
+      <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*,Auto">
         <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="8">
           <i:Icon Value="fa-solid fa-fire" Foreground="#E06A28" FontSize="20"/>
           <TextBlock Text="RESTROPOS" Foreground="{DynamicResource TextoColor}" FontWeight="Bold" VerticalAlignment="Center" LetterSpacing="1"/>
@@ -47,9 +47,12 @@
 
         <Button Grid.Column="1" Content="DASHBOARD" Classes.Active="{Binding IsInicio}" Classes="NavBtn"  Command="{Binding ChangeViewCommand}"  CommandParameter="Inicio"/>
         <Button Grid.Column="2" Content="CONFIGURAR MENÚ" Classes.Active="{Binding IsMenu}" Classes="NavBtn" Command="{Binding ChangeViewCommand}" CommandParameter="Menu" />
-        <Button Grid.Column="3" Content="Mesas" Classes="NavBtn" Command="{Binding IrAMesasCommand}" />
+        <Button Grid.Column="3" Content="MESAS" Classes="NavBtn" Command="{Binding IrAMesasCommand}" />
+        <Button Grid.Column="4" Content="REPORTES" Classes="NavBtn" Command="{Binding IrAMesasCommand}" />
+        <Button Grid.Column="5" Content="EMPLEADOS" Classes="NavBtn" Command="{Binding IrAMesasCommand}" />
+        <Button Grid.Column="5" Content="INVENTARIO" Classes="NavBtn" Command="{Binding IrAMesasCommand}" />
 
-        <StackPanel Grid.Column="4" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
+        <StackPanel Grid.Column="7" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
           <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right">
             <TextBlock Text="{Binding User.NombreCompleto}" Foreground="{DynamicResource TextoColor}" FontWeight="SemiBold" FontSize="13"/>
             <TextBlock Text="{Binding User.Rol}" Foreground="{DynamicResource TextoColor}" FontSize="11" HorizontalAlignment="Right"/>

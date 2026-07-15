@@ -55,9 +55,9 @@
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="CornerRadius" Value="15"/>
-        <Setter Property="Height" Value="44"/>
+        <!-- <Setter Property="Height" Value="44"/> -->
         <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontSize" Value="17"/>
         <Setter Property="Padding" Value="16,0"/>
         <Setter Property="Cursor" Value="Hand"/>
     </Style>

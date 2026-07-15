@@ -6,4 +6,5 @@ public class TableModel
 {
     public int TableNumber { get; set; }
     public TableStatus Status { get; set; }
+    public int Pax { get; set; }
 }

@@ -9,10 +9,12 @@
   <SolidColorBrush x:Key="Subtitle" Color="#E5EFA2"/>
   <SolidColorBrush x:Key="Estadistica" Color="#A36431"/>
 
-
   <SolidColorBrush x:Key="NumBotton" Color="#2BAFBFD0"/>
   <SolidColorBrush x:Key="SaveBotton" Color="#F7E1E7EC"/>
   <SolidColorBrush x:Key="TextBotton" Color="#FA111317"/>
+
+  <SolidColorBrush x:Key="BotonCeleste" Color="#99C0F3"/>
+  <SolidColorBrush x:Key="BotonGreen" Color="#D060BC65"/>
 
 
 </ResourceDictionary>

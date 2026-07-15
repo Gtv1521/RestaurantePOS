@@ -31,6 +31,9 @@ using MiComanderaApp.Core.Application.UseCases.Catalogo;
 using MiComanderaApp.Core.Infrastructure.Api;
 using MiComanderaApp.Core.Application.Request;
 using MiComanderaApp.Core.Domain.Models;
+using System.Net;
+using Microsoft.Extensions.Options;
+using MiComanderaApp.Presentation.States;
 
 namespace MiComanderaApp;
 
@@ -58,6 +61,24 @@ sealed class Program
                 services.Configure<ApiSettings>(hostContext.Configuration.GetSection("ApiSettings"));
                 services.AddSingleton<Func<Type, ViewModelBase>>(provider =>
                     type => (ViewModelBase)provider.GetRequiredService(type));
+
+                services.AddSingleton(sp =>
+                {
+                    var cookies = new CookieContainer();
+                    var handler = new HttpClientHandler
+                    {
+                        CookieContainer = cookies,
+                        UseCookies = true
+                    };
+
+                    var settings = sp.GetRequiredService<IOptions<ApiSettings>>().Value;
+
+                    return new HttpClient(handler)
+                    {
+                        BaseAddress = new Uri(settings.BaseUrl)
+                    };
+                });
+
                 services.AddSingleton<INavigationService, NavigationService>();
 
                 // 🖥️ 2. Ventana principal
@@ -75,6 +96,9 @@ sealed class Program
                 services.AddTransient<MenuComponentViewModel>();
                 services.AddTransient<ProductViewModel>();
                 services.AddSingleton<CantidadPaxViewModel>();
+
+                // global states
+                services.AddScoped<TableState>();
 
                 // 🖥️ 3. Servicios
                 services.AddSingleton<HttpClient>();

@@ -21,7 +21,7 @@ public partial class ActiveTablesComponentViewModel : ViewModelBase
         {
             new TableModel { TableNumber = 1, Status = TableStatus.Ocupada },
             new TableModel { TableNumber = 2, Status = TableStatus.Disponible },
-            new TableModel { TableNumber = 3, Status = TableStatus.Reservada },
+            new TableModel { TableNumber = 3, Status = TableStatus.Ocupada },
             new TableModel { TableNumber = 4, Status = TableStatus.Ocupada },
             new TableModel { TableNumber = 5, Status = TableStatus.Ocupada }
         };

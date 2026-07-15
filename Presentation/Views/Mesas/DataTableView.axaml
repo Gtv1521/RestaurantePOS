@@ -16,21 +16,6 @@
 
       <StackPanel Grid.Row="0" Spacing="8" Margin="0,0,0,15">
 
-        <!-- <Grid ColumnDefinitions="*, Auto">
-        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="5">
-        <TextBlock Text="MESA" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextoColor}" LetterSpacing="1"/>
-        <TextBlock Text="{Binding NumeroMesa}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource Estadistica}" LetterSpacing="1"/>
-        </StackPanel>
-
-        <TextBlock Grid.Column="1"
-        Text="{Binding NombreMesaCustom}"
-        FontSize="16"
-        FontWeight="SemiBold"
-        Foreground="#E0E6ED"
-        VerticalAlignment="Bottom"
-        IsVisible="{Binding NombreMesaCustom, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
-        </Grid> -->
-
         <Grid ColumnDefinitions="*,Auto">
 
           <!-- Izquierda -->
@@ -96,23 +81,88 @@
                BorderBrush="#2D3139"
                BorderThickness="1"
                CornerRadius="8"
-               Padding="5"
-               >
+               Padding="5">
 
         <ListBox.ItemTemplate>
           <DataTemplate>
-            <Grid ColumnDefinitions="*, Auto, Auto" Margin="8,5">
-              <TextBlock Grid.Column="0" Text="{Binding Nombre}" Foreground="{DynamicResource TextoColor}" FontWeight="Medium" VerticalAlignment="Center"/>
-              <TextBlock Grid.Column="1" Text="{Binding Cantidad, StringFormat='x{0}'}" Margin="15,0" Foreground="{DynamicResource Estadistica}" FontWeight="Bold" VerticalAlignment="Center"/>
-              <TextBlock Grid.Column="2" Text="{Binding TotalProducto, StringFormat='${0:N0}'}" Foreground="{DynamicResource Resalto}" VerticalAlignment="Center"/>
-            </Grid>
+
+            <StackPanel Margin="1,1"
+                        Spacing="1">
+
+              <!-- Información principal del producto -->
+              <Grid ColumnDefinitions="*, Auto, Auto">
+
+                <TextBlock Grid.Column="0"
+                           Text="{Binding Nombre}"
+                           Foreground="{DynamicResource TextoColor}"
+                           FontWeight="Bold"
+                           FontSize="17"
+                           VerticalAlignment="Center"/>
+
+                <TextBlock Grid.Column="1"
+                           Text="{Binding Cantidad, StringFormat='x{0}'}"
+                           Margin="15,0"
+                           Foreground="{DynamicResource Estadistica}"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"/>
+
+                <TextBlock Grid.Column="2"
+                           Text="{Binding TotalProducto, StringFormat='${0:N0}'}"
+                           Foreground="{DynamicResource Resalto}"
+                           VerticalAlignment="Center"/>
+
+              </Grid>
+
+
+              <!-- Observaciones -->
+              <ItemsControl ItemsSource="{Binding Observaciones}">
+
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+
+                    <Grid ColumnDefinitions="*,Auto,Auto"
+                          Margin="15,0,0,0">
+
+                      <!-- Nombre observación -->
+                      <TextBlock Grid.Column="0"
+                                 FontSize="14"
+                                 Foreground="{DynamicResource Estadistica}">
+                        <Run Text="+ "/>
+                        <Run Text="{Binding Item}"/>
+                      </TextBlock>
+
+                      <TextBlock Grid.Column="1"
+                                 IsVisible="{Binding TieneCantidad}"
+                                 Text="{Binding Cantidad, StringFormat='x{0}'}"
+                                 Margin="15,0"
+                                 Foreground="{DynamicResource Estadistica}"
+                                 FontWeight="Bold"
+                                 VerticalAlignment="Center"/>
+
+                      <!-- Valor observación -->
+                      <TextBlock Grid.Column="2"
+                                 IsVisible="{Binding TienePrecio}"
+                                 Text="{Binding Valor, StringFormat='${0:N0}'}"
+                                 FontSize="12"
+                                 Foreground="{DynamicResource Resalto}"
+                                 Margin="15,0,0,0"/>
+
+                    </Grid>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+
+              </ItemsControl>
+
+            </StackPanel>
+
           </DataTemplate>
         </ListBox.ItemTemplate>
+
       </ListBox>
 
       <Border Grid.Row="2" Background="{DynamicResource FondoTarjeta}" BorderBrush="#2D3139" BorderThickness="1" CornerRadius="18" Padding="15" Margin="0,15,0,0">
         <!-- Cambiamos a un Grid de 3 filas para el desglose y el Total -->
-        <Grid RowDefinitions="Auto, Auto, Auto" ColumnDefinitions="*, Auto">
+        <Grid RowDefinitions="Auto, Auto, Auto, Auto" ColumnDefinitions="*, Auto">
 
           <!-- 1. Fila de Impuesto al Consumo -->
           <TextBlock Grid.Row="0" Grid.Column="0" Text="IPOCONSUMO" FontSize="13" Foreground="{DynamicResource Resalto}" FontWeight="Medium" Margin="10,2,0,2"/>
@@ -122,12 +172,16 @@
           <TextBlock Grid.Row="1" Grid.Column="0" Text="SERVICIO (PROPINA)" FontSize="13" Foreground="{DynamicResource Resalto}" FontWeight="Medium" Margin="10,2,0,10"/>
           <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding TotalServicio, StringFormat='${0:N0}'}" FontSize="14" Foreground="{DynamicResource Resalto}" HorizontalAlignment="Right" Margin="0,2,10,10"/>
 
+          <!-- 2. Fila de Valor del Servicio (Propina voluntaria calculada sobre la base) -->
+          <TextBlock Grid.Row="2" Grid.Column="0" Text="Total Neto" FontSize="13" Foreground="{DynamicResource Resalto}" FontWeight="Medium" Margin="10,2,0,10"/>
+          <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding TotalNeto, StringFormat='${0:N0}'}" FontSize="14" Foreground="{DynamicResource Resalto}" HorizontalAlignment="Right" Margin="0,2,10,10"/>
+
           <!-- Línea divisoria sutil antes del gran total -->
-          <Separator Grid.Row="2" Grid.ColumnSpan="2" Background="{DynamicResource Resalto}" Height="1" VerticalAlignment="Top" Margin="10,0,10,10"/>
+          <Separator Grid.Row="3" Grid.ColumnSpan="2" Background="{DynamicResource Resalto}" Height="1" VerticalAlignment="Top" Margin="10,0,10,10"/>
 
           <!-- 3. Fila del Total General -->
-          <TextBlock Grid.Row="2" Grid.Column="0" Text="TOTAL A PAGAR" FontSize="15" Foreground="{DynamicResource TextoColor}" FontWeight="Bold" VerticalAlignment="Center" Margin="10,5,0,0"/>
-          <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding TotalCuenta, StringFormat='${0:N0}'}" FontSize="24" FontWeight="Black" Foreground="{DynamicResource TextoColor}" VerticalAlignment="Center" Margin="0,5,10,0"/>
+          <TextBlock Grid.Row="3" Grid.Column="0" Text="TOTAL A PAGAR" FontSize="15" Foreground="{DynamicResource TextoColor}" FontWeight="Bold" VerticalAlignment="Center" Margin="10,5,0,0"/>
+          <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding TotalCuenta, StringFormat='${0:N0}'}" FontSize="24" FontWeight="Black" Foreground="{DynamicResource TextoColor}" VerticalAlignment="Center" Margin="0,5,10,0"/>
 
         </Grid>
       </Border>
@@ -150,30 +204,37 @@
           <Grid RowDefinitions="Auto,*">
 
             <TextBlock Grid.Row="0"
-                       Text="PRODUCTOS DISPONIBLES"
+                       Text="{Binding NamePanel}"
                        FontSize="13"
                        FontWeight="Bold"
                        Foreground="{DynamicResource TextoBrush}"
                        Margin="5,0,5,10"/>
 
-            <ScrollViewer Grid.Row="1">
+            <ScrollViewer Grid.Row="1"
+                          IsVisible="{Binding !MostrandoObservaciones}">
 
               <ItemsControl ItemsSource="{Binding ProductosCatalogo}">
+
                 <ItemsControl.ItemsPanel>
                   <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal"/>
+                    <UniformGrid Columns="5"
+                                 Rows="8"
+                                 RowSpacing="5"
+                                 ColumnSpacing="5"/>
                   </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
 
                 <ItemsControl.ItemTemplate>
                   <DataTemplate>
-                    <Button Width="210"
-                            Height="55"
-                            Margin="6"
+
+                    <Button MinHeight="70"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
                             Classes="btn-verde"
                             Content="{Binding Nombre}"
                             Command="{Binding #Root.DataContext.AgregarProductoCommand}"
                             CommandParameter="{Binding}"/>
+
                   </DataTemplate>
                 </ItemsControl.ItemTemplate>
 
@@ -181,8 +242,39 @@
 
             </ScrollViewer>
 
-          </Grid>
 
+            <!-- OBSERVACIONES -->
+            <ScrollViewer Grid.Row="1"
+                          IsVisible="{Binding MostrandoObservaciones}">
+
+              <ItemsControl ItemsSource="{Binding Observations}">
+
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <UniformGrid Columns="5"
+                                 Rows="8"
+                                 RowSpacing="5"
+                                 ColumnSpacing="5"/>
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+
+                    <Button MinHeight="70"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Content="{Binding Item}"
+                            Classes="btn-verde"
+                            Command="{Binding #Root.DataContext.AgregarObservacionCommand}"
+                            CommandParameter="{Binding}"
+                            />
+
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+          </Grid>
         </Border>
 
         <!-- Panel Categorías -->
@@ -233,18 +325,132 @@
 
       <Border Grid.Row="1" Background="{DynamicResource FondoTarjeta}" BorderBrush="#2D3139" BorderThickness="1" CornerRadius="8" Padding="10" Margin="0,8,0,0">
         <Grid ColumnDefinitions="*,300" RowDefinitions="Auto,*">
-          <TextBlock Grid.Row="0"
-                     Grid.Column="0"
-                     Text="ACCIONES"
-                     FontSize="13"
-                     FontWeight="Bold"
-                     Foreground="{DynamicResource TextoBrush}"
-                     Margin="5,0,5,10"/>
 
-          <Button Content="{Binding TextoBotonAnular}"
-                  Command="{Binding AlternarModoSeleccionCommand}"
-                  Classes="btn-rojo"/>
 
+          <Grid Grid.Column="0"
+                RowDefinitions="Auto,*,*,*,*"
+                ColumnDefinitions="*,*,*,*"
+                RowSpacing="5"
+                ColumnSpacing="5"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                MinHeight="270"
+                >
+
+            <!-- titulo  -->
+            <TextBlock Grid.Row="0"
+                       Grid.ColumnSpan="4"
+                       Text="OPCIONES"
+                       FontSize="13"
+                       FontWeight="Bold"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Left"
+                       Foreground="{DynamicResource TextoBrush}"
+                       />
+
+
+            <!-- Primera fila-->
+            <Button Grid.Row="1"
+                    Grid.Column="0"
+                    Content="{Binding TextoBotonAnular}"
+                    Command="{Binding AlternarModoSeleccionCommand}"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                    Classes="btn-rojo"
+                    />
+
+            <Button Grid.Row="1"
+                    Grid.Column="1"
+                    Content="Observaciones"
+                    Command="{Binding ChargerObservationsCommand}"
+                    Classes="btn-verde"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    />
+
+            <Button Grid.Row="1"
+                    Grid.RowSpan="2"
+                    Grid.Column="2"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                    Content="Enviar"
+                    Classes="btn-naranja"/>
+
+            <Button Grid.Row="1"
+                    Grid.RowSpan="2"
+                    Grid.Column="3"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                    Content="Cancelar"
+                    Classes="btn-rojo"
+                    Command="{Binding CancelarCommand}"
+                    />
+
+
+            <!-- segunda fila-->
+            <Button Grid.Row="2"
+                    Grid.Column="0"
+                    Content="Clientes"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                    Classes="btn-verde"
+                    />
+
+            <Button Grid.Row="2"
+                    Grid.Column="1"
+                    Content="Historial"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                    Classes="btn-verde"
+                    />
+
+
+            <!-- tercera fila -->
+            <Button Grid.Row="3"
+                    Grid.Column="0"
+                    Content="Boton"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                    Classes="btn-verde"
+                    />
+
+            <Button Grid.Row="3"
+                    Grid.Column="1"
+                    Content="Boton"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                    Classes="btn-verde"
+                    />
+
+            <Button Grid.Row="3"
+                    Grid.Column="2"
+                    Content="Historial"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                    Classes="btn-verde"
+                    />
+
+            <Button Grid.Row="3"
+                    Grid.Column="3"
+                    Content="Volver"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                    Classes="btn-azul"
+                    Command="{Binding VolverCommand}"
+                    />
+
+
+            <!-- cuarta fila -->
+            <Button Grid.Row="4"
+                    Grid.Column="0"
+                    Content="Botton"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                    Classes="btn-verde"
+                    />
+          </Grid>
+
+          <!-- panle de numeros -->
           <Grid Grid.Row="0"
                 Grid.RowSpan="2"
                 Grid.Column="1"

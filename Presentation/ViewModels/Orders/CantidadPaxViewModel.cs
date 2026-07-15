@@ -55,17 +55,16 @@ public partial class CantidadPaxViewModel : ViewModelBase
         // Vuelve a la vista anterior
         var vm = _factory.Create<TablesViewModel>();
         _navigationService.NavigateTo(vm);
+        CantidadPax = string.Empty;
     }
 
     [RelayCommand(CanExecute = nameof(CanAccept))]
     private void Aceptar()
     {
-        // TODO: Navegar a la vista de toma de pedido, pasando la mesa y la cantidad de personas.
-        // Por ejemplo: _navigationService.NavigateTo<NewOrderViewModel>(new { Mesa, CantidadPax });
-        System.Console.WriteLine($"Aceptado: {CantidadPax} personas para la mesa {Mesa}");
         var vm = _factory.Create<DataTableViewModel>();
         vm.Initialize(Mesa, int.Parse(CantidadPax));
-        _navigationService.NavigateTo<DataTableViewModel>();
+        _navigationService.NavigateTo(vm);
+        CantidadPax = string.Empty;
     }
 
     private bool CanAccept() => !string.IsNullOrEmpty(CantidadPax) && CantidadPax != "0";
