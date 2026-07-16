@@ -150,14 +150,10 @@
                     </Grid>
                   </DataTemplate>
                 </ItemsControl.ItemTemplate>
-
               </ItemsControl>
-
             </StackPanel>
-
           </DataTemplate>
         </ListBox.ItemTemplate>
-
       </ListBox>
 
       <Border Grid.Row="2" Background="{DynamicResource FondoTarjeta}" BorderBrush="#2D3139" BorderThickness="1" CornerRadius="18" Padding="15" Margin="0,15,0,0">
@@ -169,8 +165,8 @@
           <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding TotalIpoconsumo, StringFormat='${0:N0}'}" FontSize="14" Foreground="{DynamicResource Resalto}" HorizontalAlignment="Right" Margin="0,2,10,2"/>
 
           <!-- 2. Fila de Valor del Servicio (Propina voluntaria calculada sobre la base) -->
-          <TextBlock Grid.Row="1" Grid.Column="0" Text="SERVICIO (PROPINA)" FontSize="13" Foreground="{DynamicResource Resalto}" FontWeight="Medium" Margin="10,2,0,10"/>
-          <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding TotalServicio, StringFormat='${0:N0}'}" FontSize="14" Foreground="{DynamicResource Resalto}" HorizontalAlignment="Right" Margin="0,2,10,10"/>
+          <TextBlock Grid.Row="1" Grid.Column="0" Text="SERVICIO (PROPINA)" FontSize="13" Foreground="{DynamicResource Resalto}" FontWeight="Medium" Margin="10,2,0,2"/>
+          <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding TotalServicio, StringFormat='${0:N0}'}" FontSize="14" Foreground="{DynamicResource Resalto}" HorizontalAlignment="Right" Margin="0,2,10,2"/>
 
           <!-- 2. Fila de Valor del Servicio (Propina voluntaria calculada sobre la base) -->
           <TextBlock Grid.Row="2" Grid.Column="0" Text="Total Neto" FontSize="13" Foreground="{DynamicResource Resalto}" FontWeight="Medium" Margin="10,2,0,10"/>

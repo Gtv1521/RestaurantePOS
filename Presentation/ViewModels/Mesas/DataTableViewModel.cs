@@ -25,7 +25,7 @@ public class ProductoItem
 
 public class CategoriaItem
 {
-    public string Id { get; set; } = string.Empty;
+    public int Id { get; set; }
     public string Nombre { get; set; } = string.Empty;
 }
 public partial class ObservacionItem : ObservableObject
@@ -131,15 +131,15 @@ public partial class DataTableViewModel : ViewModelBase
 
         foreach (var item in catalogo)
         {
-            Categorias.Add(new CategoriaItem { Id = item.Id.ToString(), Nombre = item.Name });
+            Categorias.Add(new CategoriaItem { Id = item.Id, Nombre = item.Name });
         }
 
-        _ = ChangeCategoria(Categorias.FirstOrDefault()?.Id!);
+        _ = ChangeCategoria(Categorias.FirstOrDefault()?.Id ?? 0);
     }
 
 
     [RelayCommand]
-    private async Task ChangeCategoria(string id)
+    private async Task ChangeCategoria(int id)
     {
         ProductosCatalogo.Clear();
         MostrandoObservaciones = false;

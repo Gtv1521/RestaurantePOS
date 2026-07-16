@@ -22,22 +22,66 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             _httpClient = httpClient;
             _url = $"{apiSettings.Value.BaseUrl}/api/Product";
         }
-        public Task<string?> CreateAsync(ProductoRequest data)
+        public async Task<string?> CreateAsync(ProductoRequest data)
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.PostAsJsonAsync($"{_url}", data);
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+
+                throw response.StatusCode switch
+                {
+                    HttpStatusCode.BadRequest => new BadRequestException(error),
+                    HttpStatusCode.NotFound => new NotFoundException(error),
+                    _ => new HttpRequestException(
+                        $"Error {(int)response.StatusCode}: {error}")
+                };
+            }
+            var result = await response.Content.ReadFromJsonAsync<string>();
+            return result ?? throw new InvalidOperationException("No se pudo crear el producto.");
         }
 
-        public Task<bool> DeleteAsync(string id)
+        public async Task<bool> DeleteAsync(string id)
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.DeleteAsync($"{_url}/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+
+                throw response.StatusCode switch
+                {
+                    HttpStatusCode.BadRequest => new BadRequestException(error),
+                    HttpStatusCode.NotFound => new NotFoundException(error),
+                    _ => new HttpRequestException(
+                        $"Error {(int)response.StatusCode}: {error}")
+                };
+            }
+
+            var result = await response.Content.ReadFromJsonAsync<bool?>();
+            return result ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
         }
 
-        public Task<IEnumerable<ProductoModel>> GetAllAsync()
+        public async Task<IEnumerable<ProductoModel>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.GetAsync($"{_url}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+
+                throw response.StatusCode switch
+                {
+                    HttpStatusCode.BadRequest => new BadRequestException(error),
+                    HttpStatusCode.NotFound => new NotFoundException(error),
+                    _ => new HttpRequestException(
+                        $"Error {(int)response.StatusCode}: {error}")
+                };
+            }
+            return await response.Content.ReadFromJsonAsync<IEnumerable<ProductoModel>>()
+               ?? Enumerable.Empty<ProductoModel>();
         }
 
-        public async Task<IEnumerable<ProductoModel>> GetAllDataAsync(string id)
+        public async Task<IEnumerable<ProductoModel>> GetAllDataAsync(int id)
         {
             var response = await _httpClient.GetAsync($"{_url}/category/{id}");
 
@@ -58,9 +102,26 @@ namespace MiComanderaApp.Core.Infrastructure.Api
                    ?? Enumerable.Empty<ProductoModel>();
         }
 
-        public Task<ProductoModel> GetAsync(string id)
+        public async Task<ProductoModel> GetAsync(string id)
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.GetAsync($"{_url}/category/{id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+
+                throw response.StatusCode switch
+                {
+                    HttpStatusCode.BadRequest => new BadRequestException(error),
+                    HttpStatusCode.NotFound => new NotFoundException(error),
+                    _ => new HttpRequestException(
+                        $"Error {(int)response.StatusCode}: {error}")
+                };
+            }
+
+            var result = await response.Content.ReadFromJsonAsync<ProductoModel>();
+
+            return result ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
         }
 
         public Task<bool> UpdateAsync(string id, ProductoRequest data)

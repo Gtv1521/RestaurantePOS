@@ -1,0 +1,99 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="using:MiComanderaApp.Presentation.Views.Dialogs.Modals"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="MiComanderaApp.Presentation.Views.Dialogs.Modals.CreateProduct"
+        Title="CreateProduct"
+        ShowInTaskbar="False"
+        SystemDecorations="None"
+        WindowStartupLocation="Manual"
+        Background="Transparent"
+        x:DataType="local:CreateProductViewModel"
+        Height="600"
+        Width="1000"
+        >
+        <Border Padding="25"
+                CornerRadius="15"
+                Background="{DynamicResource FondoTarjeta}">
+
+                <StackPanel Spacing="15">
+
+                        <TextBlock Text="Crear Producto"
+                                   FontSize="24"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"
+                                   Foreground="{DynamicResource TextoBrush}"
+                                   />
+
+
+                        <TextBlock Text="Nombre" Foreground="{DynamicResource TextoColor}"/>
+
+                        <TextBox Text="{Binding Nombre}"
+                                 Watermark="Ej: Hamburguesa clásica" BorderBrush="{DynamicResource Border}"/>
+
+
+                        <TextBlock Text="Código"
+                                   Foreground="{DynamicResource TextoColor}"/>
+
+                        <TextBox Text="{Binding Codigo}"
+                                 BorderBrush="{DynamicResource Border}"
+                                 Watermark="Código interno" Foreground="{DynamicResource TextoColor}"/>
+
+
+                        <TextBlock Text="Precio"
+                                   Foreground="{DynamicResource TextoColor}"
+                                   />
+
+                        <TextBox Text="{Binding Precio}"
+                                 Foreground="{DynamicResource TextoColor}"
+                                 BorderBrush="{DynamicResource Border}"
+                                 Watermark="0.00"/>
+
+
+                        <TextBlock Text="Categoría"
+                                   Foreground="{DynamicResource TextoColor}"/>
+
+                        <ComboBox ItemsSource="{Binding Categorias}"
+                                  Foreground="{DynamicResource TextoColor}"
+                                  BorderBrush="{DynamicResource Border}"
+                                  SelectedItem="{Binding CategoriaSeleccionada}"/>
+
+
+                        <TextBlock Text="Descripción" Foreground="{DynamicResource TextoColor}"/>
+
+                        <TextBox Text="{Binding Descripcion}"
+                                 Height="80"
+                                 Foreground="{DynamicResource TextoColor}"
+                                 AcceptsReturn="True"
+                                 TextWrapping="Wrap"/>
+
+
+                        <CheckBox Content="Producto activo"
+                                  IsChecked="{Binding Activo}"/>
+
+
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Right"
+                                    Spacing="10"
+                                    Margin="0,20,0,0">
+
+                                <Button Content="Cancelar"
+                                        Width="100"
+                                        Classes="btn-rojo"
+                                        Command="{Binding CancelarCommand}"/>
+
+                                <Button Content="Guardar"
+                                        Width="100"
+                                        Classes="btn-verde"
+                                        Background="#4CAF50"
+                                        Command="{Binding GuardarCommand}"/>
+
+                        </StackPanel>
+
+
+                </StackPanel>
+
+        </Border>
+</Window>

@@ -173,4 +173,35 @@
         <Setter Property="TextBlock.Foreground" Value="#1A202C"/>
     </Style>
 
+
+    <!-- valores de teclado -->
+
+    <Style Selector="Button.key">
+
+        <Setter Property="Height" Value="45"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Background" Value="{DynamicResource FondoInput}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextoBrush}"/>
+
+    </Style>
+
+
+    <Style Selector="Button.key:pointerover">
+
+        <Setter Property="Background" Value="#E65100"/>
+        <Setter Property="Foreground" Value="White"/>
+
+    </Style>
+
+
+    <Style Selector="Button.key-enter">
+
+        <Setter Property="Height" Value="45"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Background" Value="#4CAF50"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+
+    </Style>
 </Styles>

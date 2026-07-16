@@ -44,10 +44,6 @@ public partial class AdminDashboardViewModel : ViewModelBase
         User = _userSesion.Model!;
         VistaActual = _factory.Create<EstadisticasComponentViewModel>();
     }
-    // public void Initialize()
-    // {
-
-    // }
 
     partial void OnCurrentViewChanged(string value)
     {
@@ -84,4 +80,4 @@ public partial class AdminDashboardViewModel : ViewModelBase
         var vm = _factory.Create<TablesViewModel>();
         _navigation.NavigateTo(vm);
     }
-};
+}

@@ -34,6 +34,10 @@ using MiComanderaApp.Core.Domain.Models;
 using System.Net;
 using Microsoft.Extensions.Options;
 using MiComanderaApp.Presentation.States;
+using MiComanderaApp.Views;
+using MiComanderaApp.Presentation.Views.Dialogs.Modals;
+using MiComanderaApp.Presentation.Services;
+using MiComanderaApp.Core.Application.UseCases.Product;
 
 namespace MiComanderaApp;
 
@@ -79,6 +83,8 @@ sealed class Program
                     };
                 });
 
+                services.AddSingleton<IWindowProvider, WindowProvider>();
+                services.AddSingleton<IDialogService, DialogService>();
                 services.AddSingleton<INavigationService, NavigationService>();
 
                 // 🖥️ 2. Ventana principal
@@ -112,6 +118,7 @@ sealed class Program
                 services.AddScoped<GetSessionSave>();
                 services.AddScoped<GetAllCatalogoUseCase>();
                 services.AddScoped<GetCatalogoXIdProdUseCase>();
+                services.AddScoped<GetAllProductUseCase>();
 
 
                 // signalR
@@ -119,6 +126,12 @@ sealed class Program
                 services.AddSingleton<SignalREventRegistry>();
                 services.AddScoped<ISignalREventHandler, OrderEvents>();
                 services.AddScoped<ISignalREventHandler, TablesEvents>();
+
+
+                services.AddSingleton<MainWindow>();
+                services.AddTransient<CreateProductViewModel>();
+                services.AddTransient<CreateProduct>();
+                services.AddSingleton<IDialogService, DialogService>();
             })
             .Build();
 

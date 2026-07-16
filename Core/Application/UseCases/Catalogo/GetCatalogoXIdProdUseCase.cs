@@ -18,7 +18,7 @@ namespace MiComanderaApp.Core.Application.UseCases.Catalogo
             _repo = repo;
         }
 
-        public async Task<IEnumerable<ProductoModel>> Execute(string id)
+        public async Task<IEnumerable<ProductoModel>> Execute(int id)
         {
             return await _repo.GetAllDataAsync(id);
         }

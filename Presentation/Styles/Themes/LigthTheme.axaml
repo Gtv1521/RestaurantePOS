@@ -3,7 +3,7 @@
 
 
   <SolidColorBrush x:Key="FondoPrincipal" Color="#DEDFE5"/>
-  <SolidColorBrush x:Key="FondoTarjeta" Color="#6FC6D0D7"/>
+  <SolidColorBrush x:Key="FondoTarjeta" Color="#D5BAC2C8"/>
   <SolidColorBrush x:Key="Panel" Color="#79B4C3CD"/>
   <SolidColorBrush x:Key="TextoColor" Color="Black"/>
   <SolidColorBrush x:Key="Resalto" Color="#5C5D5F"/>

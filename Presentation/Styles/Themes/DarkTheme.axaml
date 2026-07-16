@@ -16,5 +16,5 @@
   <SolidColorBrush x:Key="BotonCeleste" Color="#99C0F3"/>
   <SolidColorBrush x:Key="BotonGreen" Color="#D060BC65"/>
 
-
+  <SolidColorBrush x:Key="Border" Color="#D0687168"/>
 </ResourceDictionary>

@@ -80,6 +80,12 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Components/AllTablesComponent.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Components/Generales/TecladoComponent.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Dialogs/Modals/CreateProduct.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/MainContentView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 

@@ -7,6 +7,7 @@
              mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="600"
              x:Class="MiComanderaApp.Views.LoginView"
              x:DataType="vm:LoginViewModel"
+             Focusable="True"
              Background="{DynamicResource FondoPrincipal}"
              FontFamily="Courier New, JetBrains Mono, monospace">
 

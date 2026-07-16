@@ -25,6 +25,6 @@ namespace MiComanderaApp.Interfaces
 
     public interface IGetList<T>
     {
-        Task<IEnumerable<T>> GetAllDataAsync(string id);
+        Task<IEnumerable<T>> GetAllDataAsync(int id);
     }
 }
