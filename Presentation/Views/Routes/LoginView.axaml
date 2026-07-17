@@ -9,7 +9,7 @@
              x:DataType="vm:LoginViewModel"
              Focusable="True"
              Background="{DynamicResource FondoPrincipal}"
-             FontFamily="Courier New, JetBrains Mono, monospace">
+             FontFamily="Segoe UI, Roboto, sans-serif">
 
     <Design.DataContext>
         <vm:LoginViewModel/>
@@ -25,9 +25,9 @@
             </StackPanel>
 
             <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                <TextBlock Text="{Binding Horas}" FontSize="84" Foreground="{DynamicResource TextoBrush}" FontWeight="Bold"/>
+                <TextBlock Text="{Binding Horas}" FontSize="84" Foreground="{DynamicResource TextoColor}" FontWeight="Bold"/>
                 <TextBlock Text=":" FontSize="84" Foreground="#E65100" FontWeight="Bold" Margin="6,0"/>
-                <TextBlock Text="{Binding Minutos}" FontSize="84" Foreground="{DynamicResource TextoBrush}" FontWeight="Bold"/>
+                <TextBlock Text="{Binding Minutos}" FontSize="84" Foreground="{DynamicResource TextoColor}" FontWeight="Bold"/>
                 <TextBlock Text=":" FontSize="84" Foreground="#E65100" FontWeight="Bold" Margin="6,0"/>
                 <TextBlock Text="{Binding Segundos}" FontSize="84" Foreground="#D0A1B0C1" FontWeight="Bold"/>
             </StackPanel>
@@ -56,13 +56,13 @@
                         <Ellipse Width="10" Height="10" Canvas.Left="3" Canvas.Top="1" Stroke="#E65100" StrokeThickness="2"/>
                     </Canvas>
                 </Border>
-                <TextBlock Text="Acceso Express" Foreground="{DynamicResource TextoBrush}" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <TextBlock Text="Acceso Express" Foreground="{DynamicResource TextoColor}" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center"/>
                 <TextBlock Text="Ingresa tu PIN de 4 dígitos" Foreground="#718096" FontSize="13" HorizontalAlignment="Center"/>
             </StackPanel>
 
             <Grid HorizontalAlignment="Center">
                 <TextBox Text="{Binding PinCode}" PasswordChar="●" IsReadOnly="True" Focusable="False"
-                         FontSize="24" Foreground="{DynamicResource TextoBrush}" LetterSpacing="14" Background="Transparent"
+                         FontSize="24" Foreground="{DynamicResource TextoColor}" LetterSpacing="14" Background="Transparent"
                          BorderThickness="0" TextBlock.TextAlignment="Center" Width="200"/>
             </Grid>
 

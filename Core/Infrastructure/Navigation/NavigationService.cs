@@ -12,22 +12,53 @@ namespace MiComanderaApp.Services.Routing
     {
         private readonly Func<Type, ViewModelBase> _viewModelFactory;
 
-        [ObservableProperty]
-        private ViewModelBase? _currentView;
+    // Vista principal (con animación)
+    [ObservableProperty] private ViewModelBase? _currentView;
 
-        public NavigationService(Func<Type, ViewModelBase> viewModelFactory)
-        {
-            _viewModelFactory = viewModelFactory;
-        }
+    // Vista overlay (modal flotante)
+    [ObservableProperty] private ViewModelBase? _overlayView;
 
-        public void NavigateTo<TViewModel>() where TViewModel : ViewModelBase
-        {
-            CurrentView = _viewModelFactory(typeof(TViewModel));
-        }
+    [ObservableProperty]
+    private bool _isOverlayVisible;
 
-        public void NavigateTo(ViewModelBase viewModel)
-        {
-            CurrentView = viewModel;
-        }
+    public NavigationService(Func<Type, ViewModelBase> viewModelFactory)
+    {
+        _viewModelFactory = viewModelFactory;
+    }
+
+    // Navegación normal (con animación)
+    public void NavigateTo<TViewModel>() where TViewModel : ViewModelBase
+    {
+        CurrentView = _viewModelFactory(typeof(TViewModel));
+    }
+
+    public void NavigateTo(ViewModelBase viewModel)
+    {
+        CurrentView = viewModel;
+    }
+
+    // Mostrar overlay (sin animación, superpuesto)
+    public void ShowOverlay<TViewModel>() where TViewModel : ViewModelBase
+    {
+        OverlayView = _viewModelFactory(typeof(TViewModel));
+        IsOverlayVisible = true;
+    }
+
+    public void ShowOverlay(ViewModelBase viewModel)
+    {
+        OverlayView = viewModel;
+        IsOverlayVisible = true;
+    }
+
+    // Cerrar overlay
+    public void CloseOverlay()
+    {
+        IsOverlayVisible = false;
+        OverlayView = null;
+    }
+
+    // Verificar si hay overlay abierto
+    public bool IsOverlayOpen() => IsOverlayVisible;
+
     }
 }

@@ -15,7 +15,7 @@
     <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,20">
       <TextBlock Grid.Column="0"
                  Text="Configurador de Menú"
-                 Foreground="#8F9CA3"
+                 Foreground="{DynamicResource TextoColor}"
                  FontSize="20"
                  FontWeight="SemiBold"
                  VerticalAlignment="Center"/>

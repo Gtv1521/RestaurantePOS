@@ -17,7 +17,8 @@
 
       <ItemsControl ItemsSource="{Binding SalesCards}"
                     HorizontalAlignment="Stretch"
-                    Margin="0,0,-10,5"> <ItemsControl.ItemsPanel>
+                    Margin="0,0,-10,5"> 
+                    <ItemsControl.ItemsPanel>
                       <ItemsPanelTemplate>
                         <UniformGrid Rows="1" HorizontalAlignment="Stretch"/>
                       </ItemsPanelTemplate>

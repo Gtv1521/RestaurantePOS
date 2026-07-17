@@ -163,18 +163,18 @@
                                 VerticalContentAlignment="Center"
                                 CornerRadius="6">
                             <StackPanel Orientation="Horizontal" Spacing="6">
-                                <i:Icon Value="fa-solid fa-pen" Foreground="#8F9CA3" FontSize="12"/>
-                                <TextBlock Text="Editar" Foreground="#8F9CA3" FontSize="13" FontWeight="SemiBold"/>
+                                <i:Icon Value="fa-solid fa-pen" Foreground="{DynamicResource BotonTextWhite}" FontSize="12"/>
+                                <TextBlock Text="Editar" Foreground="{DynamicResource BotonTextWhite}" FontSize="13" FontWeight="SemiBold"/>
                             </StackPanel>
                         </Button>
 
                         <Button Grid.Column="1" 
-                                Background="#2C1D21" 
+                                Background="{DynamicResource BotonDelete}" 
                                 Width="35" Height="32"
                                 HorizontalContentAlignment="Center" 
                                 VerticalContentAlignment="Center"
                                 CornerRadius="6">
-                            <i:Icon Value="fa-solid fa-trash" Foreground="#EF5350" FontSize="12"/>
+                            <i:Icon Value="fa-solid fa-trash" Foreground="#c91815" FontSize="12"/>
                         </Button>
                     </Grid> </Grid>
             </Border>

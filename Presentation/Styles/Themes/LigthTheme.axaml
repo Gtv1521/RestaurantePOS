@@ -5,7 +5,7 @@
   <SolidColorBrush x:Key="FondoPrincipal" Color="#DEDFE5"/>
   <SolidColorBrush x:Key="FondoTarjeta" Color="#D5BAC2C8"/>
   <SolidColorBrush x:Key="Panel" Color="#79B4C3CD"/>
-  <SolidColorBrush x:Key="TextoColor" Color="Black"/>
+  <SolidColorBrush x:Key="TextoColor" Color="#060707"/>
   <SolidColorBrush x:Key="Resalto" Color="#5C5D5F"/>
   <SolidColorBrush x:Key="TextoBrush" Color="#122030"/>
   <SolidColorBrush x:Key="Subtitle" Color="#2D4259"/>
@@ -19,7 +19,15 @@
   <!-- Botones  -->
   <SolidColorBrush x:Key="BotonCeleste" Color="#99C0F3"/>
   <SolidColorBrush x:Key="BotonGreen" Color="#D060BC65"/>
+  <SolidColorBrush x:Key="BotonAdd" Color="#D060BC65" />
+  <SolidColorBrush x:Key="BotonDelete" Color="#641111be" />
+  <SolidColorBrush x:Key="BotonTextWhite" Color="#f7f6f6f3" />
 
+  <SolidColorBrush x:Key="Border" Color="#D0687168"/>
 
+  <!-- Modal -->
+  <SolidColorBrush x:Key="FondoPanelModal" Color="#292424c0"/>
+  <SolidColorBrush x:Key="FondoModal" Color="#fffcfc"/>
+  <SolidColorBrush x:Key="BorderModal" Color="#615fb368"/>
 
 </ResourceDictionary>

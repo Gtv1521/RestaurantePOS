@@ -7,13 +7,34 @@
         xmlns:vLogin="using:MiComanderaApp.Views"
         x:Class="MiComanderaApp.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Mi Comandera"
         WindowState="Maximized"
         x:DataType="vm:MainWindowViewModel">    
 
+
+
+     <Grid>
+        <!-- Contenedor principal con animación -->
+        <Grid>
+            <!-- Tu navegación con animación -->
+            <TransitioningContentControl 
+                Content="{Binding Navigation.CurrentView}">
+                <TransitioningContentControl.PageTransition>
+                    <CrossFade Duration="0:0:0.25" />
+                </TransitioningContentControl.PageTransition>
+            </TransitioningContentControl>
+
+            <!-- Overlay (modal flotante) -->
+            <ContentControl 
+                Content="{Binding Navigation.OverlayView}"
+                IsVisible="{Binding Navigation.IsOverlayVisible}"/>
+        </Grid>
+    </Grid>
+
+<!-- 
     <TransitioningContentControl Content="{Binding Navigation.CurrentView}">
         <TransitioningContentControl.PageTransition>
             <CrossFade Duration="0:0:0.25" />
         </TransitioningContentControl.PageTransition>
     </TransitioningContentControl>
+-->
 </Window>
