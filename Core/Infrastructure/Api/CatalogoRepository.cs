@@ -25,7 +25,7 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             _httpClient = httpClient;
         }
 
-        public async Task<string?> CreateAsync(CatalogoRequest data)
+        public async Task<string> CreateAsync(CatalogoRequest data)
         {
             var response = await _httpClient.PostAsJsonAsync($"{_url}", data);
 

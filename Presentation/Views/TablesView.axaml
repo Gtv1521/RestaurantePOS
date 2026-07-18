@@ -53,13 +53,13 @@
                     <TextBlock Text="{Binding User.NombreCompleto}"
                                FontWeight="Bold"
                                FontSize="16"
-                               Foreground="{DynamicResource TextoBrush}"
+                               Foreground="{DynamicResource TextoColor}"
                                HorizontalAlignment="Right"
                                VerticalAlignment="Center"/>
 
                     <TextBlock Text="{Binding User.Rol}"
                                FontSize="14"
-                               Foreground="{DynamicResource TextoBrush}"
+                               Foreground="{DynamicResource TextoColor}"
                                HorizontalAlignment="Right"
                                VerticalAlignment="Center"/>
 
@@ -74,7 +74,7 @@
 
         <!-- Panel Derecho: Menú Lateral -->
         <Border Grid.Column="1"
-                Background="{StaticResource PosSurface}"
+                Background="{DynamicResource FondoTarjeta}"
                 BorderBrush="#6079A2"
                 BorderThickness="1,0,0,0">
 
@@ -84,13 +84,13 @@
                     <TextBlock Text="Panel de Control"
                                FontSize="18"
                                FontWeight="Bold"
-                               Foreground="#1A202C"
+                               Foreground="{DynamicResource TextoColor}"
                                Margin="0,0,0,8" />
 
                     <TextBlock Text="ACCIONES"
                                FontSize="10"
                                FontWeight="Bold"
-                               Foreground="{StaticResource PosGrayText}"
+                               Foreground="{StaticResource TextoColor}"
                                LetterSpacing="1.5" />
 
                     <!-- Nueva Orden -->
@@ -152,7 +152,7 @@
                     <TextBlock Text="FILTROS"
                                FontSize="10"
                                FontWeight="Bold"
-                               Foreground="{StaticResource PosGrayText}"
+                               Foreground="{StaticResource TextoColor}"
                                LetterSpacing="1.5" />
 
                     <!-- Todas las Mesas -->
@@ -183,7 +183,7 @@
                     <TextBlock Text="HERRAMIENTAS"
                                FontSize="10"
                                FontWeight="Bold"
-                               Foreground="{StaticResource PosGrayText}"
+                               Foreground="{StaticResource TextoColor}"
                                LetterSpacing="1.5" />
 
                     <!-- Corte de Caja -->

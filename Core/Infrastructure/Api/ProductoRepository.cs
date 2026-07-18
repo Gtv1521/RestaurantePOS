@@ -22,7 +22,7 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             _httpClient = httpClient;
             _url = $"{apiSettings.Value.BaseUrl}/api/Product";
         }
-        public async Task<string?> CreateAsync(ProductoRequest data)
+        public async Task<string> CreateAsync(ProductoRequest data)
         {
             var response = await _httpClient.PostAsJsonAsync($"{_url}", data);
             if (!response.IsSuccessStatusCode)
@@ -37,8 +37,8 @@ namespace MiComanderaApp.Core.Infrastructure.Api
                         $"Error {(int)response.StatusCode}: {error}")
                 };
             }
-            var result = await response.Content.ReadFromJsonAsync<string>();
-            return result ?? throw new InvalidOperationException("No se pudo crear el producto.");
+            var result = await response.Content.ReadFromJsonAsync<ProductoModel>();
+            return result?.Id.ToString() ?? throw new InvalidOperationException("No se pudo crear el producto.");
         }
 
         public async Task<bool> DeleteAsync(string id)

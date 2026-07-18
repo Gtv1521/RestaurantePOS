@@ -10,7 +10,7 @@ namespace MiComanderaApp.Core.Infrastructure.Api
 {
     public class TablesRepository : ISingleCrud<TableModel, TableRequest>
     {
-        public Task<string?> CreateAsync(TableRequest data)
+        public Task<string> CreateAsync(TableRequest data)
         {
             throw new NotImplementedException();
         }

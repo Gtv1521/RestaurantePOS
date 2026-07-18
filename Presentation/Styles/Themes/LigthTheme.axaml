@@ -12,7 +12,7 @@
   <SolidColorBrush x:Key="Estadistica" Color="#5061B8"/>
 
   <!-- Teclado -->
-  <SolidColorBrush x:Key="NumBotton" Color="#E3C2C8D6"/>
+  <SolidColorBrush x:Key="NumBotton" Color="#3F4D5872"/>
   <SolidColorBrush x:Key="SaveBotton" Color="#F791A1AD"/>
   <SolidColorBrush x:Key="TextBotton" Color="#FA000000"/>
 
@@ -21,12 +21,12 @@
   <SolidColorBrush x:Key="BotonGreen" Color="#D060BC65"/>
   <SolidColorBrush x:Key="BotonAdd" Color="#D060BC65" />
   <SolidColorBrush x:Key="BotonDelete" Color="#641111be" />
-  <SolidColorBrush x:Key="BotonTextWhite" Color="#f7f6f6f3" />
+  <SolidColorBrush x:Key="BotonText" Color="#F7000000" />
 
   <SolidColorBrush x:Key="Border" Color="#D0687168"/>
 
   <!-- Modal -->
-  <SolidColorBrush x:Key="FondoPanelModal" Color="#292424c0"/>
+  <SolidColorBrush x:Key="FondoPanelModal" Color="#9C131315"/>
   <SolidColorBrush x:Key="FondoModal" Color="#fffcfc"/>
   <SolidColorBrush x:Key="BorderModal" Color="#615fb368"/>
 

@@ -1,0 +1,26 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Style Selector="TextBox">
+    <!-- 1. Colores en estado normal -->
+    <Setter Property="Background" Value="{DynamicResource FondoPrincipal}" />
+    <Setter Property="Foreground" Value="{DynamicResource TextoColor}" />
+    <Setter Property="BorderBrush" Value="#2D3139" />
+    <Setter Property="CaretBrush" Value="White" /> <!-- Color de la barrita que parpadea -->
+
+    <Style.Resources>
+      <!-- 2. SOBREESCRITURA DE RECURSOS CLAVE (Aquí se soluciona el problema) -->
+
+      <!-- Pinceles para cuando el puntero está encima (PointerOver) -->
+      <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#488B9A9A" />
+      <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#4A8A9898" />
+      <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#27377D" />
+
+      <!-- Pinceles para cuando estás escribiendo (Focused / Enfoque) -->
+      <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#26838D8D" /> <!-- Evita que se ponga negro plano si no quieres -->
+      <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#2B00FFFF" />    <!-- 🚨 FUERZA EL TEXTO A BLANCO AL ESCRIBIR -->
+      <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#302E78" />  <!-- Borde naranja de enfoque -->
+
+    </Style.Resources>
+  </Style>
+</Styles>

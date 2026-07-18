@@ -103,6 +103,9 @@ sealed class Program
                 services.AddTransient<ProductViewModel>();
                 services.AddSingleton<CantidadPaxViewModel>();
 
+                // modal
+                services.AddTransient<NewUserModalViewModel>();
+
                 // global states
                 services.AddScoped<TableState>();
 
@@ -119,6 +122,7 @@ sealed class Program
                 services.AddScoped<GetAllCatalogoUseCase>();
                 services.AddScoped<GetCatalogoXIdProdUseCase>();
                 services.AddScoped<GetAllProductUseCase>();
+                services.AddScoped<InsertProductUseCase>();
 
 
                 // signalR

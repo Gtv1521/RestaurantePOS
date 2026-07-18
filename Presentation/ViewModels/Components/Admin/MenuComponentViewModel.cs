@@ -23,6 +23,7 @@ namespace MiComanderaApp.ViewModels.Components.Admin;
 public partial class MenuComponentViewModel : ViewModelBase
 {
     private readonly IViewModelFactory _factory;
+    private readonly INavigationService _navigation;
     private readonly IDialogService _dialogService;
     private readonly GetAllProductUseCase _repo;
     private readonly GetAllCatalogoUseCase _categorias;
@@ -36,12 +37,14 @@ public partial class MenuComponentViewModel : ViewModelBase
         IViewModelFactory factory,
         IDialogService dialogService,
         GetAllCatalogoUseCase categorias,
+        INavigationService navigation,
         GetCatalogoXIdProdUseCase oneCategoria,
         GetAllProductUseCase repo
         )
     {
         _factory = factory;
         _repo = repo;
+        _navigation = navigation;
         _prodXIdCat = oneCategoria;
         _dialogService = dialogService;
         _categorias = categorias;
@@ -88,17 +91,22 @@ public partial class MenuComponentViewModel : ViewModelBase
     [RelayCommand]
     private async Task NuevoProducto()
     {
-        var producto =
-        await _dialogService
-        .ShowDialogAsync<CreateProduct, CreateProductViewModel, ProductoRequest>(
-            new PixelPoint(250, 30)
-            );
+        // var producto =
+        // await _dialogService
+        // .ShowDialogAsync<CreateProduct, CreateProductViewModel, ProductoRequest>(
+        //     new PixelPoint(250, 30)
+        //     );
 
-        if (producto != null)
-        {
+        // if (producto != null)
+        // {
 
-            System.Console.WriteLine(producto);
-        }
+        //     System.Console.WriteLine(producto);
+        // }
+
+        var vm = _factory.Create<NewUserModalViewModel>();
+
+        _navigation.ShowOverlay(vm);
+
     }
 
 }

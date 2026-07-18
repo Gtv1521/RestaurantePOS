@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MiComanderaApp.Interfaces;
@@ -13,12 +14,15 @@ public partial class CantidadPaxViewModel : ViewModelBase
     private readonly IViewModelFactory _factory;
 
 
-    [ObservableProperty]
-    private int _mesa;
+    [ObservableProperty] private int _mesa;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(AceptarCommand))]
     private string _cantidadPax = string.Empty;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Title))]
+    private bool _newMesa = false;
 
     public CantidadPaxViewModel(INavigationService navigationService, IViewModelFactory factory)
     {
@@ -29,6 +33,10 @@ public partial class CantidadPaxViewModel : ViewModelBase
     public void Initialize(int table)
     {
         Mesa = table;
+    }
+    public void State(bool openTable)
+    {
+        NewMesa = openTable;
     }
 
     [RelayCommand]
@@ -61,11 +69,26 @@ public partial class CantidadPaxViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(CanAccept))]
     private void Aceptar()
     {
-        var vm = _factory.Create<DataTableViewModel>();
-        vm.Initialize(Mesa, int.Parse(CantidadPax));
-        _navigationService.NavigateTo(vm);
-        CantidadPax = string.Empty;
+        if (!NewMesa)
+        {
+            var vm = _factory.Create<CantidadPaxViewModel>();
+            vm.Initialize(int.Parse(CantidadPax));
+            vm.State(true);
+            _navigationService.NavigateTo(vm);
+            CantidadPax = string.Empty;
+
+        }
+        else
+        {
+            var vm = _factory.Create<DataTableViewModel>();
+            vm.Initialize(Mesa, int.Parse(CantidadPax));
+            _navigationService.NavigateTo(vm);
+            CantidadPax = string.Empty;
+
+        }
+
     }
 
     private bool CanAccept() => !string.IsNullOrEmpty(CantidadPax) && CantidadPax != "0";
+    public string Title => NewMesa == false ? "Digite numero de mesa" : "Digite cantidad de pax";
 }
