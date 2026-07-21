@@ -15,9 +15,6 @@ namespace MiComanderaApp.Core.Infrastructure.Api
 {
     public class TablesRepository : ISingleCrud<TableModel, TableRequest>
     {
-<<<<<<< HEAD
-        public Task<string?> CreateAsync(TableRequest data)
-=======
         private readonly HttpClient _httpClient;
         private readonly string _url;
 
@@ -28,7 +25,6 @@ namespace MiComanderaApp.Core.Infrastructure.Api
         }
 
         public Task<string> CreateAsync(TableRequest data)
->>>>>>> origin/Gustavo
         {
             throw new NotImplementedException();
         }

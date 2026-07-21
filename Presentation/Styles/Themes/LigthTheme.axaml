@@ -25,12 +25,7 @@
   <SolidColorBrush x:Key="BotonCeleste" Color="#99C0F3"/>
   <SolidColorBrush x:Key="BotonGreen" Color="#D060BC65"/>
   <SolidColorBrush x:Key="BotonAdd" Color="#D060BC65" />
-<<<<<<< HEAD
-  <SolidColorBrush x:Key="BotonDelete" Color="#641111be" />
-  <SolidColorBrush x:Key="BotonTextWhite" Color="#f7f6f6f3" />
-=======
   <SolidColorBrush x:Key="BotonText" Color="#F7000000" />
->>>>>>> origin/Gustavo
 
   <SolidColorBrush x:Key="Border" Color="#D0687168"/>
 

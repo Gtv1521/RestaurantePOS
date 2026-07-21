@@ -22,12 +22,8 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             _httpClient = httpClientFactory.CreateClient("MiComanderaApi");
             _url = $"{apiSettings.Value.BaseUrl}/api/Product";
         }
-<<<<<<< HEAD
-        public async Task<string?> CreateAsync(ProductoRequest data)
-=======
 
         public async Task<string> CreateAsync(ProductoRequest data)
->>>>>>> origin/Gustavo
         {
             var response = await _httpClient.PostAsJsonAsync($"{_url}", data);
             if (!response.IsSuccessStatusCode)

@@ -15,6 +15,8 @@ namespace MiComanderaApp.Core.Application.Request
         public bool IsAvailable { get; set; }
         public string ImageUrl { get; set; } = "";
         public string CategoryName { get; set; } = "";
+        public int CategoryId { get; set; }
+    
 
     }
 }
