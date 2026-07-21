@@ -1,18 +1,26 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="MiComanderaApp.App"
              xmlns:local="using:MiComanderaApp.Services.Routing"
-             RequestedThemeVariant="Light">
-    
+             xmlns:vm="using:MiComanderaApp.ViewModels"
+             x:Class="MiComanderaApp.App">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://MiComanderaApp/Presentation/Styles/DataTemplates.axaml" />
+                <ResourceInclude Source="avares://MiComanderaApp/Presentation/Styles/Themes/DarkTheme.axaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+
     <Application.DataTemplates>
         <local:ViewLocator />
     </Application.DataTemplates>
 
     <Application.Styles>
         <FluentTheme />
-        
-        <!-- Incluir los estilos y recursos del tema -->
-        <StyleInclude Source="avares://MiComanderaApp/Styles/NaviTheme.axaml"/>
+        <StyleInclude Source="avares://MiComanderaApp/Presentation/Styles/Partes/TextBoxStyles.axaml"/>
+        <StyleInclude Source="avares://MiComanderaApp/Presentation/Styles/NaviTheme.axaml"/>
     </Application.Styles>
-    
+
 </Application>

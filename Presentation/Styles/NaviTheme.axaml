@@ -1,0 +1,208 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:components="using:MiComanderaApp.Views.Components"
+        xmlns:vm="using:MiComanderaApp.ViewModels">
+
+    <Styles.Resources>
+        <!-- ================= COLORES DEL TEMA ================= -->
+        <!-- Fondo principal -->
+        <SolidColorBrush x:Key="BackgroundLigth" Color="#F0F2F5"/>
+        <SolidColorBrush x:Key="BackgroundDark" Color="#1D4889"/>
+        <SolidColorBrush x:Key="BackgroundBlue" Color="#1E2939"/>
+
+        <SolidColorBrush x:Key="PosSurface" Color="#FFA3C5ED"/>
+
+        <!-- Azul - Acciones principales -->
+        <SolidColorBrush x:Key="PosBlueText" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="PosBlueBg" Color="#2563EB"/>
+        <SolidColorBrush x:Key="PosBlueHover" Color="#1D4ED8"/>
+        <SolidColorBrush x:Key="PosBluePressed" Color="#1E40AF"/>
+
+        <!-- Verde - Confirmaciones, mesas disponibles -->
+        <SolidColorBrush x:Key="PosGreenText" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="PosGreenBg" Color="#059669"/>
+        <SolidColorBrush x:Key="PosGreenHover" Color="#124638"/>
+        <SolidColorBrush x:Key="PosGreenPressed" Color="#065F46"/>
+
+        <!-- Rojo - Peligro, salir, mesas ocupadas -->
+        <SolidColorBrush x:Key="PosRedText" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="PosRedBg" Color="#DC2626"/>
+        <SolidColorBrush x:Key="PosRedHover" Color="#B91C1C"/>
+        <SolidColorBrush x:Key="PosRedPressed" Color="#991B1B"/>
+
+        <!-- Gris - Acciones secundarias -->
+        <SolidColorBrush x:Key="PosGrayText" Color="#FF080505"/>
+        <SolidColorBrush x:Key="PosGrayBg" Color="#6B7280"/>
+        <SolidColorBrush x:Key="PosGrayHover" Color="#616E81"/> <!--  Aqui movi -->
+        <SolidColorBrush x:Key="PosGrayPressed" Color="#374151"/>
+
+        <!-- Naranja - Mesas con pedido pendiente -->
+        <SolidColorBrush x:Key="PosOrangeText" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="PosOrangeBg" Color="#EA580C"/>
+        <SolidColorBrush x:Key="PosOrangeHover" Color="#C2410C"/>
+        <SolidColorBrush x:Key="PosOrangePressed" Color="#9A3412"/>
+
+        <!-- Colores para estados de mesa -->
+        <SolidColorBrush x:Key="MesaDisponible" Color="#10B981"/>
+        <SolidColorBrush x:Key="MesaOcupada" Color="#EF4444"/>
+        <SolidColorBrush x:Key="MesaPendiente" Color="#F59E0B"/>
+        <SolidColorBrush x:Key="MesaReservada" Color="#6366F1"/>
+    </Styles.Resources>
+
+    <!-- ================= ESTILOS BASE ================= -->
+    <Style Selector="Button.btn-azul, Button.btn-verde, Button.btn-rojo, Button.btn-gris, Button.btn-naranja">
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="CornerRadius" Value="15"/>
+        <!-- <Setter Property="Height" Value="44"/> -->
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="FontSize" Value="17"/>
+        <Setter Property="Padding" Value="16,0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+
+    <!-- ================= BOTÓN AZUL ================= -->
+    <Style Selector="Button.btn-azul">
+        <Setter Property="Background" Value="{DynamicResource BotonCeleste}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextBotton}"/>
+    </Style>
+    <Style Selector="Button.btn-azul:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{StaticResource PosBlueHover}"/>
+    </Style>
+    <Style Selector="Button.btn-azul:pressed">
+        <Setter Property="Background" Value="{StaticResource PosBluePressed}"/>
+    </Style>
+
+    <!-- ================= BOTÓN VERDE ================= -->
+    <Style Selector="Button.btn-verde">
+        <Setter Property="Background" Value="{DynamicResource BotonGreen}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextBotton}"/>
+    </Style>
+    <Style Selector="Button.btn-verde:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{StaticResource PosGreenHover}"/>
+    </Style>
+    <Style Selector="Button.btn-verde:pressed">
+        <Setter Property="Background" Value="{StaticResource PosGreenPressed}"/>
+    </Style>
+
+    <!-- ================= BOTÓN ROJO ================= -->
+    <Style Selector="Button.btn-rojo">
+        <Setter Property="Background" Value="{StaticResource PosRedBg}"/>
+        <Setter Property="Foreground" Value="{StaticResource TextBotton}"/>
+    </Style>
+    <Style Selector="Button.btn-rojo:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{StaticResource PosRedHover}"/>
+    </Style>
+    <Style Selector="Button.btn-rojo:pressed">
+        <Setter Property="Background" Value="{StaticResource PosRedPressed}"/>
+    </Style>
+
+    <!-- ================= BOTÓN GRIS ================= -->
+    <Style Selector="Button.btn-gris">
+        <Setter Property="Background" Value="{StaticResource PosGrayBg}"/>
+        <Setter Property="Foreground" Value="{StaticResource TextBotton}"/>
+    </Style>
+    <Style Selector="Button.btn-gris:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{StaticResource PosGrayHover}"/>
+    </Style>
+    <Style Selector="Button.btn-gris:pressed">
+        <Setter Property="Background" Value="{StaticResource PosGrayPressed}"/>
+    </Style>
+
+    <!-- ================= BOTÓN NARANJA ================= -->
+    <Style Selector="Button.btn-naranja">
+        <Setter Property="Background" Value="{StaticResource PosOrangeBg}"/>
+        <Setter Property="Foreground" Value="{StaticResource PosOrangeText}"/>
+    </Style>
+    <Style Selector="Button.btn-naranja:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{StaticResource PosOrangeHover}"/>
+    </Style>
+    <Style Selector="Button.btn-naranja:pressed">
+        <Setter Property="Background" Value="{StaticResource PosOrangePressed}"/>
+    </Style>
+
+
+    <Style Selector="Button.NavBtn">
+        <Setter Property="Background" Value="#1A202C"/>
+        <Setter Property="Foreground" Value="{DynamicResource Subtitle}"/>
+        <Setter Property="Padding" Value="16,10"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+    </Style>
+    <Style Selector="Button.NavBtn:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{StaticResource PosOrangeHover}"/>
+    </Style>
+    <Style Selector="Button.NavBtn:pressed">
+        <Setter Property="Background" Value="{StaticResource PosOrangePressed}"/>
+    </Style>
+
+    <Style Selector="Button.NavBtn.Active">
+        <Setter Property="Background" Value="#32221A"/>
+        <Setter Property="Foreground" Value="#E06A28"/>
+        <Setter Property="BorderBrush" Value="#E06A28"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+
+    <!-- ================= Botones de teclado ================= -->
+    <Style Selector="Button.KeypadBtn">
+        <Setter Property="Background" Value="{DynamicResource NumBotton}"/>
+        <Setter Property="Foreground" Value="{DynamicResource BotonText}"/>
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="CornerRadius" Value="14"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.12"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.KeypadBtn:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#D2D6DC"/>
+        <Setter Property="TextBlock.Foreground" Value="#1A202C"/>
+    </Style>
+
+
+    <!-- valores de teclado -->
+
+    <Style Selector="Button.key">
+
+        <Setter Property="Height" Value="45"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Background" Value="{DynamicResource FondoInput}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextoBrush}"/>
+
+    </Style>
+
+
+    <Style Selector="Button.key:pointerover">
+
+        <Setter Property="Background" Value="#E65100"/>
+        <Setter Property="Foreground" Value="White"/>
+
+    </Style>
+
+
+    <Style Selector="Button.key-enter">
+
+        <Setter Property="Height" Value="45"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Background" Value="#4CAF50"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+
+    </Style>
+
+</Styles>

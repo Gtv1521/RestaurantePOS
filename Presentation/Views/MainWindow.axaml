@@ -1,0 +1,40 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MiComanderaApp.ViewModels"
+        xmlns:vmOrder="using:MiComanderaApp.ViewModels.Orders"
+        xmlns:vOrder="using:MiComanderaApp.Views.Orders"
+        xmlns:vmLogin="using:MiComanderaApp.ViewModels"
+        xmlns:vLogin="using:MiComanderaApp.Views"
+        x:Class="MiComanderaApp.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        WindowState="Maximized"
+        x:DataType="vm:MainWindowViewModel">    
+
+
+
+     <Grid>
+        <!-- Contenedor principal con animación -->
+        <Grid>
+            <!-- Tu navegación con animación -->
+            <TransitioningContentControl 
+                Content="{Binding Navigation.CurrentView}">
+                <TransitioningContentControl.PageTransition>
+                    <CrossFade Duration="0:0:0.25" />
+                </TransitioningContentControl.PageTransition>
+            </TransitioningContentControl>
+
+            <!-- Overlay (modal flotante) -->
+            <ContentControl 
+                Content="{Binding Navigation.OverlayView}"
+                IsVisible="{Binding Navigation.IsOverlayVisible}"/>
+        </Grid>
+    </Grid>
+
+<!-- 
+    <TransitioningContentControl Content="{Binding Navigation.CurrentView}">
+        <TransitioningContentControl.PageTransition>
+            <CrossFade Duration="0:0:0.25" />
+        </TransitioningContentControl.PageTransition>
+    </TransitioningContentControl>
+-->
+</Window>

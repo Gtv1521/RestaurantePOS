@@ -1,0 +1,185 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="using:System"
+                    xmlns:vm="using:MiComanderaApp.ViewModels"
+                    xmlns:i="using:Projektanker.Icons.Avalonia"
+                    xmlns:models="using:MiComanderaApp.Models"
+                    xmlns:vmProduct="using:MiComanderaApp.ViewModels.Components.Admin"
+                    >
+
+
+    <DataTemplate x:Key="MesaTemplate" DataType="{x:Type vm:TableViewModel}">
+        <Border Width="150"
+                Height="130"
+                Margin="10"
+                CornerRadius="16"
+                BorderBrush="#AE9D9D"
+                BorderThickness="1"
+                Background="{Binding Status, Converter={x:Static vm:TableViewModel.StatusToClassConverter}, FallbackValue=#E6F4EA}">
+
+            <Button HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    BorderThickness="0"
+                    CornerRadius="16"
+                    Padding="0"
+                    Background="Transparent"
+                    Cursor="Hand"
+                    Command="{Binding OpenTableCommand}">
+
+                <Button.Styles>
+                    <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+                        <Setter Property="Background" Value="#69634965" />
+                    </Style>
+                    <Style Selector="Button:pressed /template/ ContentPresenter#PART_ContentPresenter">
+                        <Setter Property="Background" Value="#0F000000" />
+                    </Style>
+                </Button.Styles>
+
+                <Grid RowDefinitions="Auto,*">
+                    <Border Grid.Row="0" Height="4" CornerRadius="2" Margin="20,8,20,0" Background="#34A853"/>
+
+                    <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="2">
+                        <TextBlock Text="MESA" HorizontalAlignment="Center" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource PosGrayText}" Opacity="0.6" LetterSpacing="2.5" />
+                        <TextBlock Text="{Binding TableNumber}" HorizontalAlignment="Center" FontSize="38" FontWeight="Bold" Foreground="#1A202C" />
+                    </StackPanel>
+                </Grid>
+            </Button>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate x:Key="AllMesaTemplate" DataType="{x:Type vm:TableViewModel}">
+        <Border Width="90" Height="90" Margin="6" CornerRadius="12" BorderThickness="1" BorderBrush="#E2E8F0">
+            
+            <Border.Tag>
+                <Binding Path="Status" Converter="{x:Static vm:TableViewModel.StatusToClassConverter}"/>
+            </Border.Tag>
+
+            <Border.Styles>
+                <Style Selector="Border[Tag=available]"><Setter Property="Background" Value="#34AA55" /></Style>
+                <Style Selector="Border[Tag=occupied]"><Setter Property="Background" Value="#2B6CB0" /></Style>
+                <Style Selector="Border[Tag=reserved]"><Setter Property="Background" Value="#ED8936" /></Style>
+            </Border.Styles>
+                
+            <Button HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    BorderThickness="0"
+                    CornerRadius="12"
+                    Padding="0"
+                    Background="Transparent"
+                    Cursor="Hand"
+                    Command="{Binding OpenTableCommand}"> 
+
+                <Button.Styles>
+                    <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+                        <Setter Property="Background" Value="Transparent" />
+                    </Style>
+                    <Style Selector="Button:pressed /template/ ContentPresenter#PART_ContentPresenter">
+                        <Setter Property="Background" Value="#B05B5463" />
+                    </Style>
+                </Button.Styles>
+
+                <Grid RowDefinitions="Auto,*">
+
+                    <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="2">
+                        <TextBlock Text="Mesa"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="16"
+                                   Foreground="#1A202C" />
+
+                        <TextBlock Text="{Binding TableNumber}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="32"
+                                   FontWeight="Black"
+                                   Foreground="#1A202C" />
+                    </StackPanel>
+                </Grid>
+            </Button>
+        </Border>
+    </DataTemplate>
+
+
+    <DataTemplate x:Key="ShowProducts" DataType="{x:Type models:ProductoModel}">
+    <Border Background="{DynamicResource FondoTarjeta}" Width="300" MaxHeight="260" CornerRadius="12" ClipToBounds="True" Margin="5" >
+        <Grid RowDefinitions="110,*">
+            
+            <Grid Grid.Row="0">
+                <Image Source="{Binding ImageUrl}" Stretch="UniformToFill"/>
+                
+                <Border Background="#15000000"/>
+
+                <Border Background="{DynamicResource Estadistica}" 
+                        CornerRadius="4" 
+                        HorizontalAlignment="Left" 
+                        VerticalAlignment="Top" 
+                        Margin="12" 
+                        Padding="8,4">
+                    <TextBlock Text="{Binding CategoryName}" Foreground="{DynamicResource TextoColor}" FontSize="13" FontWeight="Bold"/>
+                </Border>
+
+                <Border Background="{DynamicResource NumBotton}" 
+                        CornerRadius="4" 
+                        HorizontalAlignment="Right" 
+                        VerticalAlignment="Top" 
+                        Margin="12" 
+                        Padding="6,4">
+                    <TextBlock Text="{Binding IsAvailable}" Foreground="{DynamicResource TextoColor}" FontSize="11" FontWeight="Bold"/>
+                </Border>
+            </Grid>
+
+            <Border Grid.Row="1" Padding="15,12" Grid.RowSpan="2">
+                <Grid RowDefinitions="Auto,Auto,Auto">
+                    
+                    <TextBlock Grid.Row="0" 
+                               Text="{Binding Name}" 
+                               Foreground="{DynamicResource TextoColor}" 
+                               FontSize="15" 
+                               FontWeight="SemiBold" 
+                               />
+                               <!-- TextTrimming="CharacterEllipsis" -->
+
+                    <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Margin="0,1,0,10">
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="4">
+                            <TextBlock Text="S/" Foreground="{DynamicResource Estadistica}" FontSize="15" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Price, StringFormat='{}{0:N2}'}" Foreground="{DynamicResource Estadistica}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding TaxPercentage, StringFormat='{}IVA {0}%'}" Foreground="#4F5E67" FontSize="11"/>
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <i:Icon Value="fa-solid fa-print" Foreground="{DynamicResource TextoColor}" FontSize="11"/>
+                                <TextBlock Text="{Binding Description}" Foreground="#4F5E67" FontSize="11"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid Grid.Row="2" ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <Button Grid.Column="0" 
+                                Background="#222B36" 
+                                Height="32"
+                                HorizontalAlignment="Stretch" 
+                                HorizontalContentAlignment="Center" 
+                                VerticalContentAlignment="Center"
+                                CornerRadius="6">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <i:Icon Value="fa-solid fa-pen" Foreground="{DynamicResource BotonTextWhite}" FontSize="12"/>
+                                <TextBlock Text="Editar" Foreground="{DynamicResource BotonText}" FontSize="13" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Grid.Column="1" 
+                                Background="{DynamicResource BotonDelete}" 
+                                Width="35" Height="32"
+                                HorizontalContentAlignment="Center" 
+                                VerticalContentAlignment="Center"
+                                CornerRadius="6">
+                            <i:Icon Value="fa-solid fa-trash" Foreground="#c91815" FontSize="12"/>
+                        </Button>
+                    </Grid> </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</DataTemplate>
+
+</ResourceDictionary>

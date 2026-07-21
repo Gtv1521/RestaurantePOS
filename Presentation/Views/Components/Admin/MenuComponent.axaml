@@ -1,0 +1,98 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:MiComanderaApp.ViewModels.Components.Admin"
+             xmlns:i="using:Projektanker.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MiComanderaApp.Views.Components.Admin.MenuComponent"
+             x:DataType="vm:MenuComponentViewModel"
+             x:Name="Root">
+
+
+  <Grid RowDefinitions="Auto,Auto,*" Margin="24">
+
+    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,20">
+      <TextBlock Grid.Column="0"
+                 Text="Configurador de Menú"
+                 Foreground="{DynamicResource TextoColor}"
+                 FontSize="20"
+                 FontWeight="SemiBold"
+                 VerticalAlignment="Center"/>
+
+      <Button Grid.Column="1"
+              Background="#E06A28"
+              Padding="16,8"
+              CornerRadius="6"
+              Command="{Binding NuevoProductoCommand}">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <i:Icon Value="fa-solid fa-plus" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
+          <TextBlock Text="Nuevo ítem" Foreground="White" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+        </StackPanel>
+      </Button>
+    </Grid>
+
+    <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10" Margin="0,0,0,25">
+      <StackPanel.Styles>
+        <Style Selector="Button">
+          <Setter Property="Background" Value="#1A202C"/>
+          <Setter Property="Foreground" Value="#5F6E77"/>
+          <Setter Property="Padding" Value="14,6"/>
+          <Setter Property="FontSize" Value="13"/>
+          <Setter Property="CornerRadius" Value="6"/>
+        </Style>
+        <Style Selector="Button.Active">
+          <Setter Property="Background" Value="#32221A"/>
+          <Setter Property="Foreground" Value="#E06A28"/>
+          <Setter Property="BorderBrush" Value="#E06A28"/>
+          <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+      </StackPanel.Styles>
+
+      <Button Content="Todas" Classes="Active" Command="{Binding #Root.DataContext.LoadProductsCommand}"/>
+      <ItemsControl ItemsSource="{Binding Categorias}"
+                    HorizontalAlignment="Right">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Orientation="Horizontal" Spacing="10"/>
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <Button Content="{Binding Name}"
+                    Classes="Botton"
+
+                    Command="{Binding #Root.DataContext.ChangeCatalogoCommand}"
+                    CommandParameter="{Binding Id}"
+                    />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+
+
+      <Button Content="+"/>
+    </StackPanel>
+
+
+    <Grid Grid.Row="2">
+
+      <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                    VerticalScrollBarVisibility="Auto">
+
+        <ItemsControl ItemsSource="{Binding Products}"
+                      ItemTemplate="{StaticResource ShowProducts}">
+
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel Orientation="Horizontal"/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+        </ItemsControl>
+
+      </ScrollViewer>
+
+    </Grid>
+  </Grid>
+</UserControl>

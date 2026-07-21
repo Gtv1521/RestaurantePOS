@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MiComanderaApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9a04cfd452f9533fc262fcb05f0c0e226bd4842d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a9f34f6231e23932d82beba2a4d5d8cee2ae752f")]
 [assembly: System.Reflection.AssemblyProductAttribute("MiComanderaApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MiComanderaApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

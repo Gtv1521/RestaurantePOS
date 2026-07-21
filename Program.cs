@@ -9,10 +9,35 @@ using Avalonia.ReactiveUI;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Services.Routing;
 using MiComanderaApp.Models;
-using MiComanderaApp.Services.Conections;
 using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using System.IO;
+using Projektanker.Icons.Avalonia;
+using Projektanker.Icons.Avalonia.FontAwesome;
+using MiComanderaApp.ViewModels.Mesas;
+using MiComanderaApp.Services.Factorys;
+using MiComanderaApp.ViewModels.Components;
+using MiComanderaApp.Views.Routes;
+using MiComanderaApp.ViewModels.Routes;
+using MiComanderaApp.ViewModels.Components.Admin;
+using MiComanderaApp.ViewModels.Components.Products;
+using MiComanderaApp.Infrastructure.Api;
+using MiComanderaApp.Core.Infrastructure.SignalR;
+using LiveChartsCore.Drawing.Segments;
+using MiComanderaApp.Core.Infrastructure.SignalR.Events;
+using MiComanderaApp.Core.Domain.Interfaces;
+using MiComanderaApp.Core.Application.UseCases.Session;
+using MiComanderaApp.Core.Application.UseCases.Catalogo;
+using MiComanderaApp.Core.Infrastructure.Api;
+using MiComanderaApp.Core.Application.Request;
+using MiComanderaApp.Core.Domain.Models;
+using System.Net;
+using Microsoft.Extensions.Options;
+using MiComanderaApp.Presentation.States;
+using MiComanderaApp.Views;
+using MiComanderaApp.Presentation.Views.Dialogs.Modals;
+using MiComanderaApp.Presentation.Services;
+using MiComanderaApp.Core.Application.UseCases.Product;
 
 namespace MiComanderaApp;
 
@@ -36,22 +61,81 @@ sealed class Program
             })
             .ConfigureServices((hostContext, services) =>
             {
+                services.AddSingleton<IViewModelFactory, ViewModelFactory>();
                 services.Configure<ApiSettings>(hostContext.Configuration.GetSection("ApiSettings"));
                 services.AddSingleton<Func<Type, ViewModelBase>>(provider =>
                     type => (ViewModelBase)provider.GetRequiredService(type));
+
+                services.AddSingleton(sp =>
+                {
+                    var cookies = new CookieContainer();
+                    var handler = new HttpClientHandler
+                    {
+                        CookieContainer = cookies,
+                        UseCookies = true
+                    };
+
+                    var settings = sp.GetRequiredService<IOptions<ApiSettings>>().Value;
+
+                    return new HttpClient(handler)
+                    {
+                        BaseAddress = new Uri(settings.BaseUrl)
+                    };
+                });
+
+                services.AddSingleton<IWindowProvider, WindowProvider>();
+                services.AddSingleton<IDialogService, DialogService>();
                 services.AddSingleton<INavigationService, NavigationService>();
 
                 // 🖥️ 2. Ventana principal
                 services.AddSingleton<MainWindowViewModel>();
                 services.AddSingleton<LoginViewModel>();
+                services.AddSingleton<AdminDashboardViewModel>();
 
                 services.AddTransient<TablesViewModel>();
+                services.AddTransient<TableViewModel>();
                 services.AddTransient<NewOrderViewModel>();
+                services.AddTransient<DataTableViewModel>();
+                services.AddTransient<ActiveTablesComponentViewModel>();
+                services.AddTransient<AllTablesComponentViewModel>();
+                services.AddTransient<EstadisticasComponentViewModel>();
+                services.AddTransient<MenuComponentViewModel>();
+                services.AddTransient<ProductViewModel>();
+                services.AddSingleton<CantidadPaxViewModel>();
+
+                // modal
+                services.AddTransient<NewUserModalViewModel>();
+
+                // global states
+                services.AddScoped<TableState>();
 
                 // 🖥️ 3. Servicios
                 services.AddSingleton<HttpClient>();
                 services.AddScoped<ISession<SessionModel>, SessionService>();
+                services.AddScoped<IMultipleCrud<CatalogoModel, CatalogoRequest>, CatalogoRepository>();
+                services.AddScoped<IMultipleCrud<ProductoModel, ProductoRequest>, ProductoRepository>();
+                services.AddScoped<IGetList<ProductoModel>, ProductoRepository>();
+                services.AddScoped<ISingleCrud<TableModel, TableRequest>, TablesRepository>();
 
+                // usescases 
+                services.AddScoped<GetSessionSave>();
+                services.AddScoped<GetAllCatalogoUseCase>();
+                services.AddScoped<GetCatalogoXIdProdUseCase>();
+                services.AddScoped<GetAllProductUseCase>();
+                services.AddScoped<InsertProductUseCase>();
+
+
+                // signalR
+                services.AddSingleton<SignalRService>();
+                services.AddSingleton<SignalREventRegistry>();
+                services.AddScoped<ISignalREventHandler, OrderEvents>();
+                services.AddScoped<ISignalREventHandler, TablesEvents>();
+
+
+                services.AddSingleton<MainWindow>();
+                services.AddTransient<CreateProductViewModel>();
+                services.AddTransient<CreateProduct>();
+                services.AddSingleton<IDialogService, DialogService>();
             })
             .Build();
 
@@ -63,7 +147,11 @@ sealed class Program
     }
 
     public static AppBuilder BuildAvaloniaApp()
-    => AppBuilder.Configure<App>()
+    {
+        IconProvider.Current.Register<FontAwesomeIconProvider>();
+
+        return AppBuilder.Configure<App>()
         .UsePlatformDetect()
         .LogToTrace();
+    }
 }
