@@ -2,7 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using DynamicData;
+using MiComanderaApp.Core.Application.Request;
+using MiComanderaApp.Core.Application.UseCases.Session;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
 
@@ -11,32 +15,30 @@ namespace MiComanderaApp.ViewModels.Components;
 public partial class ActiveTablesComponentViewModel : ViewModelBase
 {
     private readonly IViewModelFactory _factory;
-    public ObservableCollection<TableViewModel> Tables { get; } = new();
+    private readonly ISingleCrud<TableModel, TableRequest> _allTbles;
+    private readonly GetSessionSave _userSesion;
 
-    public ActiveTablesComponentViewModel(IViewModelFactory factory)
+
+    public ObservableCollection<TableModel> Tables { get; } = new();
+
+    public ActiveTablesComponentViewModel(
+        IViewModelFactory factory,
+        ISingleCrud<TableModel, TableRequest> allTbles,
+        GetSessionSave userSesion
+        )
     {
         _factory = factory;
-        // Simulación de datos de ejemplo
-        var allTables = new List<TableModel>
-        {
-            new TableModel { TableNumber = 1, Status = TableStatus.Ocupada },
-            new TableModel { TableNumber = 2, Status = TableStatus.Disponible },
-            new TableModel { TableNumber = 3, Status = TableStatus.Ocupada },
-            new TableModel { TableNumber = 4, Status = TableStatus.Ocupada },
-            new TableModel { TableNumber = 5, Status = TableStatus.Ocupada }
-        };
+        _userSesion = userSesion;
+        _allTbles = allTbles;
+        _ = LoadTables();
+    }
 
-        // Filtrar solo las mesas activas (Ocupadas o Reservadas)
-        foreach (var table in allTables)
+    private async Task LoadTables()
+    {
+        var response = await _allTbles.GetAllAsync(_userSesion.Execute().UserId.ToString(), 1, 40);
+        foreach (var table in response)
         {
-            if (table.Status == TableStatus.Ocupada || table.Status == TableStatus.Reservada)
-            {
-                var tableVm = _factory.Create<TableViewModel>();
-                tableVm.Initialize(table);
-
-                Tables.Add(tableVm);
-                // 🚀 SOLUCIÓN: Le pasamos 'table' directamente entre los paréntesis
-            }
+            Tables.Add(table);
         }
     }
 }

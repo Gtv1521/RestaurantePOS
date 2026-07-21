@@ -3,6 +3,9 @@
 
   <SolidColorBrush x:Key="FondoPrincipal" Color="#04071B"/>
   <SolidColorBrush x:Key="FondoTarjeta" Color="#970E2A48"/>
+  <SolidColorBrush x:Key="PanelName" Color="#2BA09EBC"/>
+  <SolidColorBrush x:Key="Name" Color="#F6E2C013"/>
+
   <SolidColorBrush x:Key="TextoColor" Color="#DCE3E9"/>
   <SolidColorBrush x:Key="TextoBrush" Color="#0D1B2A"/>
   <SolidColorBrush x:Key="Resalto" Color="#98A2B3"/>
@@ -12,14 +15,26 @@
   <!-- Teclado -->
   <SolidColorBrush x:Key="NumBotton" Color="#2BAFBFD0"/>
   <SolidColorBrush x:Key="SaveBotton" Color="#F7E1E7EC"/>
+<<<<<<< HEAD
   <SolidColorBrush x:Key="TextBotton" Color="#FAF2F3F6"/>
+=======
+>>>>>>> origin/Gustavo
 
   <!-- Botones  -->
+  <SolidColorBrush x:Key="BorderEditar" Color="#222B36"/> <!-- Boton de editar menu -->
+  <SolidColorBrush x:Key="BotonDelete" Color="#932D2D30" />
+
   <SolidColorBrush x:Key="BotonCeleste" Color="#99C0F3"/>
   <SolidColorBrush x:Key="BotonGreen" Color="#D060BC65"/>
   <SolidColorBrush x:Key="BotonAdd" Color="#D060BC65" />
+<<<<<<< HEAD
   <SolidColorBrush x:Key="BotonDelete" Color="#641111be" />
   <SolidColorBrush x:Key="BotonTextWhite" Color="#f7f6f6f3" />
+=======
+
+  <SolidColorBrush x:Key="BotonText" Color="#F7ECE7E7" />  <!-- texto de teclado de numeros -->
+  <SolidColorBrush x:Key="TextBotton" Color="#FA060606"/>  <!-- texto de acciones de botones -->
+>>>>>>> origin/Gustavo
 
   <SolidColorBrush x:Key="Border" Color="#D0687168"/>
 

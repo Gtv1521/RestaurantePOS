@@ -24,8 +24,8 @@ public partial class AllTablesComponentViewModel : ViewModelBase
         var openTableNumbers = new List<int> { 1, 2, 3, 4, 8, 11, 20, 23, 40 };
         var allTables = Enumerable.Range(1, 80).Select(i => new TableModel
         {
-            TableNumber = i,
-            Status = openTableNumbers.Contains(i) ? TableStatus.Ocupada : TableStatus.Disponible
+            NumeroMesa = i,
+            Estado = openTableNumbers.Contains(i) ? "Ocupada" : "Disponible"
         }).ToList();
 
         foreach (var table in allTables)

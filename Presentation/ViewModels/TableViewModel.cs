@@ -28,34 +28,36 @@ public partial class TableViewModel : ViewModelBase
         _factory = factory;
     }
 
-    [ObservableProperty] private TableStatus _status;
+    [ObservableProperty] private string _status = "Free";
     [ObservableProperty] private int _tableNumber;
     [ObservableProperty] private TableModel? _table;
+    [ObservableProperty] private string _claseEstado = "";
+
 
     public void Initialize(TableModel table)
     {
         Table = table;
-        Status = table.Status;
-        TableNumber = table.TableNumber;
+        Status = table.Estado;
+        TableNumber = table.NumeroMesa;
     }
 
-    public static readonly IValueConverter StatusToClassConverter =
-        new FuncValueConverter<TableStatus, string?>(status => status switch
-        {
-            TableStatus.Disponible => "available",
-            TableStatus.Ocupada => "occupied",
-            TableStatus.Reservada => "reserved",
-            _ => null
-        });
+    // public static readonly IValueConverter StatusToClassConverter =
+    //     new FuncValueConverter<TableStatus, string?>(status => status switch
+    //     {
+    //         TableStatus.Disponible => "available",
+    //         TableStatus.Ocupada => "occupied",
+    //         TableStatus.Reservada => "reserved",
+    //         _ => null
+    //     });
 
     [RelayCommand]
     public void OpenTable()
     {
-        if (Status == TableStatus.Ocupada)
+        if (Status == Table?.Estado)
         {
             _dataTable.DataTable = Table;
             var vm = _factory.Create<DataTableViewModel>();
-            vm.Initialize(TableNumber, Table?.Pax ?? 0);
+            vm.Initialize(TableNumber, Table?.Capacidad ?? 0);
             _navigationService.NavigateTo(vm);
         }
         else

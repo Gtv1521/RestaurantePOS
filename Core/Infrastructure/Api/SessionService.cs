@@ -18,9 +18,9 @@ namespace MiComanderaApp.Infrastructure.Api
         private readonly HttpClient _httpClient;
         private readonly string _url;
 
-        public SessionService(HttpClient httpClient, IOptions<ApiSettings> apiSettings)
+        public SessionService(IHttpClientFactory httpClientFactory, IOptions<ApiSettings> apiSettings)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClientFactory.CreateClient("MiComanderaApi");
             _url = $"{apiSettings.Value.BaseUrl}/api/Auth";
         }
 

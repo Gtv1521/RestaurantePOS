@@ -15,7 +15,7 @@
                 CornerRadius="16"
                 BorderBrush="#AE9D9D"
                 BorderThickness="1"
-                Background="{Binding Status, Converter={x:Static vm:TableViewModel.StatusToClassConverter}, FallbackValue=#E6F4EA}">
+                Background="{Binding Status}">
 
             <Button HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
@@ -51,7 +51,7 @@
         <Border Width="90" Height="90" Margin="6" CornerRadius="12" BorderThickness="1" BorderBrush="#E2E8F0">
             
             <Border.Tag>
-                <Binding Path="Status" Converter="{x:Static vm:TableViewModel.StatusToClassConverter}"/>
+                <Binding Path="Status" />
             </Border.Tag>
 
             <Border.Styles>
@@ -156,15 +156,20 @@
 
                     <Grid Grid.Row="2" ColumnDefinitions="*,Auto" ColumnSpacing="10">
                         <Button Grid.Column="0" 
-                                Background="#222B36" 
+                                Background="{DynamicResource BorderEditar}" 
                                 Height="32"
                                 HorizontalAlignment="Stretch" 
                                 HorizontalContentAlignment="Center" 
                                 VerticalContentAlignment="Center"
                                 CornerRadius="6">
                             <StackPanel Orientation="Horizontal" Spacing="6">
+<<<<<<< HEAD
                                 <i:Icon Value="fa-solid fa-pen" Foreground="{DynamicResource BotonTextWhite}" FontSize="12"/>
                                 <TextBlock Text="Editar" Foreground="{DynamicResource BotonTextWhite}" FontSize="13" FontWeight="SemiBold"/>
+=======
+                                <i:Icon Value="fa-solid fa-pen" Foreground="{DynamicResource BotonText}" FontSize="12"/>
+                                <TextBlock Text="Editar" Foreground="{DynamicResource BotonText}" FontSize="13" FontWeight="SemiBold"/>
+>>>>>>> origin/Gustavo
                             </StackPanel>
                         </Button>
 
@@ -182,4 +187,83 @@
     </Border>
 </DataTemplate>
 
+    <DataTemplate x:Key="Tables" DataType="{x:Type vm:TableViewModel}">
+
+                <!-- TARJETA DE MESA -->
+                <Button Classes="MesaCard"
+                    Background="#A2AA6C"
+                    Margin="5,5"
+                    Width="200"
+                    CornerRadius="18"
+                    Command="{Binding OpenTableCommand}"
+                    Classes.ocupada="{Binding ClaseEstado}"        
+                    Tag="{Binding}">
+                    
+                    <Grid RowDefinitions="Auto,*,Auto">
+                        
+                        <!-- Número -->
+                        <TextBlock Grid.Row="0" 
+                                   Text="{Binding TableNumber}" 
+                                   Classes="MesaNumero"/>
+                        
+                        <!-- Información -->
+                        <StackPanel Grid.Row="1" 
+                                    Spacing="2"
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Table.Capacidad}" 
+                                       Classes="MesaEstado"/>
+                            <TextBlock Text="{Binding Table.Estado}" 
+                                       Classes="MesaCliente"
+                                       IsVisible="True"/>
+                            <TextBlock Text="TiempoEspera" 
+                                       Classes="MesaTiempo"
+                                       IsVisible="True"/>
+                        </StackPanel>
+                        
+                        <!-- Acciones -->
+                        <StackPanel Grid.Row="2" 
+                                    Orientation="Horizontal" 
+                                    HorizontalAlignment="Center"
+                                    Spacing="8">
+                            <Button Classes="MesaActionButton"
+                                    Content="📝"
+                                    IsVisible="True"
+                                    />
+                            <Button Classes="MesaActionButton"
+                                    Content="➕"
+                                    IsVisible="True"
+                                    />
+                        </StackPanel>
+                    </Grid>
+                    
+                </Button>
+            </DataTemplate>
+
+
+<DropShadowEffect x:Key="SombraSuave" 
+    BlurRadius="6" 
+    OffsetX="0" 
+    OffsetY="2" 
+    Opacity="0.08"/>
+        
+        <!-- Sombra media -->
+<DropShadowEffect x:Key="SombraMedia" 
+    BlurRadius="12" 
+    OffsetX="0" 
+    OffsetY="4" 
+    Opacity="0.12"/>
+        
+        <!-- Sombra fuerte -->
+<DropShadowEffect x:Key="SombraFuerte" 
+    BlurRadius="20" 
+    OffsetX="0" 
+    OffsetY="8" 
+    Opacity="0.2"/>
+        
+        <!-- Sombra de hover para tarjetas -->
+<DropShadowEffect x:Key="SombraHover" 
+    BlurRadius="16" 
+    OffsetX="0" 
+    OffsetY="6" 
+    Opacity="0.25"/>
 </ResourceDictionary>

@@ -17,22 +17,29 @@ namespace MiComanderaApp.Core.Infrastructure.Api
     {
         private readonly HttpClient _httpClient;
         private readonly string _url;
-        public ProductoRepository(HttpClient httpClient, IOptions<ApiSettings> apiSettings)
+        public ProductoRepository(IHttpClientFactory httpClientFactory, IOptions<ApiSettings> apiSettings)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClientFactory.CreateClient("MiComanderaApi");
             _url = $"{apiSettings.Value.BaseUrl}/api/Product";
         }
+<<<<<<< HEAD
         public async Task<string?> CreateAsync(ProductoRequest data)
+=======
+
+        public async Task<string> CreateAsync(ProductoRequest data)
+>>>>>>> origin/Gustavo
         {
             var response = await _httpClient.PostAsJsonAsync($"{_url}", data);
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();
 
+                System.Console.WriteLine(error);
                 throw response.StatusCode switch
                 {
                     HttpStatusCode.BadRequest => new BadRequestException(error),
                     HttpStatusCode.NotFound => new NotFoundException(error),
+                    HttpStatusCode.Unauthorized => new UnauthorizedAccessException(error),
                     _ => new HttpRequestException(
                         $"Error {(int)response.StatusCode}: {error}")
                 };

@@ -13,8 +13,6 @@
              Background="{StaticResource FondoPrincipal}"
              FontFamily="Segoe UI, Roboto, sans-serif">
 
-
-
     <UserControl.DataTemplates>
         <DataTemplate DataType="{x:Type vmTables:AllTablesComponentViewModel}">
             <views:AllTablesComponent />
@@ -25,28 +23,198 @@
         </DataTemplate>
     </UserControl.DataTemplates>
 
+    <!-- ================================================ -->
+    <!--  ESTILOS DE TARJETAS DE MESAS                    -->
+    <!-- ================================================ -->
+    <UserControl.Styles>
 
-    <!-- ================= DISTRIBUCIÓN PRINCIPAL ================= -->
-    <Grid ColumnDefinitions="*, 280">
+        <!-- Base de tarjeta de mesa -->
+        <Style Selector="Border.MesaCard">
+            <Setter Property="Width" Value="160"/>
+            <Setter Property="Height" Value="135"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Padding" Value="16"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <!-- Sombra en Avalonia: se usa efecto de DropShadow -->
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="8"
+                                      OffsetX="0"
+                                      OffsetY="2"
+                                      Opacity="0.15"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-        <!-- Panel Izquierdo: Catálogo de Mesas -->
-        <DockPanel Grid.Column="0" Margin="1,1">
-            <Grid DockPanel.Dock="Top"
-                  Margin="8"
-                  ColumnDefinitions="*,280">
+        <!-- Hover de tarjeta -->
+        <Style Selector="Border.MesaCard:pointerover">
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="1.03" ScaleY="1.03"/>
+                        <TranslateTransform Y="-4"/>
+                    </TransformGroup>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="16"
+                                      OffsetX="0"
+                                      OffsetY="6"
+                                      Opacity="0.25"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-                <!-- Izquierda -->
+        <!-- Estado: Ocupada -->
+        <Style Selector="Border.MesaCard.Ocupada">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="#E74C3C"/>
+                        <GradientStop Offset="1" Color="#C0392B"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Estado: Libre -->
+        <Style Selector="Border.MesaCard.Libre">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="#4A90D9"/>
+                        <GradientStop Offset="1" Color="#357ABD"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Estado: Reservada -->
+        <Style Selector="Border.MesaCard.Reservada">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="#F39C12"/>
+                        <GradientStop Offset="1" Color="#D68910"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Número de mesa -->
+        <Style Selector="TextBlock.MesaNumero">
+            <Setter Property="FontSize" Value="32"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="8"
+                                      OffsetX="0"
+                                      OffsetY="2"
+                                      Opacity="0.2"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Estado texto -->
+        <Style Selector="TextBlock.MesaEstado">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Opacity" Value="0.8"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="LetterSpacing" Value="0.5"/>
+        </Style>
+
+        <!-- Cliente -->
+        <Style Selector="TextBlock.MesaCliente">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,2,0,0"/>
+        </Style>
+
+        <!-- Tiempo de espera -->
+        <Style Selector="TextBlock.MesaTiempo">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Opacity" Value="0.7"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,2,0,0"/>
+        </Style>
+
+        <!-- Botón de acción de mesa -->
+        <Style Selector="Button.MesaActionButton">
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="CornerRadius" Value="15"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="#40FFFFFF"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,4,0,0"/>
+        </Style>
+
+        <Style Selector="Button.MesaActionButton:pointerover">
+            <Setter Property="Background" Value="#66FFFFFF"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1.1" ScaleY="1.1"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Botón oculto -->
+        <Style Selector="Button.MesaActionButton.Oculto">
+            <Setter Property="Opacity" Value="0.2"/>
+            <Setter Property="IsVisible" Value="False"/>
+        </Style>
+
+        <!-- ItemsControl de mesas -->
+        <Style Selector="ItemsControl.MesasGrid">
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"
+                                   HorizontalAlignment="Left"
+                                   ItemSpacing="16"/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Styles>
+
+    <!-- ================================================ -->
+    <!--  DISTRIBUCIÓN PRINCIPAL                         -->
+    <!-- ================================================ -->
+
+    <Grid RowDefinitions="Auto,*" >
+        <Border Background="{DynamicResource FondoTarjeta}"
+                BorderThickness="1"
+                CornerRadius="12"
+                Padding="15"
+                Margin="10">
+            <Grid Grid.Row="0"
+                  Margin="5"
+
+                  ColumnDefinitions="*, Auto">
+
+                <!-- Título -->
                 <StackPanel Grid.Column="0" Spacing="4">
                     <TextBlock Text="{Binding ViewTitle}"
                                FontSize="26"
                                FontWeight="Bold"
                                Foreground="{DynamicResource TextoColor}" />
-
                     <TextBlock Text="Selecciona una mesa para gestionar pedidos"
                                FontSize="13"
                                Foreground="{DynamicResource TextoColor}" />
                 </StackPanel>
 
+<<<<<<< HEAD
 
                 <StackPanel Grid.Column="1" Spacing="2" >
 
@@ -259,8 +427,290 @@
                         </StackPanel>
                     </Button>
                 </StackPanel>
+=======
+                <!-- Usuario -->
+                <Border Grid.Column="1"
+                        Background="{DynamicResource PanelName}"
+                        CornerRadius="50"
+                        MinWidth="300"
+                        Padding="8,8,22,8"
+                        Margin="0,0,5,0">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <Border Width="40" Height="40"
+                                Background="#4A90D9"
+                                CornerRadius="20">
+                            <TextBlock Text="GB"
+                                       Foreground="White"
+                                       FontWeight="Bold"
+                                       FontSize="16"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"/>
+                        </Border>
+                        <StackPanel>
+                            <TextBlock Text="{Binding User.NombreCompleto}"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextoColor}"/>
+                            <TextBlock Text="{Binding User.Rol}"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource Name}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+>>>>>>> origin/Gustavo
 
             </Grid>
         </Border>
+
+        <Grid Grid.Row="1" ColumnDefinitions="*, 280">
+
+            <!-- ============================================ -->
+            <!-- PANEL IZQUIERDO: MESAS                       -->
+            <!-- ============================================ -->
+            <DockPanel Grid.Column="0" Margin="1,1">
+
+                <!-- HEADER -->
+
+                <!-- ESTADÍSTICAS RÁPIDAS -->
+                <Border DockPanel.Dock="Top"
+                        Margin="10,0,10,12"
+                        Background="{DynamicResource FondoTarjeta}"
+                        CornerRadius="12"
+                        Padding="14,16"
+                        Effect="{StaticResource SombraSuave}">
+                    <StackPanel Orientation="Horizontal" Spacing="40">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="🟢" FontSize="18"/>
+                            <TextBlock Text="Ocupadas:" Foreground="#6C757D"/>
+                            <TextBlock Text="MesasOcupadas"
+                                       FontWeight="Bold"
+                                       Foreground="#2B8A3E"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="🟡" FontSize="18"/>
+                            <TextBlock Text="Reservadas:" Foreground="#6C757D"/>
+                            <TextBlock Text="MesasReservadas"
+                                       FontWeight="Bold"
+                                       Foreground="#D68910"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="⚪" FontSize="18"/>
+                            <TextBlock Text="Libres:" Foreground="#6C757D"/>
+                            <TextBlock Text=" MesasLibres"
+                                       FontWeight="Bold"
+                                       Foreground="#4A90D9"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- CONTENIDO DE MESAS -->
+                <Border DockPanel.Dock="Top"
+                        Margin="10,0,10,12"
+                        Background="{DynamicResource FondoTarjeta}"
+                        CornerRadius="12"
+                        Padding="20"
+                        Effect="{StaticResource SombraSuave}">
+                    <ContentControl Content="{Binding VistaActual}" />
+                </Border>
+
+            </DockPanel>
+
+            <!-- ============================================ -->
+            <!-- PANEL DERECHO: MENÚ LATERAL                 -->
+            <!-- ============================================ -->
+            <Border Grid.Column="1"
+                    Background="{DynamicResource FondoTarjeta}"
+                    CornerRadius="15"
+                    Margin="0,0,10,10"
+                    BorderThickness="1,0,0,0">
+
+                <Grid RowDefinitions="Auto, *, Auto" Margin="20,24,20,20" RowSpacing="10">
+
+                    <!-- ACCIONES -->
+                    <StackPanel Grid.Row="0" Spacing="12">
+                        <TextBlock Text="Panel de Control"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Foreground="{DynamicResource TextoColor}"
+                                   Margin="0,0,0,8" />
+
+                        <TextBlock Text="⚡ ACCIONES"
+                                   FontSize="10"
+                                   FontWeight="Bold"
+                                   Foreground="{StaticResource TextoColor}"
+                                   LetterSpacing="1.5" />
+
+                        <!-- Nueva Orden -->
+                        <Button HorizontalAlignment="Stretch"
+                                Classes="btn-azul"
+                                Command="{Binding AbirNuevaOrdenCommand}"
+                                Height="48">
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        Spacing="10">
+                                <i:Icon Value="fa-solid fa-file-circle-plus"
+                                        Width="16"
+                                        Height="16"/>
+                                <TextBlock Text="Nueva Orden"
+                                           FontSize="14"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Unir Mesas -->
+                        <Button HorizontalAlignment="Stretch"
+                                Classes="btn-gris"
+                                Height="44"
+                                >
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        Spacing="10">
+                                <i:Icon Value="fa-solid fa-arrows-to-circle"
+                                        Width="16"
+                                        Height="16"/>
+                                <TextBlock Text="Unir Mesas"
+                                           FontSize="13"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Transferir Cuenta -->
+                        <Button HorizontalAlignment="Stretch"
+                                Classes="btn-gris"
+                                Height="44"
+                                >
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        Spacing="10">
+                                <i:Icon Value="fa-solid fa-rotate"
+                                        Width="16"
+                                        Height="16"/>
+                                <TextBlock Text="Transferir Cuenta"
+                                           FontSize="13"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Border Height="1" Background="#E8EAED" Margin="0,8"/>
+
+                        <!-- FILTROS -->
+                        <TextBlock Text="📊 FILTROS"
+                                   FontSize="10"
+                                   FontWeight="Bold"
+                                   Foreground="{StaticResource TextoColor}"
+                                   LetterSpacing="1.5" />
+
+                        <!-- Todas las Mesas -->
+                        <Button HorizontalAlignment="Stretch"
+                                Classes="btn-verde"
+                                Height="44"
+                                Command="{Binding ToggleTablesViewCommand}">
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        Spacing="10">
+                                <i:Icon Value="fa-solid fa-table-cells"
+                                        Width="16"
+                                        Height="16"/>
+                                <TextBlock Text="{Binding ToggleButtonText}"
+                                           FontSize="13"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                    <!-- HERRAMIENTAS -->
+                    <StackPanel Grid.Row="1"
+                                VerticalAlignment="Bottom"
+                                Spacing="12">
+
+                        <Border Height="1" Background="#E8EAED"/>
+
+                        <TextBlock Text="🔧 HERRAMIENTAS"
+                                   FontSize="10"
+                                   FontWeight="Bold"
+                                   Foreground="{StaticResource TextoColor}"
+                                   LetterSpacing="1.5" />
+
+                        <!-- Corte de Caja -->
+                        <Button HorizontalAlignment="Stretch"
+                                Classes="btn-gris"
+                                Height="44"
+                                >
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        Spacing="10">
+                                <i:Icon Value="fa-solid fa-object-group"
+                                        Width="16"
+                                        Height="16"/>
+                                <TextBlock Text="Corte de Caja"
+                                           FontSize="13"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Administrar -->
+                        <Button HorizontalAlignment="Stretch"
+                                Classes="btn-gris"
+                                IsVisible="{Binding Administrar}"
+                                Height="44"
+                                Command="{Binding IrAdministrarCommand}">
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        Spacing="10">
+                                <i:Icon Value="fa-solid fa-gear"
+                                        Width="16"
+                                        Height="16"/>
+                                <TextBlock Text="Administrar"
+                                           FontSize="13"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Reportes -->
+                        <Button HorizontalAlignment="Stretch"
+                                Classes="btn-gris"
+                                Height="44"
+                                >
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        Spacing="10">
+                                <i:Icon Value="fa-solid fa-file-arrow-down"
+                                        Width="16"
+                                        Height="16"/>
+                                <TextBlock Text="Reportes X/Z"
+                                           FontSize="13"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                    <!-- SALIR -->
+                    <StackPanel Grid.Row="2" Margin="0,16,0,0">
+                        <Border Height="2" Background="#E8EAED" Margin="0,0,0,12"/>
+
+                        <Button HorizontalAlignment="Stretch"
+                                Classes="btn-rojo"
+                                Height="48"
+                                Command="{Binding SalirCommand}">
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        Spacing="10">
+                                <i:Icon Value="fa-solid fa-reply-all"
+                                        Width="16"
+                                        Height="16"/>
+                                <TextBlock Text="🚪 Salir del Sistema"
+                                           FontSize="14"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                </Grid>
+            </Border>
+
+
+        </Grid>
+
     </Grid>
 </UserControl>
