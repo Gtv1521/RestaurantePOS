@@ -163,13 +163,8 @@
                                 VerticalContentAlignment="Center"
                                 CornerRadius="6">
                             <StackPanel Orientation="Horizontal" Spacing="6">
-<<<<<<< HEAD
-                                <i:Icon Value="fa-solid fa-pen" Foreground="{DynamicResource BotonTextWhite}" FontSize="12"/>
-                                <TextBlock Text="Editar" Foreground="{DynamicResource BotonTextWhite}" FontSize="13" FontWeight="SemiBold"/>
-=======
                                 <i:Icon Value="fa-solid fa-pen" Foreground="{DynamicResource BotonText}" FontSize="12"/>
                                 <TextBlock Text="Editar" Foreground="{DynamicResource BotonText}" FontSize="13" FontWeight="SemiBold"/>
->>>>>>> origin/Gustavo
                             </StackPanel>
                         </Button>
 
