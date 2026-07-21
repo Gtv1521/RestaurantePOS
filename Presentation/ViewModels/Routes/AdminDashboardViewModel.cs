@@ -30,6 +30,8 @@ public partial class AdminDashboardViewModel : ViewModelBase
     public bool IsMesas => CurrentView == "Mesas";
     public bool IsClientes => CurrentView == "Clientes";
     public bool IsConfiguracion => CurrentView == "Configuracion";
+    public bool IsInventario => CurrentView == "Inventario";
+
 
     public AdminDashboardViewModel(IViewModelFactory factory, INavigationService navigation, ISession<SessionModel> userSesion)
     {
@@ -52,6 +54,8 @@ public partial class AdminDashboardViewModel : ViewModelBase
         OnPropertyChanged(nameof(IsMesas));
         OnPropertyChanged(nameof(IsClientes));
         OnPropertyChanged(nameof(IsConfiguracion));
+        OnPropertyChanged(nameof(IsInventario));
+
     }
 
     [RelayCommand]
@@ -69,6 +73,7 @@ public partial class AdminDashboardViewModel : ViewModelBase
         {
             "Inicio" => _factory.Create<EstadisticasComponentViewModel>(),
             "Menu" => _factory.Create<MenuComponentViewModel>(),
+            "Inventario" => _factory.Create<InventarioComponentViewModel>(),
             _ => _factory.Create<EstadisticasComponentViewModel>(),
         };
     }
@@ -78,6 +83,13 @@ public partial class AdminDashboardViewModel : ViewModelBase
     private void IrAMesas()
     {
         var vm = _factory.Create<TablesViewModel>();
+        _navigation.NavigateTo(vm);
+    }
+
+    [RelayCommand]
+    private void IrAInventario()
+    {
+        var vm = _factory.Create<InventarioComponentViewModel>();
         _navigation.NavigateTo(vm);
     }
 }

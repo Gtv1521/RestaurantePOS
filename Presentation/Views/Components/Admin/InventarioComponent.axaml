@@ -1,0 +1,68 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:admin="using:MiComanderaApp.ViewModels.Components.Admin"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MiComanderaApp.Views.Components.Admin.InventarioComponentView"
+             x:DataType="admin:InventarioComponentViewModel"
+             x:Name="Root"
+             >
+
+    <Grid RowDefinitions="Auto, *" Margin="20">
+        <TextBlock Text="Gestión de Inventario" Foreground="{DynamicResource TextoColor}" Classes="h1" Grid.Row="0" Margin="0,0,0,20"/>
+
+        <TabControl Grid.Row="1">
+            <TabItem Header="Ingredientes" Foreground="{DynamicResource TextoColor}">
+                <Grid RowDefinitions="Auto, Auto, *" Margin="10">
+                    <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,0,0,10" Grid.Row="0">
+                        <Button Content="Agregar Ingrediente" Foreground="{DynamicResource TextoColor}" Command="{Binding AddIngredienteCommand}"/>
+                    </StackPanel>
+
+                    <!-- Header for the ListBox -->
+                    <Grid Grid.Row="1" ColumnDefinitions="*,*,*,*,*,Auto, Auto" Classes="DataGridHeader">
+                        <TextBlock Text="Nombre" Grid.Column="0" Foreground="{DynamicResource TextoColor}"/>
+                        <TextBlock Text="Cantidad Inicial" Grid.Column="1" Foreground="{DynamicResource TextoColor}"/>
+                        <TextBlock Text="Cantidad Mínima" Grid.Column="2" Foreground="{DynamicResource TextoColor}"/>
+                        <TextBlock Text="Coste Unitario" Grid.Column="3" Foreground="{DynamicResource TextoColor}"/>
+                        <TextBlock Text="Unidad de Medida" Grid.Column="4" Foreground="{DynamicResource TextoColor}"/>
+                    </Grid>
+
+                    <ListBox Grid.Row="2"
+                             Background="{DynamicResource FondoTarjeta}"
+                             ItemsSource="{Binding Ingredientes}"
+                             SelectedItem="{Binding SelectedIngrediente}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="*,*,*,*,*,Auto,Auto" VerticalAlignment="Center" Classes="DataGridRow">
+                                    <TextBlock Text="{Binding Name}" Grid.Column="0"/>
+                                    <TextBlock Text="{Binding InitialQuantity}" Grid.Column="1"/>
+                                    <TextBlock Text="{Binding MinimumQuantity}" Grid.Column="2"/>
+                                    <TextBlock Text="{Binding UnitCost}" Grid.Column="3"/>
+                                    <TextBlock Text="{Binding UnitOfMeasure}" Grid.Column="4"/>
+                                    <Button Content="Editar"
+                                            Command="{Binding #Root.DataContext.EditIngredienteCommand}"
+                                            CommandParameter="{Binding}"
+                                            Grid.Column="5"
+                                            Classes="Flat"/>
+                                    <Button Content="Eliminar"
+                                            Command="{Binding #Root.DataContext.DeleteIngredienteCommand}"
+                                            CommandParameter="{Binding}"
+                                            Grid.Column="6"
+                                            Classes="Flat danger"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Recetas" Foreground="{DynamicResource TextoColor}">
+                <TextBlock Text="La gestión de recetas estará disponible aquí."
+                           HorizontalAlignment="Center"
+                           Foreground="{DynamicResource TextoColor}"
+                           VerticalAlignment="Center"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
+
+</UserControl>

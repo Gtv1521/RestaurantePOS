@@ -35,9 +35,14 @@ using System.Net;
 using Microsoft.Extensions.Options;
 using MiComanderaApp.Presentation.States;
 using MiComanderaApp.Views;
-using MiComanderaApp.Presentation.Views.Dialogs.Modals;
-using MiComanderaApp.Presentation.Services;
+using MiComanderaApp.Services;
 using MiComanderaApp.Core.Application.UseCases.Product;
+using MiComanderaApp.ViewModels.Dialogs.Modals;
+using MiComanderaApp.Views.Dialogs.Modals;
+using MiComanderaApp.Presentation.Services;
+using RestaurantePOS.Core.Application.UseCases.Ingrediente;
+using RestaurantePOS.Core.Application.Request;
+using MiComanderaApp.Presentation.Views.Dialogs.Modals;
 
 namespace MiComanderaApp;
 
@@ -102,9 +107,7 @@ sealed class Program
                 services.AddTransient<MenuComponentViewModel>();
                 services.AddTransient<ProductViewModel>();
                 services.AddSingleton<CantidadPaxViewModel>();
-
-                // modal
-                services.AddTransient<NewUserModalViewModel>();
+                services.AddTransient<InventarioComponentViewModel>();
 
                 // global states
                 services.AddScoped<TableState>();
@@ -116,14 +119,17 @@ sealed class Program
                 services.AddScoped<IMultipleCrud<ProductoModel, ProductoRequest>, ProductoRepository>();
                 services.AddScoped<IGetList<ProductoModel>, ProductoRepository>();
                 services.AddScoped<ISingleCrud<TableModel, TableRequest>, TablesRepository>();
+                services.AddScoped<IMultipleCrud<IngredienteModel, IngredienteRequest>, InventarioRepository>();
 
                 // usescases 
                 services.AddScoped<GetSessionSave>();
                 services.AddScoped<GetAllCatalogoUseCase>();
                 services.AddScoped<GetCatalogoXIdProdUseCase>();
                 services.AddScoped<GetAllProductUseCase>();
-                services.AddScoped<InsertProductUseCase>();
-
+                services.AddScoped<CreateIngredienteUseCase>();
+                services.AddScoped<UpdateIngredienteUseCase>();
+                services.AddScoped<DeleteIngredienteUseCase>();
+                services.AddScoped<GetAllIngredientesUseCase>();
 
                 // signalR
                 services.AddSingleton<SignalRService>();
@@ -135,6 +141,8 @@ sealed class Program
                 services.AddSingleton<MainWindow>();
                 services.AddTransient<CreateProductViewModel>();
                 services.AddTransient<CreateProduct>();
+                services.AddTransient<IngredienteDialogViewModel>();
+                services.AddTransient<IngredienteDialog>();
                 services.AddSingleton<IDialogService, DialogService>();
             })
             .Build();

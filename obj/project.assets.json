@@ -4198,19 +4198,19 @@
     ]
   },
   "packageFolders": {
-    "/home/gustavo/.nuget/packages/": {}
+    "/home/dvn/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/gustavo/Desarrollo/C#/RestorantePOS/MiComanderaApp/MiComanderaApp.csproj",
+      "projectUniqueName": "/home/dvn/Documents/Development/C#/RestaurantePOS/MiComanderaApp.csproj",
       "projectName": "MiComanderaApp",
-      "projectPath": "/home/gustavo/Desarrollo/C#/RestorantePOS/MiComanderaApp/MiComanderaApp.csproj",
-      "packagesPath": "/home/gustavo/.nuget/packages/",
-      "outputPath": "/home/gustavo/Desarrollo/C#/RestorantePOS/MiComanderaApp/obj/",
+      "projectPath": "/home/dvn/Documents/Development/C#/RestaurantePOS/MiComanderaApp.csproj",
+      "packagesPath": "/home/dvn/.nuget/packages/",
+      "outputPath": "/home/dvn/Documents/Development/C#/RestaurantePOS/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/gustavo/.nuget/NuGet/NuGet.Config"
+        "/home/dvn/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -4228,13 +4228,7 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
-      },
-      "SdkAnalysisLevel": "10.0.100"
+      }
     },
     "frameworks": {
       "net8.0": {
@@ -4315,15 +4309,7 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[8.0.27, 8.0.27]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Host.linux-x64",
-            "version": "[8.0.27, 8.0.27]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[8.0.27, 8.0.27]"
+            "version": "[8.0.29, 8.0.29]"
           }
         ],
         "frameworkReferences": {
@@ -4331,7 +4317,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.108/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.129/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
