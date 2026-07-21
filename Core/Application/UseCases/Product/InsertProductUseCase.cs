@@ -14,7 +14,7 @@ namespace MiComanderaApp.Core.Application.UseCases.Product
 
         public InsertProductUseCase(IMultipleCrud<ProductoModel, ProductoRequest> repo)
         {
-            _repo = repo;
+            _repo = repo; 
         }
 
         public async Task<string> Execute(ProductoRequest request)
