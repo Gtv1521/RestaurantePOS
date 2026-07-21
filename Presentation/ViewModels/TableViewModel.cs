@@ -42,9 +42,9 @@ public partial class TableViewModel : ViewModelBase
     }
 
     // public static readonly IValueConverter StatusToClassConverter =
-    //     new FuncValueConverter<TableStatus, string?>(status => status switch
+    //     new FuncValueConverter<TableModel, string?>(status => status switch
     //     {
-    //         TableStatus.Disponible => "available",
+    //         status.Estado => "available",
     //         TableStatus.Ocupada => "occupied",
     //         TableStatus.Reservada => "reserved",
     //         _ => null
