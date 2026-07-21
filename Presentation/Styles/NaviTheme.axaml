@@ -65,7 +65,7 @@
     <!-- ================= BOTÓN AZUL ================= -->
     <Style Selector="Button.btn-azul">
         <Setter Property="Background" Value="{DynamicResource BotonCeleste}"/>
-        <Setter Property="Foreground" Value="{DynamicResource TextBotton}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextoBrush}"/>
     </Style>
     <Style Selector="Button.btn-azul:pointerover /template/ ContentPresenter">
         <Setter Property="Background" Value="{StaticResource PosBlueHover}"/>
@@ -77,7 +77,7 @@
     <!-- ================= BOTÓN VERDE ================= -->
     <Style Selector="Button.btn-verde">
         <Setter Property="Background" Value="{DynamicResource BotonGreen}"/>
-        <Setter Property="Foreground" Value="{DynamicResource TextBotton}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextoBrush}"/>
     </Style>
     <Style Selector="Button.btn-verde:pointerover /template/ ContentPresenter">
         <Setter Property="Background" Value="{StaticResource PosGreenHover}"/>
@@ -89,7 +89,7 @@
     <!-- ================= BOTÓN ROJO ================= -->
     <Style Selector="Button.btn-rojo">
         <Setter Property="Background" Value="{StaticResource PosRedBg}"/>
-        <Setter Property="Foreground" Value="{StaticResource TextBotton}"/>
+        <Setter Property="Foreground" Value="{StaticResource PosRedText}"/>
     </Style>
     <Style Selector="Button.btn-rojo:pointerover /template/ ContentPresenter">
         <Setter Property="Background" Value="{StaticResource PosRedHover}"/>
@@ -101,7 +101,7 @@
     <!-- ================= BOTÓN GRIS ================= -->
     <Style Selector="Button.btn-gris">
         <Setter Property="Background" Value="{StaticResource PosGrayBg}"/>
-        <Setter Property="Foreground" Value="{StaticResource TextBotton}"/>
+        <Setter Property="Foreground" Value="{StaticResource PosGrayText}"/>
     </Style>
     <Style Selector="Button.btn-gris:pointerover /template/ ContentPresenter">
         <Setter Property="Background" Value="{StaticResource PosGrayHover}"/>
@@ -154,7 +154,7 @@
     <!-- ================= Botones de teclado ================= -->
     <Style Selector="Button.KeypadBtn">
         <Setter Property="Background" Value="{DynamicResource NumBotton}"/>
-        <Setter Property="Foreground" Value="{DynamicResource BotonText}"/>
+        <Setter Property="Foreground" Value="{DynamicResource Subtitle}"/>
         <Setter Property="FontSize" Value="22"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="VerticalAlignment" Value="Stretch"/>
@@ -204,5 +204,33 @@
         <Setter Property="FontWeight" Value="Bold"/>
 
     </Style>
+    
+    <!-- Styles for ListBox as DataGrid -->
+    <Style Selector="Grid.DataGridHeader TextBlock">
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Padding" Value="10,5"/>
+        <Setter Property="Background" Value="{DynamicResource PosSurface}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
 
+    <Style Selector="Grid.DataGridRow TextBlock">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="Grid.DataGridRow Button.Flat">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource PosBlueBg}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Margin" Value="5,0"/>
+    </Style>
+    
+    <Style Selector="Grid.DataGridRow Button.Flat.danger">
+        <Setter Property="Foreground" Value="{DynamicResource PosRedBg}"/>
+    </Style>
+
+    <Style Selector="Grid.DataGridRow Button.Flat:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource PosGrayBg}"/>
+    </Style>
 </Styles>

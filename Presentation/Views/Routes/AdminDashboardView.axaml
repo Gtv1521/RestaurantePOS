@@ -50,7 +50,7 @@
         <Button Grid.Column="3" Content="MESAS" Classes="NavBtn" Command="{Binding IrAMesasCommand}" />
         <Button Grid.Column="4" Content="REPORTES" Classes="NavBtn" Command="{Binding IrAMesasCommand}" />
         <Button Grid.Column="5" Content="EMPLEADOS" Classes="NavBtn" Command="{Binding IrAMesasCommand}" />
-        <Button Grid.Column="5" Content="INVENTARIO" Classes="NavBtn" Command="{Binding IrAMesasCommand}" />
+        <Button Grid.Column="5" Content="INVENTARIO" Classes="NavBtn" Classes.Active="{Binding IsInventario}" Command="{Binding ChangeViewCommand}" CommandParameter="Inventario" />
 
         <StackPanel Grid.Column="7" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
           <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right">

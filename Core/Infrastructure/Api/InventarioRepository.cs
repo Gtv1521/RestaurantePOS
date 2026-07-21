@@ -1,30 +1,35 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using MiComanderaApp.Core.Application.Request;
+using MiComanderaApp.Core.Domain.Interfaces;
+using MiComanderaApp.Core.Domain.Models;
 using MiComanderaApp.Exceptions;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
 using Microsoft.Extensions.Options;
+using RestaurantePOS.Core.Application.Request;
 
 namespace MiComanderaApp.Core.Infrastructure.Api
 {
-    public class ProductoRepository : IMultipleCrud<ProductoModel, ProductoRequest>, IGetList<ProductoModel>
+    public class InventarioRepository : IMultipleCrud<IngredienteModel, IngredienteRequest>
     {
         private readonly HttpClient _httpClient;
         private readonly string _url;
-        public ProductoRepository(HttpClient httpClient, IOptions<ApiSettings> apiSettings)
+
+        public InventarioRepository(HttpClient httpClient, IOptions<ApiSettings> apiSettings)
         {
             _httpClient = httpClient;
-            _url = $"{apiSettings.Value.BaseUrl}/api/Product";
+            _url = $"{apiSettings.Value.BaseUrl}/api/Ingredient";
         }
-        public async Task<string?> CreateAsync(ProductoRequest data)
+
+        public async Task<string?> CreateAsync(IngredienteRequest data)
         {
             var response = await _httpClient.PostAsJsonAsync($"{_url}", data);
+
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();
@@ -37,8 +42,10 @@ namespace MiComanderaApp.Core.Infrastructure.Api
                         $"Error {(int)response.StatusCode}: {error}")
                 };
             }
+
             var result = await response.Content.ReadFromJsonAsync<string>();
-            return result ?? throw new InvalidOperationException("No se pudo crear el producto.");
+
+            return result ?? throw new InvalidOperationException("No se pudo crear el ingrediente.");
         }
 
         public async Task<bool> DeleteAsync(string id)
@@ -58,10 +65,10 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             }
 
             var result = await response.Content.ReadFromJsonAsync<bool?>();
-            return result ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
+            return result ?? throw new InvalidOperationException("No se pudo Borrar el ingrediente.");
         }
 
-        public async Task<IEnumerable<ProductoModel>> GetAllAsync()
+        public async Task<IEnumerable<IngredienteModel>> GetAllAsync()
         {
             var response = await _httpClient.GetAsync($"{_url}");
 
@@ -77,14 +84,13 @@ namespace MiComanderaApp.Core.Infrastructure.Api
                         $"Error {(int)response.StatusCode}: {error}")
                 };
             }
-            return await response.Content.ReadFromJsonAsync<IEnumerable<ProductoModel>>()
-               ?? Enumerable.Empty<ProductoModel>();
+            var result = await response.Content.ReadFromJsonAsync<IEnumerable<IngredienteModel>>();
+            return result ?? throw new InvalidOperationException("No se pudo obtener los ingredientes.");
         }
 
-        public async Task<IEnumerable<ProductoModel>> GetAllDataAsync(int id)
+        public async Task<IngredienteModel> GetAsync(string id)
         {
-            var response = await _httpClient.GetAsync($"{_url}/category/{id}");
-
+            var response = await _httpClient.GetAsync($"{_url}/{id}");
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();
@@ -97,15 +103,12 @@ namespace MiComanderaApp.Core.Infrastructure.Api
                         $"Error {(int)response.StatusCode}: {error}")
                 };
             }
-
-            return await response.Content.ReadFromJsonAsync<IEnumerable<ProductoModel>>()
-                   ?? Enumerable.Empty<ProductoModel>();
+            var result = await response.Content.ReadFromJsonAsync<IngredienteModel>();
+            return result ?? throw new InvalidOperationException("No se pudo obtener el ingrediente.");
         }
-
-        public async Task<ProductoModel> GetAsync(string id)
+        public async Task<bool> UpdateAsync(string id, IngredienteRequest data)
         {
-            var response = await _httpClient.GetAsync($"{_url}/category/{id}");
-
+            var response = await _httpClient.PutAsJsonAsync($"{_url}/{id}", data);
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();
@@ -118,15 +121,8 @@ namespace MiComanderaApp.Core.Infrastructure.Api
                         $"Error {(int)response.StatusCode}: {error}")
                 };
             }
-
-            var result = await response.Content.ReadFromJsonAsync<ProductoModel>();
-
-            return result ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
-        }
-
-        public Task<bool> UpdateAsync(string id, ProductoRequest data)
-        {
-            throw new NotImplementedException();
+            var result = await response.Content.ReadFromJsonAsync<bool?>();
+            return result ?? throw new InvalidOperationException("No se pudo actualizar el ingrediente.");  
         }
     }
 }

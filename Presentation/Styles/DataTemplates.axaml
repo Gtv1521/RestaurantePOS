@@ -164,7 +164,7 @@
                                 CornerRadius="6">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <i:Icon Value="fa-solid fa-pen" Foreground="{DynamicResource BotonTextWhite}" FontSize="12"/>
-                                <TextBlock Text="Editar" Foreground="{DynamicResource BotonText}" FontSize="13" FontWeight="SemiBold"/>
+                                <TextBlock Text="Editar" Foreground="{DynamicResource BotonTextWhite}" FontSize="13" FontWeight="SemiBold"/>
                             </StackPanel>
                         </Button>
 

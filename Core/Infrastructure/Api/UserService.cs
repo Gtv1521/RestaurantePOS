@@ -23,7 +23,7 @@ namespace MiComanderaApp.Infrastructure.Api
             _httpClient = httpClient;
         }
 
-        public async Task<string> CreateAsync(UserRequest data)
+        public async Task<string?> CreateAsync(UserRequest data)
         {
             var response = await _httpClient.PostAsJsonAsync($"{_url}/CreateUser", data);
 

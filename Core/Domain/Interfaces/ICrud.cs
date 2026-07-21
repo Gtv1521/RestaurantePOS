@@ -8,7 +8,7 @@ namespace MiComanderaApp.Interfaces
     public interface ICrud<T, R>
     {
         Task<T> GetAsync(string id);
-        Task<string> CreateAsync(R data);
+        Task<string?> CreateAsync(R data);
         Task<bool> UpdateAsync(string id, R data);
         Task<bool> DeleteAsync(string id);
     }

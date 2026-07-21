@@ -7,16 +7,30 @@ build_property.AvaloniaNameGeneratorFilterByNamespace = *
 build_property.AvaloniaNameGeneratorViewFileNamingStrategy = NamespaceAndClassName
 build_property.AvaloniaNameGeneratorAttachDevTools = true
 build_property.AvaloniaUseCompiledBindingsByDefault = true
+build_property.AvaloniaUseCompiledBindingsByDefault = true
 build_property.AvaloniaMainPackageVersion = 11.3.18
-build_property.AvaloniaPreviewerNetCoreToolPath = /home/gustavo/.nuget/packages/avalonia/11.3.18/buildTransitive//../tools/netstandard2.0/designer/Avalonia.Designer.HostApp.dll
+build_property.AvaloniaMainPackageVersion = 11.3.18
+build_property.AvaloniaPreviewerNetCoreToolPath = /home/dvn/.nuget/packages/avalonia/11.3.18/buildTransitive//../tools/netstandard2.0/designer/Avalonia.Designer.HostApp.dll
+build_property.AvaloniaPreviewerNetCoreToolPath = /home/dvn/.nuget/packages/avalonia/11.3.18/buildTransitive//../tools/netstandard2.0/designer/Avalonia.Designer.HostApp.dll
+build_property.TargetFramework = net8.0
+build_property.TargetFramework = net8.0
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.RuntimeIdentifier = 
+build_property.AppHostRuntimeIdentifier = arch-x64
+build_property.DefaultAppHostRuntimeIdentifier = arch-x64
+build_property.NETCoreSdkPortableRuntimeIdentifier = linux-x64
+build_property.IsTestProject = 
+build_property.ProjectAssetsFile = /home/dvn/Documents/Development/C#/RestaurantePOS/obj/project.assets.json
+build_property.ProjectDepsFilePath = /home/dvn/Documents/Development/C#/RestaurantePOS/bin/Debug/net8.0/MiComanderaApp.deps.json
+build_property.ProjectRuntimeConfigFilePath = /home/dvn/Documents/Development/C#/RestaurantePOS/bin/Debug/net8.0/MiComanderaApp.runtimeconfig.json
+build_property.IntermediateOutputPath = obj/Debug/net8.0/
+build_property.PublishDir = bin/Debug/net8.0/publish/
+build_property.HasAvaloniaDiagnosticsSupport = 
 build_property.MvvmToolkitEnableINotifyPropertyChangingSupport = true
 build_property._MvvmToolkitIsUsingWindowsRuntimePack = false
 build_property.CsWinRTComponent = 
 build_property.CsWinRTAotOptimizerEnabled = 
 build_property.CsWinRTAotWarningLevel = 
-build_property.TargetFramework = net8.0
-build_property.TargetFrameworkIdentifier = .NETCoreApp
-build_property.TargetFrameworkVersion = v8.0
 build_property.TargetPlatformMinVersion = 
 build_property.UsingMicrosoftNETSdkWeb = 
 build_property.ProjectTypeGuids = 
@@ -25,80 +39,78 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = MiComanderaApp
-build_property.ProjectDir = /home/gustavo/Desarrollo/C#/RestorantePOS/MiComanderaApp/
+build_property.ProjectDir = /home/dvn/Documents/Development/C#/RestaurantePOS/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
-build_property.EffectiveAnalysisLevelStyle = 8.0
-build_property.EnableCodeStyleSeverity = 
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/App.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Styles/DataTemplates.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Presentation/Styles/DataTemplates.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Styles/NaviTheme.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Presentation/Styles/NaviTheme.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Styles/Partes/TextBoxStyles.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Presentation/Styles/Themes/BlueTheme.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Styles/Themes/BlueTheme.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Presentation/Styles/Themes/DarkTheme.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Styles/Themes/DarkTheme.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Presentation/Styles/Themes/LigthTheme.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Styles/Themes/LigthTheme.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Presentation/Views/Components/ActiveTablesComponent.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Components/ActiveTablesComponent.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Presentation/Views/Components/Admin/EstadisticasComponent.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Components/Admin/EstadisticasComponent.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Presentation/Views/Components/Admin/InventarioComponent.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Components/Admin/MenuComponent.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Presentation/Views/Components/Admin/MenuComponent.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Components/Admin/Usuarios.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Presentation/Views/Components/Admin/Usuarios.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Components/AllTablesComponent.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Presentation/Views/Components/AllTablesComponent.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Components/Generales/TecladoComponent.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Presentation/Views/Components/Generales/TecladoComponent.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Dialogs/Modals/CreateProduct.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Presentation/Views/Dialogs/Modals/CreateProduct.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Dialogs/Modals/NewUserModalView.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Presentation/Views/Dialogs/Modals/IngredienteDialog.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/MainContentView.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Presentation/Views/MainContentView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/MainWindow.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Presentation/Views/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Mesas/DataTableView.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Presentation/Views/Mesas/DataTableView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Orders/CantidadPaxView.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Presentation/Views/Orders/CantidadPaxView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Orders/NewOrderView.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Presentation/Views/Orders/NewOrderView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Routes/AdminDashboardView.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Presentation/Views/Routes/AdminDashboardView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Routes/LoginView.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Presentation/Views/Routes/LoginView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/TablesView.axaml]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Presentation/Views/TablesView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Assets/avalonia-logo.ico]
+[/home/dvn/Documents/Development/C\#/RestaurantePOS/Assets/avalonia-logo.ico]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaResource

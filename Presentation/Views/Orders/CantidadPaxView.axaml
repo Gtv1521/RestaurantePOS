@@ -18,10 +18,10 @@
 
       <!-- Título y Número de Mesa -->
       <StackPanel Grid.Row="0" Margin="0,20,0,10" HorizontalAlignment="Center">
-        <TextBlock Text="{Binding Mesa, StringFormat='MESA N° {0}'}" IsVisible="{Binding NewMesa}"
+        <TextBlock Text="{Binding Mesa, StringFormat='MESA N° {0}'}"
                    FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextoBrush}"
                    HorizontalAlignment="Center"/>
-        <TextBlock Text="{Binding Title}"
+        <TextBlock Text="CANTIDAD DE PERSONAS"
                    FontSize="16" Foreground="{DynamicResource TextoBrush}"
                    HorizontalAlignment="Center" Margin="0,5,0,0"/>
       </StackPanel>
