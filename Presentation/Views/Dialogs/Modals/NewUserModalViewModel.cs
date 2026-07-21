@@ -76,6 +76,10 @@ public partial class NewUserModalViewModel : ViewModelBase
             await _insertProductUseCase.Execute(producto);
             _navegation.CloseOverlay();
         }
+        catch (UnauthorizedAccessException ex)
+        {
+            System.Console.WriteLine(ex.Message, ex.Source, ex.TargetSite);
+        }
         catch (System.Exception ex)
         {
             Error = ex.Message;

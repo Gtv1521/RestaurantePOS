@@ -86,7 +86,7 @@
                 <Button Grid.Row="3" Grid.Column="0" Classes="KeypadBtn" Command="{Binding DeleteDigitCommand}" i:Attached.Icon="fa-solid fa-delete-left" />
                 <Button Grid.Row="3" Grid.Column="1" Content="0" Classes="KeypadBtn" Command="{Binding AddDigitCommand}" CommandParameter="0"/>
 
-                <Button Grid.Row="3" Grid.Column="2" Classes="KeypadBtn" Background="{DynamicResource SaveBotton}" Foreground="{DynamicResource TextBrush}" Command="{Binding LoginCommand}" i:Attached.Icon="fa-solid fa-arrow-right"/>
+                <Button Grid.Row="3" Grid.Column="2" Classes="KeypadBtn" Background="{DynamicResource SaveBotton}" Foreground="{DynamicResource TextBotton}" Command="{Binding LoginCommand}" i:Attached.Icon="fa-solid fa-arrow-right"/>
             </Grid>
 
             <TextBlock Text="{Binding ErrorMessage}" Foreground="#D32F2F" FontSize="13" FontWeight="Medium"

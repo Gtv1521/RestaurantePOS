@@ -3,9 +3,13 @@
   <!-- Add Resources Here -->
   <SolidColorBrush x:Key="FondoPrincipal" Color="#0F0F10"/>
   <SolidColorBrush x:Key="FondoTarjeta" Color="#97393A3C"/>
+  <SolidColorBrush x:Key="PanelName" Color="#2BA7A6B6"/>
+  <SolidColorBrush x:Key="Name" Color="#D1D0DF"/>
+  
   <SolidColorBrush x:Key="TextoColor" Color="#DCE3E9"/>
   <SolidColorBrush x:Key="TextoBrush" Color="#B1B7BE"/>
   <SolidColorBrush x:Key="Resalto" Color="#98A2B3"/>
+  
   <SolidColorBrush x:Key="Subtitle" Color="#E5EFA2"/>
   <SolidColorBrush x:Key="Estadistica" Color="#A36431"/>
 
@@ -13,7 +17,9 @@
   <SolidColorBrush x:Key="SaveBotton" Color="#F7E1E7EC"/>
   <SolidColorBrush x:Key="TextBotton" Color="#FA111317"/>
 
-    <!-- Botones  -->
+  <!-- Botones  -->
+  <SolidColorBrush x:Key="BorderEditar" Color="#222B36"/> <!-- Boton de editar menu -->
+
   <SolidColorBrush x:Key="BotonCeleste" Color="#99C0F3"/>
   <SolidColorBrush x:Key="BotonGreen" Color="#D060BC65"/>
   <SolidColorBrush x:Key="BotonAdd" Color="#D060BC65" />

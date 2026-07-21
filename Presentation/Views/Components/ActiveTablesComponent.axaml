@@ -10,7 +10,7 @@
 
 
   <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-    <ItemsControl ItemsSource="{Binding Tables}" ItemTemplate="{StaticResource MesaTemplate}">
+    <ItemsControl ItemsSource="{Binding Tables}" ItemTemplate="{StaticResource Tables}">
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
       </ItemsControl.ItemsPanel>

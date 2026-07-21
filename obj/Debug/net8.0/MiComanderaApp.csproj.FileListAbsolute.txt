@@ -197,6 +197,7 @@ C:/Users/USUSARIO/Desarrollo/C#/RestaurantePOS/obj/Debug/net8.0/ref/MiComanderaA
 /home/gustavo/Desarrollo/C#/RestorantePOS/MiComanderaApp/bin/Debug/net8.0/Microsoft.Extensions.FileSystemGlobbing.dll
 /home/gustavo/Desarrollo/C#/RestorantePOS/MiComanderaApp/bin/Debug/net8.0/Microsoft.Extensions.Hosting.dll
 /home/gustavo/Desarrollo/C#/RestorantePOS/MiComanderaApp/bin/Debug/net8.0/Microsoft.Extensions.Hosting.Abstractions.dll
+/home/gustavo/Desarrollo/C#/RestorantePOS/MiComanderaApp/bin/Debug/net8.0/Microsoft.Extensions.Http.dll
 /home/gustavo/Desarrollo/C#/RestorantePOS/MiComanderaApp/bin/Debug/net8.0/Microsoft.Extensions.Logging.dll
 /home/gustavo/Desarrollo/C#/RestorantePOS/MiComanderaApp/bin/Debug/net8.0/Microsoft.Extensions.Logging.Abstractions.dll
 /home/gustavo/Desarrollo/C#/RestorantePOS/MiComanderaApp/bin/Debug/net8.0/Microsoft.Extensions.Logging.Configuration.dll

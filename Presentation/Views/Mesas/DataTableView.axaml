@@ -12,9 +12,9 @@
 
   <Grid ColumnDefinitions="2*, 8*" Margin="15">
 
-    <Grid Grid.Column="0" RowDefinitions="Auto, *, Auto" Margin="0,0,15,0">
+    <Grid Grid.Column="0" RowDefinitions="Auto, *, Auto" Margin="0,0,10,0">
 
-      <StackPanel Grid.Row="0" Spacing="8" Margin="0,0,0,15">
+      <StackPanel Grid.Row="0" Spacing="8" Margin="0,0,0,5">
 
         <Grid ColumnDefinitions="*,Auto">
 
@@ -78,9 +78,7 @@
                SelectionMode="{Binding ModoSeleccion}"
                SelectedItems="{Binding ProductosSeleccionados, Mode=TwoWay}"
                Background="{DynamicResource FondoTarjeta}"
-               BorderBrush="#2D3139"
-               BorderThickness="1"
-               CornerRadius="8"
+               CornerRadius="12"
                Padding="5">
 
         <ListBox.ItemTemplate>
@@ -156,7 +154,7 @@
         </ListBox.ItemTemplate>
       </ListBox>
 
-      <Border Grid.Row="2" Background="{DynamicResource FondoTarjeta}" BorderBrush="#2D3139" BorderThickness="1" CornerRadius="18" Padding="15" Margin="0,15,0,0">
+      <Border Grid.Row="2" Background="{DynamicResource FondoTarjeta}"  CornerRadius="18" Padding="15" Margin="0,15,0,0">
         <!-- Cambiamos a un Grid de 3 filas para el desglose y el Total -->
         <Grid RowDefinitions="Auto, Auto, Auto, Auto" ColumnDefinitions="*, Auto">
 
@@ -192,9 +190,8 @@
         <!-- Panel Productos -->
         <Border Grid.Column="0"
                 Background="{DynamicResource FondoTarjeta}"
-                BorderBrush="#2D3139"
                 BorderThickness="1"
-                CornerRadius="8"
+                CornerRadius="12"
                 Padding="10">
 
           <Grid RowDefinitions="Auto,*">
@@ -275,10 +272,9 @@
 
         <!-- Panel Categorías -->
         <Border Grid.Column="1"
-                Background="{DynamicResource Panel}"
-                BorderBrush="#2D3139"
+                Background="{DynamicResource FondoTarjeta}"
                 BorderThickness="1"
-                CornerRadius="8"
+                CornerRadius="12"
                 Padding="10">
 
           <Grid RowDefinitions="Auto,*">
@@ -319,7 +315,7 @@
         </Border>
       </Grid>
 
-      <Border Grid.Row="1" Background="{DynamicResource FondoTarjeta}" BorderBrush="#2D3139" BorderThickness="1" CornerRadius="8" Padding="10" Margin="0,8,0,0">
+      <Border Grid.Row="1" Background="{DynamicResource FondoTarjeta}" BorderThickness="1" CornerRadius="12" Padding="10" Margin="0,8,0,0">
         <Grid ColumnDefinitions="*,300" RowDefinitions="Auto,*">
 
 

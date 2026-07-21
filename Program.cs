@@ -61,27 +61,34 @@ sealed class Program
             })
             .ConfigureServices((hostContext, services) =>
             {
+
+                // 1. Registramos el contenedor de cookies único para TODA la app
+                services.AddSingleton<CookieContainer>();
+
+                // 2. Registramos el HttpClient genérico de la aplicación
+                services.AddHttpClient("MiComanderaApi", (sp, client) =>
+                {
+                    var settings = sp.GetRequiredService<IOptions<ApiSettings>>().Value;
+                    client.BaseAddress = new Uri(settings.BaseUrl);
+                })
+                .ConfigurePrimaryHttpMessageHandler(sp =>
+                {
+                    // Todos los servicios compartirán este mismo frasco de cookies
+                    var cookies = sp.GetRequiredService<CookieContainer>();
+
+                    return new HttpClientHandler
+                    {
+                        CookieContainer = cookies,
+                        UseCookies = true,
+                        // Si usas HTTP local o certificados de prueba en Arch Linux, esto evita que se bloquee:
+                        ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+                    };
+                });
+
                 services.AddSingleton<IViewModelFactory, ViewModelFactory>();
                 services.Configure<ApiSettings>(hostContext.Configuration.GetSection("ApiSettings"));
                 services.AddSingleton<Func<Type, ViewModelBase>>(provider =>
                     type => (ViewModelBase)provider.GetRequiredService(type));
-
-                services.AddSingleton(sp =>
-                {
-                    var cookies = new CookieContainer();
-                    var handler = new HttpClientHandler
-                    {
-                        CookieContainer = cookies,
-                        UseCookies = true
-                    };
-
-                    var settings = sp.GetRequiredService<IOptions<ApiSettings>>().Value;
-
-                    return new HttpClient(handler)
-                    {
-                        BaseAddress = new Uri(settings.BaseUrl)
-                    };
-                });
 
                 services.AddSingleton<IWindowProvider, WindowProvider>();
                 services.AddSingleton<IDialogService, DialogService>();
