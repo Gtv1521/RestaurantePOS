@@ -50,7 +50,7 @@ public partial class TablesViewModel : ViewModelBase
         _navigationService = navigationService;
         _factory = factory;
         _userSesion = userSesion;
-        _vistaActual = _factory.Create<ActiveTablesComponentViewModel>();
+        _vistaActual = _factory.Create<AllTablesComponentViewModel>();
         InitializeComponent();
 
     }
@@ -67,7 +67,7 @@ public partial class TablesViewModel : ViewModelBase
         IsShowingAllTables = !IsShowingAllTables;
         ToggleButtonText = IsShowingAllTables ? "Todas las Mesas" : "Mesas Abiertas";
         ViewTitle = IsShowingAllTables ? "Mesas Abiertas" : "Todas las Mesas";
-        VistaActual = IsShowingAllTables ? _factory.Create<ActiveTablesComponentViewModel>() : _factory.Create<AllTablesComponentViewModel>();
+        VistaActual = IsShowingAllTables ? _factory.Create<AllTablesComponentViewModel>() : _factory.Create<ActiveTablesComponentViewModel>();
     }
 
 

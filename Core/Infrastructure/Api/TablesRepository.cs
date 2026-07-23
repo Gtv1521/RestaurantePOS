@@ -13,7 +13,7 @@ using Microsoft.Extensions.Options;
 
 namespace MiComanderaApp.Core.Infrastructure.Api
 {
-    public class TablesRepository : ISingleCrud<TableModel, TableRequest>
+    public class TablesRepository : IMultipleCrud<TableModel, TableRequest>, IOptionsMesas<VentaModel>
     {
         private readonly HttpClient _httpClient;
         private readonly string _url;
@@ -21,7 +21,7 @@ namespace MiComanderaApp.Core.Infrastructure.Api
         public TablesRepository(IHttpClientFactory _factory, IOptions<ApiSettings> apiSettings)
         {
             _httpClient = _factory.CreateClient("MiComanderaApi");
-            _url = $"{apiSettings.Value.BaseUrl}/api/Tables";
+            _url = $"{apiSettings.Value.BaseUrl}/api/Table";
         }
 
         public Task<string> CreateAsync(TableRequest data)
@@ -34,9 +34,9 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<TableModel>> GetAllAsync(string id, int? page, int? size)
+        public async Task<IEnumerable<TableModel>> GetAllAsync()
         {
-            var response = await _httpClient.GetAsync($"{_url}/GetAllTables");
+            var response = await _httpClient.GetAsync($"{_url}");
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();
@@ -55,6 +55,51 @@ namespace MiComanderaApp.Core.Infrastructure.Api
         }
 
         public Task<TableModel> GetAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> LiberarMesa(int id)
+        {
+            var response = await _httpClient.GetAsync($"{_url}/{id}/liberar");
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+
+                throw response.StatusCode switch
+                {
+                    HttpStatusCode.BadRequest => new BadRequestException(error),
+                    HttpStatusCode.NotFound => new NotFoundException(error),
+                    _ => new HttpRequestException(
+                        $"Error {(int)response.StatusCode}: {error}")
+                };
+            }
+
+            var result = await response.Content.ReadFromJsonAsync<bool?>();
+            return result ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
+        }
+
+        public async Task<VentaModel> OcuparMesa(int id)
+        {
+            var response = await _httpClient.GetAsync($"{_url}/{id}/ocupar");
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+
+                throw response.StatusCode switch
+                {
+                    HttpStatusCode.BadRequest => new BadRequestException(error),
+                    HttpStatusCode.NotFound => new NotFoundException(error),
+                    _ => new HttpRequestException(
+                        $"Error {(int)response.StatusCode}: {error}")
+                };
+            }
+
+            var result = await response.Content.ReadFromJsonAsync<VentaModel>();
+            return result ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
+        }
+
+        public Task<bool> Reservar(int id, string? nota = null)
         {
             throw new NotImplementedException();
         }

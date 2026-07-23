@@ -12,6 +12,7 @@ using DynamicData;
 using MiComanderaApp.Core.Application.UseCases.Catalogo;
 using MiComanderaApp.Core.Application.UseCases.Session;
 using MiComanderaApp.Interfaces;
+using MiComanderaApp.Models;
 
 namespace MiComanderaApp.ViewModels.Mesas;
 

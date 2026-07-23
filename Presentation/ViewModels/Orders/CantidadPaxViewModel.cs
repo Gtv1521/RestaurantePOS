@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MiComanderaApp.Core.Application.UseCases.Table;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
 using MiComanderaApp.ViewModels.Mesas;
@@ -12,6 +14,8 @@ public partial class CantidadPaxViewModel : ViewModelBase
 {
     private readonly INavigationService _navigationService;
     private readonly IViewModelFactory _factory;
+    private readonly OcuparTableUseCase _ocuparCase;
+
 
 
     [ObservableProperty] private int _mesa;
@@ -23,21 +27,34 @@ public partial class CantidadPaxViewModel : ViewModelBase
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Title))]
     private bool _newMesa = false;
+    private VentaModel _dataVenta = new();
 
-    public CantidadPaxViewModel(INavigationService navigationService, IViewModelFactory factory)
+    public CantidadPaxViewModel(
+        INavigationService navigationService,
+        IViewModelFactory factory,
+        OcuparTableUseCase ocuparCase)
     {
         _navigationService = navigationService;
+        _ocuparCase = ocuparCase;
         _factory = factory;
     }
 
-    public void Initialize(int table)
+    public async Task Initialize(int table, VentaModel venta)
     {
         Mesa = table;
+        System.Console.WriteLine(venta.VentaId);
+        await State(true);
     }
-    public void State(bool openTable)
+    public async Task State(bool openTable)
     {
         NewMesa = openTable;
     }
+
+    private async Task<VentaModel> OcuparMesa(int id)
+    {
+        return await _ocuparCase.Execute(id);
+    }
+
 
     [RelayCommand]
     private void AddDigit(string digit)
@@ -72,7 +89,7 @@ public partial class CantidadPaxViewModel : ViewModelBase
         if (!NewMesa)
         {
             var vm = _factory.Create<CantidadPaxViewModel>();
-            vm.Initialize(int.Parse(CantidadPax));
+            vm.Initialize(int.Parse(CantidadPax), await OcuparMesa(NewMesa););
             vm.State(true);
             _navigationService.NavigateTo(vm);
             CantidadPax = string.Empty;

@@ -48,16 +48,16 @@
     </DataTemplate>
 
     <DataTemplate x:Key="AllMesaTemplate" DataType="{x:Type vm:TableViewModel}">
-        <Border Width="90" Height="90" Margin="6" CornerRadius="12" BorderThickness="1" BorderBrush="#E2E8F0">
+        <Border Width="90" Height="90" Margin="4" CornerRadius="12" BorderThickness="1" BorderBrush="{Binding ColorEstado}">
             
             <Border.Tag>
                 <Binding Path="Status" />
             </Border.Tag>
 
             <Border.Styles>
-                <Style Selector="Border[Tag=available]"><Setter Property="Background" Value="#34AA55" /></Style>
-                <Style Selector="Border[Tag=occupied]"><Setter Property="Background" Value="#2B6CB0" /></Style>
-                <Style Selector="Border[Tag=reserved]"><Setter Property="Background" Value="#ED8936" /></Style>
+                <Style Selector="Border[Tag=Libre]"><Setter Property="Background" Value="#34AA55" /></Style>
+                <Style Selector="Border[Tag=Ocupada]"><Setter Property="Background" Value="#2B6CB0" /></Style>
+                <Style Selector="Border[Tag=Disponible]"><Setter Property="Background" Value="#ED8936" /></Style>
             </Border.Styles>
                 
             <Button HorizontalAlignment="Stretch"
@@ -65,7 +65,7 @@
                     BorderThickness="0"
                     CornerRadius="12"
                     Padding="0"
-                    Background="Transparent"
+                    Background="{Binding ColorEstado}"
                     Cursor="Hand"
                     Command="{Binding OpenTableCommand}"> 
 
@@ -78,27 +78,47 @@
                     </Style>
                 </Button.Styles>
 
-                <Grid RowDefinitions="Auto,*">
-
-                    <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="2">
-                        <TextBlock Text="Mesa"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   FontSize="16"
-                                   Foreground="#1A202C" />
-
+                <Grid RowDefinitions="*,*,Auto">
+                    <StackPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="1">
                         <TextBlock Text="{Binding TableNumber}"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
-                                   FontSize="32"
+                                   FontSize="30"
                                    FontWeight="Black"
-                                   Foreground="#1A202C" />
+                                   Foreground="{DynamicResource TextoColor}" />
                     </StackPanel>
+                    <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="1">
+                  
+                        <TextBlock HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="13"
+                                   IsVisible="{Binding Pax}"
+                                   Foreground="{DynamicResource TextoColor}"> 
+
+                            <Run Text="Pax: "/>
+                            <Run Text="{Binding Table.Capacidad}"/>
+                        </TextBlock>
+
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" 
+                                    Orientation="Horizontal" 
+                                    HorizontalAlignment="Center"
+                                    Spacing="8">
+                            <Button Classes="MesaActionButton"
+                                    Content="📝"
+                                    IsEnabled="{Binding Open}"
+                                    />
+                            <Button Classes="MesaActionButton"
+                                    i:Attached.Icon="fa-solid fa-plus"
+                                    FontWeight="Black"
+                                    Foreground="Blue"
+                                    IsEnabled="{Binding Vacio}"
+                                    />
+                        </StackPanel>
                 </Grid>
             </Button>
         </Border>
     </DataTemplate>
-
 
     <DataTemplate x:Key="ShowProducts" DataType="{x:Type models:ProductoModel}">
     <Border Background="{DynamicResource FondoTarjeta}" Width="300" MaxHeight="260" CornerRadius="12" ClipToBounds="True" Margin="5" >
@@ -176,7 +196,8 @@
                                 CornerRadius="6">
                             <i:Icon Value="fa-solid fa-trash" Foreground="#c91815" FontSize="12"/>
                         </Button>
-                    </Grid> </Grid>
+                    </Grid> 
+                </Grid>
             </Border>
         </Grid>
     </Border>
@@ -186,10 +207,11 @@
 
                 <!-- TARJETA DE MESA -->
                 <Button Classes="MesaCard"
-                    Background="#A2AA6C"
-                    Margin="5,5"
-                    Width="200"
+                    Background="{Binding ColorEstado}"
+                    Margin="3,3"
+                    MinWidth="170"
                     CornerRadius="18"
+                    HorizontalAlignment="Stretch"
                     Command="{Binding OpenTableCommand}"
                     Classes.ocupada="{Binding ClaseEstado}"        
                     Tag="{Binding}">
@@ -198,19 +220,23 @@
                         
                         <!-- Número -->
                         <TextBlock Grid.Row="0" 
-                                   Text="{Binding TableNumber}" 
+                                   Text="{Binding TableNumber}"
+                                   Foreground="{DynamicResource TextoColor}" 
                                    Classes="MesaNumero"/>
                         
                         <!-- Información -->
                         <StackPanel Grid.Row="1" 
                                     Spacing="2"
                                     VerticalAlignment="Center">
-                            <TextBlock Text="{Binding Table.Capacidad}" 
+                            <TextBlock Text="{Binding Table.Capacidad}"
+                                        Foreground="{DynamicResource TextoColor}" 
                                        Classes="MesaEstado"/>
                             <TextBlock Text="{Binding Table.Estado}" 
+                                       Foreground="{DynamicResource TextoColor}" 
                                        Classes="MesaCliente"
                                        IsVisible="True"/>
                             <TextBlock Text="TiempoEspera" 
+                                       Foreground="{DynamicResource TextoColor}" 
                                        Classes="MesaTiempo"
                                        IsVisible="True"/>
                         </StackPanel>

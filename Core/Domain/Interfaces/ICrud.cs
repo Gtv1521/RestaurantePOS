@@ -27,4 +27,11 @@ namespace MiComanderaApp.Interfaces
     {
         Task<IEnumerable<T>> GetAllDataAsync(int id);
     }
+
+    public interface IOptionsMesas<T>
+    {
+        Task<T> OcuparMesa(int id);
+        Task<bool> LiberarMesa(int id);
+        Task<bool> Reservar(int id, string? nota = null);
+    }
 }

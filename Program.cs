@@ -38,6 +38,7 @@ using MiComanderaApp.Views;
 using MiComanderaApp.Presentation.Views.Dialogs.Modals;
 using MiComanderaApp.Presentation.Services;
 using MiComanderaApp.Core.Application.UseCases.Product;
+using MiComanderaApp.Core.Application.UseCases.Table;
 
 namespace MiComanderaApp;
 
@@ -122,15 +123,17 @@ sealed class Program
                 services.AddScoped<IMultipleCrud<CatalogoModel, CatalogoRequest>, CatalogoRepository>();
                 services.AddScoped<IMultipleCrud<ProductoModel, ProductoRequest>, ProductoRepository>();
                 services.AddScoped<IGetList<ProductoModel>, ProductoRepository>();
-                services.AddScoped<ISingleCrud<TableModel, TableRequest>, TablesRepository>();
+                services.AddScoped<IMultipleCrud<TableModel, TableRequest>, TablesRepository>();
+                services.AddScoped<IOptionsMesas<VentaModel>, TablesRepository>();
 
                 // usescases 
                 services.AddScoped<GetSessionSave>();
                 services.AddScoped<GetAllCatalogoUseCase>();
                 services.AddScoped<GetCatalogoXIdProdUseCase>();
                 services.AddScoped<GetAllProductUseCase>();
+                services.AddScoped<GetAllTablesUseCase>();
                 services.AddScoped<InsertProductUseCase>();
-
+                services.AddScoped<OcuparTableUseCase>();
 
                 // signalR
                 services.AddSingleton<SignalRService>();

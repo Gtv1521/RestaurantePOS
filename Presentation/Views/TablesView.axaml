@@ -106,7 +106,7 @@
         <Style Selector="TextBlock.MesaNumero">
             <Setter Property="FontSize" Value="32"/>
             <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="Effect">
                 <Setter.Value>
@@ -121,7 +121,7 @@
         <!-- Estado texto -->
         <Style Selector="TextBlock.MesaEstado">
             <Setter Property="FontSize" Value="11"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
             <Setter Property="Opacity" Value="0.8"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="LetterSpacing" Value="0.5"/>
@@ -131,7 +131,7 @@
         <Style Selector="TextBlock.MesaCliente">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="0,2,0,0"/>
         </Style>
@@ -139,7 +139,7 @@
         <!-- Tiempo de espera -->
         <Style Selector="TextBlock.MesaTiempo">
             <Setter Property="FontSize" Value="11"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
             <Setter Property="Opacity" Value="0.7"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="0,2,0,0"/>
@@ -152,7 +152,7 @@
             <Setter Property="CornerRadius" Value="15"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Background" Value="#40FFFFFF"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Margin" Value="0,4,0,0"/>
@@ -294,9 +294,9 @@
                         Margin="10,0,10,12"
                         Background="{DynamicResource FondoTarjeta}"
                         CornerRadius="12"
-                        Padding="20"
+                        Padding="10,20"
                         Effect="{StaticResource SombraSuave}">
-                    <ContentControl Content="{Binding VistaActual}" />
+                    <ContentControl Content="{Binding VistaActual}" Padding="3,3" />
                 </Border>
 
             </DockPanel>
