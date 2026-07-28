@@ -124,7 +124,7 @@
             <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
             <Setter Property="Opacity" Value="0.8"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="LetterSpacing" Value="0.5"/>
+            <Setter Property="LetterSpacing" Value="0.1"/>
         </Style>
 
         <!-- Cliente -->

@@ -24,4 +24,5 @@ public class VentaModel
     public string Mesero { get; set; } = "";
     public string? Alias { get; set; } = "";
     public int Instancia { get; set; }
+    public int Pax { get; set; }
 }

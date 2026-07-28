@@ -17,29 +17,32 @@ namespace MiComanderaApp.ViewModels.Components;
 public partial class ActiveTablesComponentViewModel : ViewModelBase
 {
     private readonly IViewModelFactory _factory;
-    private readonly GetAllTablesUseCase _allTbles;
+    private readonly GetAllTablesUseCase _allTables;
     private readonly GetSessionSave _userSesion;
+    private readonly GetTablesOpenUseCase _tablesOpen;
 
 
     public ObservableCollection<TableViewModel> Tables { get; } = new();
 
     public ActiveTablesComponentViewModel(
         IViewModelFactory factory,
-        GetAllTablesUseCase allTbles,
+        GetAllTablesUseCase allTables,
+        GetTablesOpenUseCase tablesOpen,
         GetSessionSave userSesion
         )
     {
         _factory = factory;
+        _tablesOpen = tablesOpen;
         _userSesion = userSesion;
-        _allTbles = allTbles;
-        _ = LoadAllTables();
+        _allTables = allTables;
+        _ = LoadOpenTables();
     }
 
-    private async Task LoadAllTables()
+    private async Task LoadOpenTables()
     {
         try
         {
-            var response = await _allTbles.Execute();
+            var response = await _tablesOpen.Execute();
 
             if (response == null || !response.Any())
             {
@@ -47,16 +50,12 @@ public partial class ActiveTablesComponentViewModel : ViewModelBase
                 return;
             }
 
-            System.Console.WriteLine($"✅ Cantidad de mesas recibidas: {response.Count()}");
-
-            // 4. Limpiamos la lista actual antes de recargar (evita duplicar elementos en la interfaz)
             Tables.Clear();
 
-            // 5. Instanciamos e inicializamos cada View Model
             foreach (var table in response)
             {
                 var tableVm = _factory.Create<TableViewModel>();
-                tableVm.Initialize(table);
+                tableVm.InicializeVenta(table);
 
                 Tables.Add(tableVm);
             }
@@ -65,10 +64,5 @@ public partial class ActiveTablesComponentViewModel : ViewModelBase
         {
             System.Console.WriteLine($"🚨 Error al cargar las mesas: {ex.Message}");
         }
-    }
-
-    private async Task LoadTablesMesero(string id)
-    {
-        
     }
 }

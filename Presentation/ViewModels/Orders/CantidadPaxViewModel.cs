@@ -19,6 +19,7 @@ public partial class CantidadPaxViewModel : ViewModelBase
 
 
     [ObservableProperty] private int _mesa;
+    [ObservableProperty] private int _instancia;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(AceptarCommand))]
@@ -27,7 +28,7 @@ public partial class CantidadPaxViewModel : ViewModelBase
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Title))]
     private bool _newMesa = false;
-    private VentaModel _dataVenta = new();
+    [ObservableProperty] private VentaModel _dataVenta = new();
 
     public CantidadPaxViewModel(
         INavigationService navigationService,
@@ -39,13 +40,14 @@ public partial class CantidadPaxViewModel : ViewModelBase
         _factory = factory;
     }
 
-    public async Task Initialize(int table, VentaModel venta)
+    public async Task Initialize(int table, VentaModel ventaModel)
     {
         Mesa = table;
-        System.Console.WriteLine(venta.VentaId);
-        await State(true);
+        DataVenta = ventaModel;
+        Instancia = ventaModel.Instancia;
+        State(true);
     }
-    public async Task State(bool openTable)
+    public void State(bool openTable)
     {
         NewMesa = openTable;
     }
@@ -84,26 +86,26 @@ public partial class CantidadPaxViewModel : ViewModelBase
     }
 
     [RelayCommand(CanExecute = nameof(CanAccept))]
-    private void Aceptar()
+    private async Task Aceptar()
     {
-        if (!NewMesa)
+        if (!NewMesa) // abre la mesa 
         {
+            var venta = await OcuparMesa(int.Parse(CantidadPax));
+            Instancia = venta.Instancia;
             var vm = _factory.Create<CantidadPaxViewModel>();
-            vm.Initialize(int.Parse(CantidadPax), await OcuparMesa(NewMesa););
+            await vm.Initialize(int.Parse(CantidadPax), venta);
             vm.State(true);
             _navigationService.NavigateTo(vm);
-            CantidadPax = string.Empty;
 
         }
-        else
+        else // edita la cantidad de personas 
         {
             var vm = _factory.Create<DataTableViewModel>();
-            vm.Initialize(Mesa, int.Parse(CantidadPax));
+            vm.Initialize(DataVenta, int.Parse(CantidadPax));
             _navigationService.NavigateTo(vm);
-            CantidadPax = string.Empty;
 
         }
-
+        CantidadPax = string.Empty;
     }
 
     private bool CanAccept() => !string.IsNullOrEmpty(CantidadPax) && CantidadPax != "0";

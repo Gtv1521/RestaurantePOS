@@ -125,6 +125,7 @@ sealed class Program
                 services.AddScoped<IGetList<ProductoModel>, ProductoRepository>();
                 services.AddScoped<IMultipleCrud<TableModel, TableRequest>, TablesRepository>();
                 services.AddScoped<IOptionsMesas<VentaModel>, TablesRepository>();
+                services.AddScoped<IGetOpens<VentaModel>, TablesRepository>();
 
                 // usescases 
                 services.AddScoped<GetSessionSave>();
@@ -134,6 +135,7 @@ sealed class Program
                 services.AddScoped<GetAllTablesUseCase>();
                 services.AddScoped<InsertProductUseCase>();
                 services.AddScoped<OcuparTableUseCase>();
+                services.AddScoped<GetTablesOpenUseCase>();
 
                 // signalR
                 services.AddSingleton<SignalRService>();

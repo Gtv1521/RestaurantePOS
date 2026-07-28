@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Threading.Tasks;
 using MiComanderaApp.Core.Application.Request;
 using MiComanderaApp.Exceptions;
@@ -13,7 +14,7 @@ using Microsoft.Extensions.Options;
 
 namespace MiComanderaApp.Core.Infrastructure.Api
 {
-    public class TablesRepository : IMultipleCrud<TableModel, TableRequest>, IOptionsMesas<VentaModel>
+    public class TablesRepository : IMultipleCrud<TableModel, TableRequest>, IOptionsMesas<VentaModel>, IGetOpens<VentaModel>
     {
         private readonly HttpClient _httpClient;
         private readonly string _url;
@@ -81,7 +82,7 @@ namespace MiComanderaApp.Core.Infrastructure.Api
 
         public async Task<VentaModel> OcuparMesa(int id)
         {
-            var response = await _httpClient.GetAsync($"{_url}/{id}/ocupar");
+            var response = await _httpClient.PostAsync($"{_url}/OcuparMesa/{id}", new StringContent("", Encoding.UTF8, "application/json"));
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();
@@ -102,6 +103,27 @@ namespace MiComanderaApp.Core.Infrastructure.Api
         public Task<bool> Reservar(int id, string? nota = null)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<VentaModel>> TablesOpen()
+        {
+            var response = await _httpClient.GetAsync($"{_url}/mesero/ocupadas");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+
+                throw response.StatusCode switch
+                {
+                    HttpStatusCode.BadRequest => new BadRequestException(error),
+                    HttpStatusCode.NotFound => new NotFoundException(error),
+                    _ => new HttpRequestException(
+                        $"Error {(int)response.StatusCode}: {error}")
+                };
+            }
+
+            var result = await response.Content.ReadFromJsonAsync<IEnumerable<VentaModel>>();
+            return result ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
         }
 
         public Task<bool> UpdateAsync(string id, TableRequest data)

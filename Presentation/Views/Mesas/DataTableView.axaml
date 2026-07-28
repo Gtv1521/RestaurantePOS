@@ -28,10 +28,14 @@
                        FontWeight="Bold"
                        Foreground="{DynamicResource TextoColor}"/>
 
-            <TextBlock Text="{Binding NumeroMesa}"
-                       FontSize="22"
+            <TextBlock FontSize="22"
                        FontWeight="Bold"
-                       Foreground="{DynamicResource Estadistica}"/>
+                       Foreground="{DynamicResource Estadistica}">
+              <Run Text="  " />
+              <Run Text="{Binding NumeroMesa}" />
+              <Run Text="/" />
+              <Run Text="{Binding Instancia}" />
+            </TextBlock>
 
           </StackPanel>
 

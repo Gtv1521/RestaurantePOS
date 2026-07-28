@@ -84,6 +84,7 @@ public partial class DataTableViewModel : ViewModelBase
     [ObservableProperty] private bool _esSeleccionMultiple;
     [ObservableProperty] private bool _mostrandoObservaciones;
     [ObservableProperty] private string? _namePanel;
+    [ObservableProperty] private string? _instancia;
 
     // Lista dinámica para los productos que el mesero va agregando a la comanda
     public ObservableCollection<ProductoPedidoItem> ProductosPedidos { get; } = new();
@@ -106,17 +107,16 @@ public partial class DataTableViewModel : ViewModelBase
         _getCatalogoXIdProdUseCase = getCatalogoXIdProdUseCase;
         _navigate = navigation;
 
-
-
         // Inicializar datos básicos de la cuenta
         HoraApertura = DateTime.Now;
         _ = CargarDatosIniciales();
     }
 
-    public void Initialize(int Table, int Pax)
+    public void Initialize(VentaModel venta, int cantidad)
     {
-        NumeroMesa = Table.ToString();
-        CantidadPax = Pax;
+        NumeroMesa = venta.NumeroMesa.ToString();
+        CantidadPax = cantidad;
+        Instancia = venta.Instancia.ToString();
     }
 
     private async Task CargarDatosIniciales()

@@ -27,6 +27,10 @@ namespace MiComanderaApp.Interfaces
     {
         Task<IEnumerable<T>> GetAllDataAsync(int id);
     }
+    public interface IGetOpens<T>
+    {
+        Task<IEnumerable<T>> TablesOpen();
+    }
 
     public interface IOptionsMesas<T>
     {
