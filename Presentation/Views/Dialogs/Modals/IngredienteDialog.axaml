@@ -1,0 +1,56 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:MiComanderaApp.ViewModels.Dialogs.Modals"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="550"
+        x:Class="MiComanderaApp.Views.Dialogs.Modals.IngredienteDialog"
+        x:DataType="vm:IngredienteDialogViewModel"
+        Title="{Binding Title}"
+        ShowInTaskbar="False"
+        SystemDecorations="None"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        Height="550"
+        Width="400">
+    <Border Padding="25"
+            CornerRadius="15"
+            Background="{DynamicResource FondoTarjeta}">
+        <StackPanel Spacing="15">
+            <TextBlock Text="{Binding Title}"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Foreground="{DynamicResource TextoBrush}"/>
+
+            <TextBlock Text="Nombre" Foreground="{DynamicResource TextoColor}"/>
+            <TextBox Text="{Binding Name}" Watermark="Ej: Tomate" BorderBrush="{DynamicResource Border}"/>
+
+            <TextBlock Text="Cantidad Inicial" Foreground="{DynamicResource TextoColor}"/>
+            <NumericUpDown Value="{Binding InitialQuantity}" BorderBrush="{DynamicResource Border}" FormatString="N2"/>
+
+            <TextBlock Text="Cantidad Mínima" Foreground="{DynamicResource TextoColor}"/>
+            <NumericUpDown Value="{Binding MinimumQuantity}" BorderBrush="{DynamicResource Border}" FormatString="N2"/>
+
+            <TextBlock Text="Coste Unitario" Foreground="{DynamicResource TextoColor}"/>
+            <NumericUpDown Value="{Binding UnitCost}" BorderBrush="{DynamicResource Border}" FormatString="C2"/>
+
+            <TextBlock Text="Unidad de Medida" Foreground="{DynamicResource TextoColor}"/>
+            <TextBox Text="{Binding UnitOfMeasure}" Watermark="Ej: Kg, L, Unidad" BorderBrush="{DynamicResource Border}"/>
+
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Spacing="10"
+                        Margin="0,20,0,0">
+                <Button Content="Cancelar"
+                        Width="100"
+                        Classes="btn-rojo"
+                        Command="{Binding CancelarCommand}"/>
+                <Button Content="Guardar"
+                        Width="100"
+                        Classes="btn-verde"
+                        Command="{Binding GuardarCommand}"/>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</Window>

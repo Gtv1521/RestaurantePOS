@@ -40,8 +40,8 @@ namespace MiComanderaApp.Core.Infrastructure.Api
                         $"Error {(int)response.StatusCode}: {error}")
                 };
             }
-            var result = await response.Content.ReadFromJsonAsync<ProductoModel>();
-            return result?.Id.ToString() ?? throw new InvalidOperationException("No se pudo crear el producto.");
+            var result = await response.Content.ReadFromJsonAsync<string>();
+            return result ?? throw new InvalidOperationException("No se pudo crear el producto.");
         }
 
         public async Task<bool> DeleteAsync(string id)

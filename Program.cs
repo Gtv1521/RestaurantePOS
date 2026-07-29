@@ -35,8 +35,7 @@ using System.Net;
 using Microsoft.Extensions.Options;
 using MiComanderaApp.Presentation.States;
 using MiComanderaApp.Views;
-using MiComanderaApp.Presentation.Views.Dialogs.Modals;
-using MiComanderaApp.Presentation.Services;
+using MiComanderaApp.Services;
 using MiComanderaApp.Core.Application.UseCases.Product;
 using MiComanderaApp.Core.Application.UseCases.Table;
 
@@ -110,9 +109,7 @@ sealed class Program
                 services.AddTransient<MenuComponentViewModel>();
                 services.AddTransient<ProductViewModel>();
                 services.AddSingleton<CantidadPaxViewModel>();
-
-                // modal
-                services.AddTransient<NewUserModalViewModel>();
+                services.AddTransient<InventarioComponentViewModel>();
 
                 // global states
                 services.AddScoped<TableState>();
@@ -147,6 +144,8 @@ sealed class Program
                 services.AddSingleton<MainWindow>();
                 services.AddTransient<CreateProductViewModel>();
                 services.AddTransient<CreateProduct>();
+                services.AddTransient<IngredienteDialogViewModel>();
+                services.AddTransient<IngredienteDialog>();
                 services.AddSingleton<IDialogService, DialogService>();
             })
             .Build();

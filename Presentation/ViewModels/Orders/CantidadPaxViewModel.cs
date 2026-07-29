@@ -47,10 +47,6 @@ public partial class CantidadPaxViewModel : ViewModelBase
         Instancia = ventaModel.Instancia;
         State(true);
     }
-    public void State(bool openTable)
-    {
-        NewMesa = openTable;
-    }
 
     private async Task<VentaModel> OcuparMesa(int id)
     {
@@ -109,5 +105,4 @@ public partial class CantidadPaxViewModel : ViewModelBase
     }
 
     private bool CanAccept() => !string.IsNullOrEmpty(CantidadPax) && CantidadPax != "0";
-    public string Title => NewMesa == false ? "Digite numero de mesa" : "Digite cantidad de pax";
 }

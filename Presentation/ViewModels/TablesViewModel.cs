@@ -61,6 +61,12 @@ public partial class TablesViewModel : ViewModelBase
         UsuarioRol = User!.Rol;
     }
 
+    // public void Initialize(SessionModel user)
+    // {
+    //     User = user;
+    //     UsuarioRol = user.Rol;
+    // }
+
     [RelayCommand]
     private void ToggleTablesView()
     {
@@ -74,9 +80,8 @@ public partial class TablesViewModel : ViewModelBase
     [RelayCommand]
     public async Task AbirNuevaOrden()
     {
-        var vm = _factory.Create<CantidadPaxViewModel>();
-        vm.State(false);
-        _navigationService.NavigateTo(vm);
+        // Abrir una nueva orden
+        _navigationService.NavigateTo<NewOrderViewModel>();
     }
 
     [RelayCommand]
