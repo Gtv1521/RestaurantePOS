@@ -59,7 +59,7 @@ public partial class CantidadPaxViewModel : ViewModelBase
     }
 
     [RelayCommand(CanExecute = nameof(CanAccept))]
-    private void Aceptar()
+    private void Aceptar() 
     {
         var vm = _factory.Create<DataTableViewModel>();
         vm.Initialize(Mesa, int.Parse(CantidadPax));
