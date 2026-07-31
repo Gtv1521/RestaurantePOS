@@ -33,8 +33,14 @@
   <SolidColorBrush x:Key="FondoPanelModal" Color="#9C131315"/>
   <SolidColorBrush x:Key="FondoModal" Color="#fffcfc"/>
   <SolidColorBrush x:Key="BorderModal" Color="#615fb368"/>
+  <SolidColorBrush x:Key="BotonFondo" Color="#D5FFFFFF"/>
 
-
-
+  <!-- Status Colors -->
+  <SolidColorBrush x:Key="SuccessBrush" Color="#28a745"/>
+  <SolidColorBrush x:Key="WarningBrush" Color="#ffc107"/>
+  <SolidColorBrush x:Key="ErrorBrush" Color="#dc3545"/>
+  <SolidColorBrush x:Key="SuccessBrushTransparent" Color="#28a745" Opacity="0.3"/>
+  <SolidColorBrush x:Key="WarningBrushTransparent" Color="#ffc107" Opacity="0.3"/>
+  <SolidColorBrush x:Key="ErrorBrushTransparent" Color="#dc3545" Opacity="0.3"/>
 
 </ResourceDictionary>

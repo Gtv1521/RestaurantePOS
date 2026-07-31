@@ -10,6 +10,7 @@ using LiveChartsCore.SkiaSharpView.Painting;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
 using MiComanderaApp.ViewModels.Components.Admin;
+using MiComanderaApp.Presentation.ViewModels.Components.Inventario;
 using SkiaSharp;
 
 namespace MiComanderaApp.ViewModels.Routes;
@@ -30,6 +31,7 @@ public partial class AdminDashboardViewModel : ViewModelBase
     public bool IsMesas => CurrentView == "Mesas";
     public bool IsClientes => CurrentView == "Clientes";
     public bool IsConfiguracion => CurrentView == "Configuracion";
+    public bool IsInventario => CurrentView == "Inventario";
 
     public AdminDashboardViewModel(IViewModelFactory factory, INavigationService navigation, ISession<SessionModel> userSesion)
     {
@@ -52,6 +54,7 @@ public partial class AdminDashboardViewModel : ViewModelBase
         OnPropertyChanged(nameof(IsMesas));
         OnPropertyChanged(nameof(IsClientes));
         OnPropertyChanged(nameof(IsConfiguracion));
+        OnPropertyChanged(nameof(IsInventario));
     }
 
     [RelayCommand]
@@ -69,6 +72,7 @@ public partial class AdminDashboardViewModel : ViewModelBase
         {
             "Inicio" => _factory.Create<EstadisticasComponentViewModel>(),
             "Menu" => _factory.Create<MenuComponentViewModel>(),
+            "Inventario" => _factory.Create<InventarioComponentViewModel>(),
             _ => _factory.Create<EstadisticasComponentViewModel>(),
         };
     }

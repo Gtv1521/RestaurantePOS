@@ -39,6 +39,8 @@ using MiComanderaApp.Presentation.Views.Dialogs.Modals;
 using MiComanderaApp.Presentation.Services;
 using MiComanderaApp.Core.Application.UseCases.Product;
 using MiComanderaApp.Core.Application.UseCases.Table;
+using MiComanderaApp.Core.Application.UseCases.Inventario.Ingredientes;
+using MiComanderaApp.Presentation.ViewModels.Components.Inventario;
 
 namespace MiComanderaApp;
 
@@ -110,6 +112,7 @@ sealed class Program
                 services.AddTransient<MenuComponentViewModel>();
                 services.AddTransient<ProductViewModel>();
                 services.AddSingleton<CantidadPaxViewModel>();
+                services.AddTransient<InventarioComponentViewModel>();
 
                 // modal
                 services.AddTransient<NewUserModalViewModel>();
@@ -122,10 +125,12 @@ sealed class Program
                 services.AddScoped<ISession<SessionModel>, SessionService>();
                 services.AddScoped<IMultipleCrud<CatalogoModel, CatalogoRequest>, CatalogoRepository>();
                 services.AddScoped<IMultipleCrud<ProductoModel, ProductoRequest>, ProductoRepository>();
+                services.AddScoped<IMultipleCrud<IngredienteModel, IngredienteRequest>, IngredienteRepository>();
                 services.AddScoped<IGetList<ProductoModel>, ProductoRepository>();
                 services.AddScoped<IMultipleCrud<TableModel, TableRequest>, TablesRepository>();
                 services.AddScoped<IOptionsMesas<VentaModel>, TablesRepository>();
                 services.AddScoped<IGetOpens<VentaModel>, TablesRepository>();
+                services.AddScoped<IngredienteRepository>();
 
                 // usescases 
                 services.AddScoped<GetSessionSave>();
@@ -136,6 +141,7 @@ sealed class Program
                 services.AddScoped<InsertProductUseCase>();
                 services.AddScoped<OcuparTableUseCase>();
                 services.AddScoped<GetTablesOpenUseCase>();
+                services.AddScoped<GetAllIngredientesUseCase>();
 
                 // signalR
                 services.AddSingleton<SignalRService>();

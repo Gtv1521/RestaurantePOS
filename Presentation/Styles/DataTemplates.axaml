@@ -5,8 +5,10 @@
                     xmlns:i="using:Projektanker.Icons.Avalonia"
                     xmlns:models="using:MiComanderaApp.Models"
                     xmlns:vmProduct="using:MiComanderaApp.ViewModels.Components.Admin"
+                    xmlns:converters="using:MiComanderaApp.Presentation.Converters"
                     >
 
+    <converters:QuantityToColorConverter x:Key="QuantityToColorConverter"/>
 
     <DataTemplate x:Key="MesaTemplate" DataType="{x:Type vm:TableViewModel}">
         <Border Width="150"
