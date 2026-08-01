@@ -1,32 +1,45 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
-  <SolidColorBrush x:Key="FondoPrincipal" Color="#04071B"/>
-  <SolidColorBrush x:Key="FondoTarjeta" Color="#970E2A48"/>
-  <SolidColorBrush x:Key="PanelName" Color="#2BA09EBC"/>
-  <SolidColorBrush x:Key="Name" Color="#F6E2C013"/>
-
+  <!-- Add Resources Here -->
+  <SolidColorBrush x:Key="FondoPrincipal" Color="#0F0F10"/>
+  <SolidColorBrush x:Key="FondoTarjeta" Color="#97393A3C"/>
+  <SolidColorBrush x:Key="PanelName" Color="#2BA7A6B6"/>
+  <SolidColorBrush x:Key="Name" Color="#D1D0DF"/>
+  
   <SolidColorBrush x:Key="TextoColor" Color="#DCE3E9"/>
-  <SolidColorBrush x:Key="TextoBrush" Color="#0D1B2A"/>
+  <SolidColorBrush x:Key="TextoBrush" Color="#B1B7BE"/>
   <SolidColorBrush x:Key="Resalto" Color="#98A2B3"/>
+  
   <SolidColorBrush x:Key="Subtitle" Color="#E5EFA2"/>
-  <SolidColorBrush x:Key="Estadistica" Color="#E37419"/>
+  <SolidColorBrush x:Key="Estadistica" Color="#A36431"/>
 
-  <!-- Teclado -->
   <SolidColorBrush x:Key="NumBotton" Color="#2BAFBFD0"/>
   <SolidColorBrush x:Key="SaveBotton" Color="#F7E1E7EC"/>
+  <SolidColorBrush x:Key="TextBotton" Color="#FA111317"/>
 
   <!-- Botones  -->
   <SolidColorBrush x:Key="BorderEditar" Color="#222B36"/> <!-- Boton de editar menu -->
-  <SolidColorBrush x:Key="BotonDelete" Color="#932D2D30" />
 
   <SolidColorBrush x:Key="BotonCeleste" Color="#99C0F3"/>
   <SolidColorBrush x:Key="BotonGreen" Color="#D060BC65"/>
   <SolidColorBrush x:Key="BotonAdd" Color="#D060BC65" />
-
-  <SolidColorBrush x:Key="BotonText" Color="#F7ECE7E7" />  <!-- texto de teclado de numeros -->
-  <SolidColorBrush x:Key="TextBotton" Color="#FA060606"/>  <!-- texto de acciones de botones -->
+  <SolidColorBrush x:Key="BotonDelete" Color="#641111be" />
+  <SolidColorBrush x:Key="BotonText" Color="#F7F3EDED" />
 
   <SolidColorBrush x:Key="Border" Color="#D0687168"/>
 
+  <!-- Modal -->
+  <SolidColorBrush x:Key="FondoPanelModal" Color="#602C2C38"/>
+  <SolidColorBrush x:Key="FondoModal" Color="#313030"/>
+  <SolidColorBrush x:Key="BorderModal" Color="#ececf1f3"/>
+  <SolidColorBrush x:Key="BotonFondo" Color="#97393A3C"/>
+  
+  <!-- Status Colors -->
+  <SolidColorBrush x:Key="SuccessBrush" Color="#28a745"/>
+  <SolidColorBrush x:Key="WarningBrush" Color="#ffc107"/>
+  <SolidColorBrush x:Key="ErrorBrush" Color="#dc3545"/>
+  <SolidColorBrush x:Key="SuccessBrushTransparent" Color="#28a745" Opacity="0.3"/>
+  <SolidColorBrush x:Key="WarningBrushTransparent" Color="#ffc107" Opacity="0.3"/>
+  <SolidColorBrush x:Key="ErrorBrushTransparent" Color="#dc3545" Opacity="0.3"/>
+  
 </ResourceDictionary>

@@ -1,17 +1,23 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace RestaurantePOS.Core.Application.Request
+using System.Text.Json.Serialization;
+
+namespace MiComanderaApp.Core.Application.Request
 {
     public class IngredienteRequest
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
+        [JsonPropertyName("name")]
+        public string Name { get; set; } = "";
+
+        [JsonPropertyName("initialQuantity")]
         public double InitialQuantity { get; set; }
+
+        [JsonPropertyName("minimumQuantity")]
         public double MinimumQuantity { get; set; }
+
+        [JsonPropertyName("unitCost")]
         public decimal UnitCost { get; set; }
-        public string UnitOfMeasure { get; set; } = string.Empty;
+
+        [JsonPropertyName("unitOfMeasure")]
+        public string UnitOfMeasure { get; set; } = "";
     }
 }

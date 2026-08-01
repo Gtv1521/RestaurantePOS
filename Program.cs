@@ -38,6 +38,8 @@ using MiComanderaApp.Views;
 using MiComanderaApp.Services;
 using MiComanderaApp.Core.Application.UseCases.Product;
 using MiComanderaApp.Core.Application.UseCases.Table;
+using MiComanderaApp.Core.Application.UseCases.Inventario.Ingredientes;
+using MiComanderaApp.Presentation.ViewModels.Components.Inventario;
 using MiComanderaApp.Presentation.Messages;
 using CommunityToolkit.Mvvm.Messaging;
 using MiComanderaApp.Core.Application.UseCases.Observacion;
@@ -114,6 +116,9 @@ sealed class Program
                 services.AddSingleton<CantidadPaxViewModel>();
                 services.AddTransient<InventarioComponentViewModel>();
 
+                // modal
+                services.AddTransient<NewUserModalViewModel>();
+
                 // global states
                 services.AddScoped<TableState>();
 
@@ -122,10 +127,12 @@ sealed class Program
                 services.AddScoped<ISession<SessionModel>, SessionService>();
                 services.AddScoped<IMultipleCrud<CatalogoModel, CatalogoRequest>, CatalogoRepository>();
                 services.AddScoped<IMultipleCrud<ProductoModel, ProductoRequest>, ProductoRepository>();
+                services.AddScoped<IMultipleCrud<IngredienteModel, IngredienteRequest>, IngredienteRepository>();
                 services.AddScoped<IGetList<ProductoModel>, ProductoRepository>();
                 services.AddScoped<IMultipleCrud<TableModel, TableRequest>, TablesRepository>();
                 services.AddScoped<IOptionsMesas<VentaModel>, TablesRepository>();
                 services.AddScoped<IGetOpens<VentaModel>, TablesRepository>();
+                services.AddScoped<IngredienteRepository>();
                 services.AddScoped<IMultipleCrud<ObservacionModel, ObservacionRequest>, ObservacionRepository>();
                 
 
@@ -138,6 +145,7 @@ sealed class Program
                 services.AddScoped<InsertProductUseCase>();
                 services.AddScoped<OcuparTableUseCase>();
                 services.AddScoped<GetTablesOpenUseCase>();
+                services.AddScoped<GetAllIngredientesUseCase>();
                 services.AddScoped<GetAllObservacionUseCase>();
 
                 // signalR
