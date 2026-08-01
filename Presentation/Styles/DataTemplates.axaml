@@ -78,7 +78,7 @@
                     </Style>
                 </Button.Styles>
 
-                <Grid RowDefinitions="*,*,Auto">
+                <Grid RowDefinitions="*,*">
                     <StackPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="1">
                         <TextBlock Text="{Binding TableNumber}"
                                    HorizontalAlignment="Center"
@@ -87,22 +87,52 @@
                                    FontWeight="Black"
                                    Foreground="{DynamicResource TextoColor}" />
                     </StackPanel>
-                    <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="1">
-                  
-                        <TextBlock HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   FontSize="13"
-                                   IsVisible="{Binding Pax}"
-                                   Foreground="{DynamicResource TextoColor}"> 
+                    <Border Grid.Row="1"
+                                Background="#40FFFFFF"
+                                CornerRadius="8"
+                                Padding="8,4"
+                                Margin="10,0,10,4"
+                                IsVisible="{Binding Open}">
+                            
+                            <Grid ColumnDefinitions="*,*" HorizontalAlignment="Center" ColumnSpacing="12">
+                                
+                                <!-- Columna 1: Pax con ícono -->
+                                <StackPanel Grid.Column="0" 
+                                            VerticalAlignment="Center" 
+                                            HorizontalAlignment="Center"
+                                            Spacing="0">
+                                    <TextBlock Text="👤"
+                                            FontSize="12"
+                                            HorizontalAlignment="Center"/>
+                                    <TextBlock Text="{Binding CantidadPax}"
+                                            FontSize="14"
+                                            FontWeight="SemiBold"
+                                            Foreground="{DynamicResource TextoColor}"
+                                            HorizontalAlignment="Center"/>
+                                </StackPanel>
+                                
+                                <!-- Columna 2: Ins con ícono -->
+                                <StackPanel Grid.Column="1" 
+                                            VerticalAlignment="Center" 
+                                            HorizontalAlignment="Center"
+                                            Spacing="0">
+                                    <TextBlock Text="📋"
+                                            FontSize="12"
+                                            HorizontalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Instancia}"
+                                            FontSize="14"
+                                            FontWeight="SemiBold"
+                                            Foreground="{DynamicResource TextoColor}"
+                                            HorizontalAlignment="Center"/>
+                                </StackPanel>
+                                
+                            </Grid>
+                        </Border>
 
-                            <Run Text="Pax: "/>
-                            <Run Text="{Binding Table.Capacidad}"/>
-                        </TextBlock>
-
-                    </StackPanel>
-                    <StackPanel Grid.Row="2" 
+                    <StackPanel Grid.Row="1" 
                                     Orientation="Horizontal" 
                                     HorizontalAlignment="Center"
+                                    IsVisible="{Binding Vacio}"
                                     Spacing="8">
                             <Button Classes="MesaActionButton"
                                     Content="📝"
@@ -116,6 +146,7 @@
                                     />
                         </StackPanel>
                 </Grid>
+           
             </Button>
         </Border>
     </DataTemplate>
