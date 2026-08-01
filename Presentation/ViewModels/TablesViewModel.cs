@@ -106,9 +106,8 @@ public partial class TablesViewModel : ViewModelBase
     [RelayCommand]
     public async Task AbirNuevaOrden()
     {
-        var vm = _factory.Create<CantidadPaxViewModel>();
-        vm.State(false);
-        _navigationService.NavigateTo(vm);
+        // Abrir una nueva orden
+        _navigationService.NavigateTo<NewOrderViewModel>();
     }
 
     [RelayCommand]

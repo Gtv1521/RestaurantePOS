@@ -7,7 +7,7 @@
   <SolidColorBrush x:Key="Name" Color="#F6E2C013"/>
 
   <SolidColorBrush x:Key="TextoColor" Color="#DCE3E9"/>
-  <SolidColorBrush x:Key="TextoBrush" Color="#D8DFE7"/>
+  <SolidColorBrush x:Key="TextoBrush" Color="#0D1B2A"/>
   <SolidColorBrush x:Key="Resalto" Color="#98A2B3"/>
   <SolidColorBrush x:Key="Subtitle" Color="#E5EFA2"/>
   <SolidColorBrush x:Key="Estadistica" Color="#E37419"/>
@@ -28,9 +28,5 @@
   <SolidColorBrush x:Key="TextBotton" Color="#FA060606"/>  <!-- texto de acciones de botones -->
 
   <SolidColorBrush x:Key="Border" Color="#D0687168"/>
-
-  <SolidColorBrush x:Key="FondoPanelModal" Color="#5B36363A"/>
-  <SolidColorBrush x:Key="FondoModal" Color="#1A0E26"/>
-  <SolidColorBrush x:Key="BorderModal" Color="#615fb368"/>
 
 </ResourceDictionary>
