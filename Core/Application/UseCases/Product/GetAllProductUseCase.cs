@@ -19,7 +19,8 @@ namespace MiComanderaApp.Core.Application.UseCases.Product
 
         public async Task<IEnumerable<ProductoModel>> Execute()
         {
-            return await _repo.GetAllAsync();
+            var result = await _repo.GetAllAsync();
+            return result;
         }
     }
 }

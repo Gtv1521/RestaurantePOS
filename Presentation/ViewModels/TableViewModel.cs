@@ -4,14 +4,17 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Avalonia.Data.Converters;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using MiComanderaApp.Core.Application.UseCases.Table;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
+using MiComanderaApp.Presentation.Messages;
 using MiComanderaApp.Presentation.States;
 using MiComanderaApp.ViewModels.Mesas;
 using MiComanderaApp.ViewModels.Orders;
@@ -24,16 +27,19 @@ public partial class TableViewModel : ViewModelBase
     private readonly IViewModelFactory _factory;
     private readonly OcuparTableUseCase _ocuparMesa;
     private readonly TableState _dataTable;
+    private readonly IMessenger _messenger;
 
     public TableViewModel(
         INavigationService navigationService,
         IViewModelFactory factory,
+        IMessenger messenger,
         OcuparTableUseCase ocuparMesa,
         TableState dataTable)
     {
         _navigationService = navigationService;
         _dataTable = dataTable;
         _ocuparMesa = ocuparMesa;
+        _messenger = messenger;
         _factory = factory;
     }
 
@@ -50,7 +56,7 @@ public partial class TableViewModel : ViewModelBase
     [ObservableProperty] private bool _open = false;
     [ObservableProperty] private bool _vacio = false;
     [ObservableProperty] private bool _pax = false;
-
+    [ObservableProperty] private int? _instancia = 0;
     [ObservableProperty] private string? _cliente;
     [ObservableProperty] private int? _cantidadPax;
     [ObservableProperty] private string _claseEstado = "";
@@ -58,8 +64,8 @@ public partial class TableViewModel : ViewModelBase
     public string ColorEstado => Status switch
     {
         "Libre" => "#4CAF50",
-        "Ocupada" => "#2B6CB0",
-        "Reservada" => "#ED8936",
+        "Ocupado" => "#af5d40",
+        "Reservado" => "#ED8936",
         "Disponible" => "#34AA55",
         _ => "#95A5A6"
     };
@@ -75,10 +81,10 @@ public partial class TableViewModel : ViewModelBase
 
             return tiempo.TotalSeconds switch
             {
-                < 60 => $"⏱️ {tiempo.Seconds}s",
-                < 3600 => $"⏱️ {tiempo.Minutes} {(tiempo.Minutes == 1 ? "m" : "ms")}",
-                < 86400 => $"⏱️ {tiempo.Hours}h {tiempo.Minutes}m",
-                _ => $"⏱️ {tiempo.Days}d {tiempo.Hours}h {tiempo.Minutes}m"
+                < 60 => $"⏱️{tiempo.Seconds}s",
+                < 3600 => $"⏱️{tiempo.Minutes} {(tiempo.Minutes == 1 ? "m" : "ms")}",
+                < 86400 => $"⏱️{tiempo.Hours}h {tiempo.Minutes}m",
+                _ => $"⏱️{tiempo.Days}d {tiempo.Hours}h {tiempo.Minutes}m"
             };
         }
     }
@@ -109,7 +115,24 @@ public partial class TableViewModel : ViewModelBase
         Status = table.Estado;
         TableNumber = table.NumeroMesa;
 
-        if (Status == "Ocupada") Pax = true;
+        if (Status == "Ocupado")
+        {
+            Pax = true;
+            Open = true;
+            Instancia = table.VentasActivas.Count();
+            CantidadPax = table.VentasActivas.FirstOrDefault()?.Pax ?? 0;
+        }
+        else if (Status == "Libre")
+        {
+            Vacio = true;
+            Open = false;
+            Pax = false;
+        }
+        else if (Status == "Reservado")
+        {
+            Open = true;
+            Pax = false;
+        }
 
     }
 
@@ -131,14 +154,24 @@ public partial class TableViewModel : ViewModelBase
 
         switch (Status)
         {
-            case "Ocupada":
-                // Si la mesa está ocupada, vamos directo a la vista de la comanda.
-                var dataTableVm = _factory.Create<DataTableViewModel>();
-                // Aquí asumimos que VentaModel se obtiene de otra parte,
-                // por ahora se inicializa con valores del TableModel.
-                var venta = new VentaModel { NumeroMesa = Table!.NumeroMesa, Instancia = 0 }; // Ejemplo
-                dataTableVm.Initialize(venta, Table.Capacidad);
-                _navigationService.NavigateTo(dataTableVm);
+            case "Ocupado":
+
+                if (Table?.VentasActivas.Count() > 1)
+                {
+                    var ventasActivas = Table.VentasActivas.ToList();
+                    _messenger.Send(new TableOpenedMessage(TableNumber, ventasActivas));
+                }
+                else
+                {
+                    // Si la mesa está ocupada, vamos directo a la vista de la comanda.
+                    var dataTableVm = _factory.Create<DataTableViewModel>();
+                    // Aquí asumimos que VentaModel se obtiene de otra parte,
+                    // por ahora se inicializa con valores del TableModel.
+                    var venta = Table!.VentasActivas.FirstOrDefault(); // Ejemplo
+                    dataTableVm.Initialize(venta!, venta!.Pax);
+                    _navigationService.NavigateTo(dataTableVm);
+
+                }
                 break;
 
             case "Libre":
@@ -156,9 +189,11 @@ public partial class TableViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void SelectTable(VentaModel venta)
+    private void SelectTable()
     {
-
+        var dataTableVm = _factory.Create<DataTableViewModel>();
+        dataTableVm.Initialize(Venta!, Venta!.Pax);
+        _navigationService.NavigateTo(dataTableVm);
     }
 }
 

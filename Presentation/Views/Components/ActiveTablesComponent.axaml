@@ -12,7 +12,10 @@
   <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
     <ItemsControl ItemsSource="{Binding Tables}" ItemTemplate="{StaticResource Tables}">
       <ItemsControl.ItemsPanel>
-        <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
+        <ItemsPanelTemplate>
+          <WrapPanel HorizontalAlignment="Stretch"
+                     VerticalAlignment="Stretch" />
+        </ItemsPanelTemplate>
       </ItemsControl.ItemsPanel>
     </ItemsControl>
   </ScrollViewer>

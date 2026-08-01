@@ -28,10 +28,14 @@
                        FontWeight="Bold"
                        Foreground="{DynamicResource TextoColor}"/>
 
-            <TextBlock Text="{Binding NumeroMesa}"
-                       FontSize="22"
+            <TextBlock FontSize="22"
                        FontWeight="Bold"
-                       Foreground="{DynamicResource Estadistica}"/>
+                       Foreground="{DynamicResource Estadistica}">
+              <Run Text="  " />
+              <Run Text="{Binding NumeroMesa}" />
+              <Run Text="/" />
+              <Run Text="{Binding Instancia}" />
+            </TextBlock>
 
           </StackPanel>
 
@@ -316,7 +320,7 @@
       </Grid>
 
       <Border Grid.Row="1" Background="{DynamicResource FondoTarjeta}" BorderThickness="1" CornerRadius="12" Padding="10" Margin="0,8,0,0">
-        <Grid ColumnDefinitions="*,300" RowDefinitions="Auto,*">
+        <Grid ColumnDefinitions="*,300" RowDefinitions="*" >
 
 
           <Grid Grid.Column="0"
@@ -326,7 +330,6 @@
                 ColumnSpacing="5"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                MinHeight="270"
                 >
 
             <!-- titulo  -->

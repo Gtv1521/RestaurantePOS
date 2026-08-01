@@ -8,18 +8,19 @@ using MiComanderaApp.Models;
 
 namespace MiComanderaApp.Core.Application.UseCases.Table
 {
-    public class GetTablesUseCase
+    public class GetAllTablesUseCase
     {
-        private readonly ISingleCrud<TableModel, TableRequest> _repo;
+        private readonly IMultipleCrud<TableModel, TableRequest> _repo;
 
-        public GetTablesUseCase(ISingleCrud<TableModel, TableRequest> repo)
+        public GetAllTablesUseCase(IMultipleCrud<TableModel, TableRequest> repo)
         {
             _repo = repo;
         }
 
-        public async Task<IEnumerable<TableModel>> Execute(string id, int? page, int? size)
+        public async Task<IEnumerable<TableModel>> Execute()
         {
-            return await _repo.GetAllAsync(id, page, size);
+            var result = await _repo.GetAllAsync();
+            return result;
         }
     }
 }

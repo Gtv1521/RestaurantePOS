@@ -4,9 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
 using System.Threading.Tasks;
 using MiComanderaApp.Core.Application.Request;
+using MiComanderaApp.Core.Domain.Models;
 using MiComanderaApp.Exceptions;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
@@ -14,55 +14,43 @@ using Microsoft.Extensions.Options;
 
 namespace MiComanderaApp.Core.Infrastructure.Api
 {
-    public class TablesRepository : IMultipleCrud<TableModel, TableRequest>, IOptionsMesas<VentaModel>, IGetOpens<VentaModel>
+    public class ObservacionRepository : IMultipleCrud<ObservacionModel, ObservacionRequest>
     {
         private readonly HttpClient _httpClient;
         private readonly string _url;
 
-        public TablesRepository(IHttpClientFactory _factory, IOptions<ApiSettings> apiSettings)
+        public ObservacionRepository(
+            IHttpClientFactory factory,
+            IOptions<ApiSettings> settings
+        )
         {
-            _httpClient = _factory.CreateClient("MiComanderaApi");
-            _url = $"{apiSettings.Value.BaseUrl}/api/Table";
+            _httpClient = factory.CreateClient("MiComanderaApi");
+            _url = $"{settings.Value.BaseUrl}/api/Observacion";
         }
-
-        public Task<string> CreateAsync(TableRequest data)
+        public async Task<string> CreateAsync(ObservacionRequest data)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> DeleteAsync(string id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<TableModel>> GetAllAsync()
-        {
-            var response = await _httpClient.GetAsync($"{_url}");
+            var response = await _httpClient.PostAsJsonAsync($"{_url}", data);
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();
 
+                System.Console.WriteLine(error);
                 throw response.StatusCode switch
                 {
                     HttpStatusCode.BadRequest => new BadRequestException(error),
                     HttpStatusCode.NotFound => new NotFoundException(error),
+                    HttpStatusCode.Unauthorized => new UnauthorizedAccessException(error),
                     _ => new HttpRequestException(
                         $"Error {(int)response.StatusCode}: {error}")
                 };
             }
-
-            return await response.Content.ReadFromJsonAsync<IEnumerable<TableModel>>()
-                   ?? Enumerable.Empty<TableModel>();
+            var result = await response.Content.ReadFromJsonAsync<ObservacionModel>();
+            return result?.Id.ToString() ?? throw new InvalidOperationException("No se pudo crear la observación.");
         }
 
-        public Task<TableModel> GetAsync(string id)
+        public async Task<bool> DeleteAsync(string id)
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task<bool> LiberarMesa(int id)
-        {
-            var response = await _httpClient.GetAsync($"{_url}/{id}/liberar");
+            var response = await _httpClient.DeleteAsync($"{_url}/{id}");
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();
@@ -78,36 +66,12 @@ namespace MiComanderaApp.Core.Infrastructure.Api
 
             var result = await response.Content.ReadFromJsonAsync<bool?>();
             return result ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
+
         }
 
-        public async Task<VentaModel> OcuparMesa(int id)
+        public async Task<IEnumerable<ObservacionModel>> GetAllAsync()
         {
-            var response = await _httpClient.PostAsync($"{_url}/OcuparMesa/{id}", new StringContent("", Encoding.UTF8, "application/json"));
-            if (!response.IsSuccessStatusCode)
-            {
-                var error = await response.Content.ReadAsStringAsync();
-
-                throw response.StatusCode switch
-                {
-                    HttpStatusCode.BadRequest => new BadRequestException(error),
-                    HttpStatusCode.NotFound => new NotFoundException(error),
-                    _ => new HttpRequestException(
-                        $"Error {(int)response.StatusCode}: {error}")
-                };
-            }
-
-            var result = await response.Content.ReadFromJsonAsync<VentaModel>();
-            return result ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
-        }
-
-        public Task<bool> Reservar(int id, string? nota = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<VentaModel>> TablesOpen()
-        {
-            var response = await _httpClient.GetAsync($"{_url}/mesero/ocupadas");
+            var response = await _httpClient.GetAsync($"{_url}");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -121,12 +85,34 @@ namespace MiComanderaApp.Core.Infrastructure.Api
                         $"Error {(int)response.StatusCode}: {error}")
                 };
             }
-
-            var result = await response.Content.ReadFromJsonAsync<IEnumerable<VentaModel>>();
-            return result ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
+            return await response.Content.ReadFromJsonAsync<IEnumerable<ObservacionModel>>()
+               ?? Enumerable.Empty<ObservacionModel>();
         }
 
-        public Task<bool> UpdateAsync(string id, TableRequest data)
+        public async Task<ObservacionModel> GetAsync(string id)
+        {
+            var response = await _httpClient.GetAsync($"{_url}/{id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+
+                throw response.StatusCode switch
+                {
+                    HttpStatusCode.BadRequest => new BadRequestException(error),
+                    HttpStatusCode.NotFound => new NotFoundException(error),
+                    _ => new HttpRequestException(
+                        $"Error {(int)response.StatusCode}: {error}")
+                };
+            }
+
+            var result = await response.Content.ReadFromJsonAsync<ObservacionModel>();
+
+            return result ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
+
+        }
+
+        public Task<bool> UpdateAsync(string id, ObservacionRequest data)
         {
             throw new NotImplementedException();
         }
