@@ -8,7 +8,7 @@
                     xmlns:converters="using:MiComanderaApp.Presentation.Converters"
                     >
 
-    <converters:QuantityToColorConverter x:Key="QuantityToColorConverter"/>
+
 
     <DataTemplate x:Key="MesaTemplate" DataType="{x:Type vm:TableViewModel}">
         <Border Width="150"
