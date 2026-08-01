@@ -1,12 +1,12 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MiComanderaApp.Core.Domain.Models;
-using RestaurantePOS.Core.Application.UseCases.Ingrediente;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using MiComanderaApp.ViewModels;
 using System.Diagnostics;
+using MiComanderaApp.Core.Application.UseCases.Inventario.Ingredientes;
 
 namespace MiComanderaApp.ViewModels.Components.Admin
 {
@@ -29,7 +29,7 @@ namespace MiComanderaApp.ViewModels.Components.Admin
 
         private async Task LoadIngredientesAsync()
         {
-            var ingredientesList = await _getAllIngredientesUseCase.Execute();
+            var ingredientesList = await _getAllIngredientesUseCase.ExecuteAsync();
             foreach (var item in ingredientesList)
             {
                 Ingredientes.Add(item);

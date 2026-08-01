@@ -38,6 +38,5 @@ namespace MiComanderaApp.Core.Domain.Models
                 return "Stock saludable";
             }
         }
-        // --- FIN DE LA SOLUCIÓN ---
     }
 }

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MiComanderaApp.Core.Application.Request;
 using MiComanderaApp.Core.Domain.Models;
 using MiComanderaApp.Interfaces;
-using RestaurantePOS.Core.Application.Request;
 
 namespace RestaurantePOS.Core.Application.UseCases.Ingrediente
 {

@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MiComanderaApp.Core.Domain.Interfaces;
 using MiComanderaApp.Core.Application.Request;
-using RestaurantePOS.Core.Application.Request;
 
 namespace MiComanderaApp.ViewModels.Dialogs.Modals
 {

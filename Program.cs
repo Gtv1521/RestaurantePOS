@@ -39,7 +39,6 @@ using MiComanderaApp.Services;
 using MiComanderaApp.Core.Application.UseCases.Product;
 using MiComanderaApp.Core.Application.UseCases.Table;
 using MiComanderaApp.Core.Application.UseCases.Inventario.Ingredientes;
-using MiComanderaApp.Presentation.ViewModels.Components.Inventario;
 using MiComanderaApp.Presentation.Messages;
 using CommunityToolkit.Mvvm.Messaging;
 using MiComanderaApp.Core.Application.UseCases.Observacion;
@@ -136,9 +135,8 @@ sealed class Program
                 services.AddScoped<IMultipleCrud<TableModel, TableRequest>, TablesRepository>();
                 services.AddScoped<IOptionsMesas<VentaModel>, TablesRepository>();
                 services.AddScoped<IGetOpens<VentaModel>, TablesRepository>();
-                services.AddScoped<IngredienteRepository>();
                 services.AddScoped<IMultipleCrud<ObservacionModel, ObservacionRequest>, ObservacionRepository>();
-                
+
 
                 // usescases 
                 services.AddScoped<GetSessionSave>();

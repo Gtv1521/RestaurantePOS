@@ -11,7 +11,6 @@ using MiComanderaApp.Exceptions;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
 using Microsoft.Extensions.Options;
-using RestaurantePOS.Core.Application.Request;
 
 namespace MiComanderaApp.Core.Infrastructure.Api
 {

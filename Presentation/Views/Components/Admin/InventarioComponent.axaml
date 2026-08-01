@@ -36,7 +36,7 @@
                             <DataTemplate>
                                 <Grid ColumnDefinitions="*,*,*,*,*,Auto,Auto" VerticalAlignment="Center" Classes="DataGridRow">
                                     <TextBlock Text="{Binding Name}" Grid.Column="0"/>
-                                    <TextBlock Text="{Binding InitialQuantity}" Grid.Column="1"/>
+                                    <TextBlock Text="{Binding AvailableQuantity}" Grid.Column="1"/>
                                     <TextBlock Text="{Binding MinimumQuantity}" Grid.Column="2"/>
                                     <TextBlock Text="{Binding UnitCost}" Grid.Column="3"/>
                                     <TextBlock Text="{Binding UnitOfMeasure}" Grid.Column="4"/>

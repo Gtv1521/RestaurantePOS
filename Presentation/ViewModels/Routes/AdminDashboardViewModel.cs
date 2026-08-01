@@ -10,7 +10,6 @@ using LiveChartsCore.SkiaSharpView.Painting;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
 using MiComanderaApp.ViewModels.Components.Admin;
-using MiComanderaApp.Presentation.ViewModels.Components.Inventario;
 using SkiaSharp;
 
 namespace MiComanderaApp.ViewModels.Routes;
