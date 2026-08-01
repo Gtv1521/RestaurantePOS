@@ -36,8 +36,8 @@ public partial class CreateProductViewModel : ObservableObject, IDialogViewModel
     {
         var producto = new ProductoRequest
         {
-            Name = Nombre!,
-            CategoryId = 0,
+            Name = Nombre,
+            CategoryName = "",
             Price = (double)Precio
         };
 

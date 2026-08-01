@@ -5,6 +5,7 @@ using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using MiComanderaApp.Models;
+using MiComanderaApp.ViewModels;
 using SkiaSharp;
 
 namespace MiComanderaApp.ViewModels.Components.Admin;

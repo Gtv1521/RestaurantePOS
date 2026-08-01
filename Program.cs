@@ -35,12 +35,14 @@ using System.Net;
 using Microsoft.Extensions.Options;
 using MiComanderaApp.Presentation.States;
 using MiComanderaApp.Views;
-using MiComanderaApp.Presentation.Views.Dialogs.Modals;
-using MiComanderaApp.Presentation.Services;
+using MiComanderaApp.Services;
 using MiComanderaApp.Core.Application.UseCases.Product;
 using MiComanderaApp.Core.Application.UseCases.Table;
 using MiComanderaApp.Core.Application.UseCases.Inventario.Ingredientes;
 using MiComanderaApp.Presentation.ViewModels.Components.Inventario;
+using MiComanderaApp.Presentation.Messages;
+using CommunityToolkit.Mvvm.Messaging;
+using MiComanderaApp.Core.Application.UseCases.Observacion;
 
 namespace MiComanderaApp;
 
@@ -131,6 +133,8 @@ sealed class Program
                 services.AddScoped<IOptionsMesas<VentaModel>, TablesRepository>();
                 services.AddScoped<IGetOpens<VentaModel>, TablesRepository>();
                 services.AddScoped<IngredienteRepository>();
+                services.AddScoped<IMultipleCrud<ObservacionModel, ObservacionRequest>, ObservacionRepository>();
+                
 
                 // usescases 
                 services.AddScoped<GetSessionSave>();
@@ -142,6 +146,7 @@ sealed class Program
                 services.AddScoped<OcuparTableUseCase>();
                 services.AddScoped<GetTablesOpenUseCase>();
                 services.AddScoped<GetAllIngredientesUseCase>();
+                services.AddScoped<GetAllObservacionUseCase>();
 
                 // signalR
                 services.AddSingleton<SignalRService>();
@@ -153,7 +158,13 @@ sealed class Program
                 services.AddSingleton<MainWindow>();
                 services.AddTransient<CreateProductViewModel>();
                 services.AddTransient<CreateProduct>();
+                services.AddTransient<IngredienteDialogViewModel>();
+                services.AddTransient<IngredienteDialog>();
                 services.AddSingleton<IDialogService, DialogService>();
+
+
+                // messager
+                services.AddSingleton<IMessenger, WeakReferenceMessenger>();
             })
             .Build();
 

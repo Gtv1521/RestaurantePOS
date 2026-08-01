@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using MiComanderaApp.Core.Domain.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
 
 namespace MiComanderaApp.Presentation.Services
 {
@@ -20,21 +18,34 @@ namespace MiComanderaApp.Presentation.Services
             _serviceProvider = serviceProvider;
         }
 
-        public async Task<TResult?> ShowDialogAsync<TView, TViewModel, TResult>(PixelPoint? posicion)
-     where TView : Window, new()
-     where TViewModel : class, IDialogViewModel<TResult>
+        public Task<TResult?> ShowDialogAsync<TView, TViewModel, TResult>(PixelPoint? position = null)
+            where TView : Window, new()
+            where TViewModel : class, IDialogViewModel<TResult>
         {
-            var window = new TView();
+            var viewModel = _serviceProvider.GetRequiredService<TViewModel>();
+            return ShowDialogInternalAsync<TView, TViewModel, TResult>(viewModel, position);
+        }
 
-            var viewModel = _serviceProvider
-                .GetRequiredService<TViewModel>();
+        public Task<TResult?> ShowDialogAsync<TView, TViewModel, TResult>(TViewModel viewModel, PixelPoint? position = null)
+            where TView : Window, new()
+            where TViewModel : class, IDialogViewModel<TResult>
+        {
+            return ShowDialogInternalAsync<TView, TViewModel, TResult>(viewModel, position);
+        }
 
-            window.DataContext = viewModel;
+        private async Task<TResult?> ShowDialogInternalAsync<TView, TViewModel, TResult>(TViewModel viewModel, PixelPoint? position)
+            where TView : Window, new()
+            where TViewModel : class, IDialogViewModel<TResult>
+        {
+            var window = new TView
+            {
+                DataContext = viewModel
+            };
 
-            if (posicion.HasValue)
+            if (position.HasValue)
             {
                 window.WindowStartupLocation = WindowStartupLocation.Manual;
-                window.Position = posicion.Value;
+                window.Position = position.Value;
             }
 
             viewModel.CloseRequested += result =>
@@ -42,7 +53,7 @@ namespace MiComanderaApp.Presentation.Services
                 window.Close(result);
             };
 
-            return await window.ShowDialog<TResult>(_windowProvider.MainWindow);
+            return await window.ShowDialog<TResult?>(_windowProvider.MainWindow);
         }
     }
 }

@@ -8,7 +8,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="avares://MiComanderaApp/Presentation/Styles/DataTemplates.axaml" />
-                <ResourceInclude Source="avares://MiComanderaApp/Presentation/Styles/Themes/DarkTheme.axaml"/>
+                <ResourceInclude Source="avares://MiComanderaApp/Presentation/Styles/Themes/LigthTheme.axaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
@@ -19,7 +19,6 @@
 
     <Application.Styles>
         <FluentTheme />
-        <StyleInclude Source="avares://MiComanderaApp/Presentation/Styles/Partes/TextBoxStyles.axaml"/>
         <StyleInclude Source="avares://MiComanderaApp/Presentation/Styles/NaviTheme.axaml"/>
     </Application.Styles>
 

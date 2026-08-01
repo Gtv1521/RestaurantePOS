@@ -84,4 +84,11 @@ public partial class AdminDashboardViewModel : ViewModelBase
         var vm = _factory.Create<TablesViewModel>();
         _navigation.NavigateTo(vm);
     }
+
+    [RelayCommand]
+    private void IrAInventario()
+    {
+        var vm = _factory.Create<InventarioComponentViewModel>();
+        _navigation.NavigateTo(vm);
+    }
 }
