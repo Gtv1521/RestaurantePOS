@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DynamicData;
 using MiComanderaApp.Core.Application.UseCases.Catalogo;
+using MiComanderaApp.Core.Application.UseCases.Observacion;
 using MiComanderaApp.Core.Application.UseCases.Session;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
@@ -31,7 +32,7 @@ public class CategoriaItem
 }
 public partial class ObservacionItem : ObservableObject
 {
-    // public int Id { get; set; }
+    public int Id { get; set; }
     public string Item { get; set; } = "";
     public decimal? Precio { get; set; }
 
@@ -64,6 +65,7 @@ public partial class DataTableViewModel : ViewModelBase
     private readonly GetSessionSave _getUserUseCase;
     private readonly GetCatalogoXIdProdUseCase _getCatalogoXIdProdUseCase;
     private readonly INavigationService _navigate;
+    private readonly GetAllObservacionUseCase _getAllObsUseCase;
 
 
     // 2. Propiedades Reactivas del Lado Izquierdo (La Cuenta)
@@ -99,11 +101,13 @@ public partial class DataTableViewModel : ViewModelBase
         GetAllCatalogoUseCase getCatalogoUseCase,
         GetSessionSave getUserUseCase,
         INavigationService navigation,
+        GetAllObservacionUseCase getAllObsUseCase,
         GetCatalogoXIdProdUseCase getCatalogoXIdProdUseCase
         )
     {
         _getCatalogoUseCase = getCatalogoUseCase;
         _getUserUseCase = getUserUseCase;
+        _getAllObsUseCase = getAllObsUseCase;
         _getCatalogoXIdProdUseCase = getCatalogoXIdProdUseCase;
         _navigate = navigation;
 
@@ -286,81 +290,20 @@ public partial class DataTableViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void ChargerObservations()
+    private async Task ChargerObservationsAsync()
     {
         NamePanel = "OBSERVACIONES";
         Observations.Clear();
         MostrandoObservaciones = true;
 
-        var observacion = new List<ObservacionItem>()
-        {
-            new ObservacionItem
-            {
-                Item = "Sin",
-                Precio = null
-            },
-            new ObservacionItem
-            {
-                Item = "Con",
-                Precio = null
-            },
-            new ObservacionItem
-            {
-                Item = "Sal",
-                Precio = null
-            },
-            new ObservacionItem
-            {
-                Item = "Lechuga",
-                Precio = null
-            },
-            new ObservacionItem
-            {
-                Item = "Tomate",
-                Precio = null
-            },
-            new ObservacionItem
-            {
-                Item = "Vinagre",
-                Precio = null
-            },
-            new ObservacionItem
-            {
-                Item = "Salsa",
-                Precio = null
-            },
-            new ObservacionItem
-            {
-                Item = "Cebolla",
-                Precio = null
-            },
-            new ObservacionItem
-            {
-                Item = "Ya",
-                Precio = null
-            },
-            new ObservacionItem
-            {
-                Item = "Con Fuertes",
-                Precio = null
-            },
-            new ObservacionItem
-            {
-                Item = "Gratinado",
-                Precio = 2000
-            },
-            new ObservacionItem
-            {
-                Item = "Con guacamole",
-                Precio = 3000
-            },
-
-        };
-
-
+        var observacion = await _getAllObsUseCase.Execute();
         foreach (var item in observacion)
         {
-            Observations.Add(item);
+            Observations.Add(new ObservacionItem
+            {
+                Item = item.Observacion,
+                Precio = item.Precio
+            });
         }
     }
 

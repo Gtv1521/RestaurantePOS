@@ -35,7 +35,22 @@ public partial class ActiveTablesComponentViewModel : ViewModelBase
         _tablesOpen = tablesOpen;
         _userSesion = userSesion;
         _allTables = allTables;
+    }
+
+    public void Initialize()
+    {
         _ = LoadOpenTables();
+    }
+
+    public void LoadSabeTable(List<VentaModel> venta)
+    {
+        foreach (var table in venta)
+        {
+            var tableVm = _factory.Create<TableViewModel>();
+            tableVm.InicializeVenta(table);
+
+            Tables.Add(tableVm);
+        }
     }
 
     private async Task LoadOpenTables()

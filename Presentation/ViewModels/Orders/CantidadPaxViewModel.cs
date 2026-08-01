@@ -40,11 +40,11 @@ public partial class CantidadPaxViewModel : ViewModelBase
         _factory = factory;
     }
 
-    public async Task Initialize(int table, VentaModel ventaModel)
+    public async Task Initialize(int table, VentaModel? ventaModel)
     {
         Mesa = table;
-        DataVenta = ventaModel;
-        Instancia = ventaModel.Instancia;
+        DataVenta = ventaModel!;
+        Instancia = ventaModel!.Instancia;
         State(true);
     }
     public void State(bool openTable)

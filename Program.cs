@@ -39,6 +39,9 @@ using MiComanderaApp.Presentation.Views.Dialogs.Modals;
 using MiComanderaApp.Presentation.Services;
 using MiComanderaApp.Core.Application.UseCases.Product;
 using MiComanderaApp.Core.Application.UseCases.Table;
+using MiComanderaApp.Presentation.Messages;
+using CommunityToolkit.Mvvm.Messaging;
+using MiComanderaApp.Core.Application.UseCases.Observacion;
 
 namespace MiComanderaApp;
 
@@ -126,6 +129,8 @@ sealed class Program
                 services.AddScoped<IMultipleCrud<TableModel, TableRequest>, TablesRepository>();
                 services.AddScoped<IOptionsMesas<VentaModel>, TablesRepository>();
                 services.AddScoped<IGetOpens<VentaModel>, TablesRepository>();
+                services.AddScoped<IMultipleCrud<ObservacionModel, ObservacionRequest>, ObservacionRepository>();
+                
 
                 // usescases 
                 services.AddScoped<GetSessionSave>();
@@ -136,6 +141,7 @@ sealed class Program
                 services.AddScoped<InsertProductUseCase>();
                 services.AddScoped<OcuparTableUseCase>();
                 services.AddScoped<GetTablesOpenUseCase>();
+                services.AddScoped<GetAllObservacionUseCase>();
 
                 // signalR
                 services.AddSingleton<SignalRService>();
@@ -148,6 +154,10 @@ sealed class Program
                 services.AddTransient<CreateProductViewModel>();
                 services.AddTransient<CreateProduct>();
                 services.AddSingleton<IDialogService, DialogService>();
+
+
+                // messager
+                services.AddSingleton<IMessenger, WeakReferenceMessenger>();
             })
             .Build();
 
