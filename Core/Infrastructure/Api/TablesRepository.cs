@@ -25,7 +25,7 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             _url = $"{apiSettings.Value.BaseUrl}/api/Table";
         }
 
-        public Task<string> CreateAsync(TableRequest data)
+        public Task<string?> CreateAsync(TableRequest data)
         {
             throw new NotImplementedException();
         }

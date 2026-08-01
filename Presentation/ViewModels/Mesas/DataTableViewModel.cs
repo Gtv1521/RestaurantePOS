@@ -121,6 +121,7 @@ public partial class DataTableViewModel : ViewModelBase
         NumeroMesa = venta.NumeroMesa.ToString();
         CantidadPax = cantidad;
         Instancia = venta.Instancia.ToString();
+        NombreMesaCustom = venta.Alias;
     }
 
     private async Task CargarDatosIniciales()

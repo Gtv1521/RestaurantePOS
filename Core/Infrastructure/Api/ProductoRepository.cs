@@ -23,7 +23,7 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             _url = $"{apiSettings.Value.BaseUrl}/api/Product";
         }
 
-        public async Task<string> CreateAsync(ProductoRequest data)
+        public async Task<string?> CreateAsync(ProductoRequest data)
         {
             var response = await _httpClient.PostAsJsonAsync($"{_url}", data);
             if (!response.IsSuccessStatusCode)

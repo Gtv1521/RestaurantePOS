@@ -19,9 +19,7 @@
         <Grid ColumnDefinitions="*,Auto">
 
           <!-- Izquierda -->
-          <StackPanel Grid.Column="0"
-                      Orientation="Horizontal"
-                      Spacing="5">
+          <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="5">
 
             <TextBlock Text="MESA"
                        FontSize="22"
@@ -48,7 +46,7 @@
             <TextBlock Text="{Binding NombreMesaCustom}"
                        FontSize="16"
                        FontWeight="SemiBold"
-                       Foreground="#E0E6ED"
+                       Foreground="{DynamicResource TextoColor}"
                        VerticalAlignment="Center"
                        IsVisible="{Binding NombreMesaCustom, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
 
@@ -67,7 +65,7 @@
         </Grid>
 
         <!-- Datos secundarios (Mesero y Hora) -->
-        <Grid ColumnDefinitions="*, *">
+        <Grid ColumnDefinitions="*, *, *">
           <TextBlock Grid.Column="0" Text="{Binding NombreMesero, StringFormat='Mesero: {0}'}" FontSize="13" Foreground="#98A2B3"/>
           <TextBlock Grid.Column="1" Text="{Binding CantidadPax, StringFormat='Pax: {0}'}" FontSize="13" Foreground="#98A2B3"/>
           <TextBlock Grid.Column="2" Text="{Binding HoraApertura, StringFormat='Hora: {0:HH:mm}'}" FontSize="13" Foreground="#98A2B3" HorizontalAlignment="Right"/>

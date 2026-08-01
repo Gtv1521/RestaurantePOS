@@ -55,6 +55,9 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Components/Admin/EstadisticasComponent.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Components/Admin/InventarioComponent.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Components/Admin/MenuComponent.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
@@ -68,6 +71,9 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Dialogs/Modals/CreateProduct.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Dialogs/Modals/IngredienteDialog.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/MainContentView.axaml]

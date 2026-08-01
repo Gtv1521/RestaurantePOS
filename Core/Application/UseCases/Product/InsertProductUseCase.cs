@@ -17,7 +17,7 @@ namespace MiComanderaApp.Core.Application.UseCases.Product
             _repo = repo;
         }
 
-        public async Task<string> Execute(ProductoRequest request)
+        public async Task<string?> Execute(ProductoRequest request)
         {
             return await _repo.CreateAsync(request);
         }

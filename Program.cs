@@ -43,6 +43,10 @@ using MiComanderaApp.Presentation.ViewModels.Components.Inventario;
 using MiComanderaApp.Presentation.Messages;
 using CommunityToolkit.Mvvm.Messaging;
 using MiComanderaApp.Core.Application.UseCases.Observacion;
+using MiComanderaApp.Presentation.Views.Dialogs.Modals;
+using MiComanderaApp.ViewModels.Dialogs.Modals;
+using MiComanderaApp.Views.Dialogs.Modals;
+using MiComanderaApp.Presentation.Services;
 
 namespace MiComanderaApp;
 
