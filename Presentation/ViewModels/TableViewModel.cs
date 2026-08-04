@@ -138,7 +138,6 @@ public partial class TableViewModel : ViewModelBase
 
     public void InicializeVenta(VentaModel venta)
     {
-        System.Console.WriteLine($"Inicializando venta para la mesa {venta.Pax}");
         Venta = venta;
         CantidadPax = venta.Pax;
         Cliente = venta.Alias;

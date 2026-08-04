@@ -29,7 +29,7 @@ public partial class CantidadPaxViewModel : ViewModelBase
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Title))]
     private bool _newMesa = false;
-    [ObservableProperty] private VentaModel? _dataVenta;
+    [ObservableProperty] private VentaModel _dataVenta = new();
 
     public CantidadPaxViewModel(
         INavigationService navigationService,
@@ -128,6 +128,15 @@ public partial class CantidadPaxViewModel : ViewModelBase
         }
     }
 
+    private void Reset()
+    {
+        CantidadPax = string.Empty;
+        DataVenta = new VentaModel();
+        Mesa = 0;
+        Instancia = 0;
+        State(false);
+    }
+
     // valida y actualiza el numero de personas
     private async Task SaveDataVentaAsync()
     {
@@ -136,6 +145,7 @@ public partial class CantidadPaxViewModel : ViewModelBase
             var result = await _updatePaxCase.ExecuteAsync(DataVenta!.VentaId, int.Parse(CantidadPax));
             if (!result) System.Console.WriteLine("Error al actualizar la cantidad de pax");
             GoToDataTable();
+            Reset();
         }
         catch (Exception ex)
         {
