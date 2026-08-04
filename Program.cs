@@ -46,6 +46,7 @@ using MiComanderaApp.Presentation.Views.Dialogs.Modals;
 using MiComanderaApp.ViewModels.Dialogs.Modals;
 using MiComanderaApp.Views.Dialogs.Modals;
 using MiComanderaApp.Presentation.Services;
+using MiComanderaApp.Core.Application.UseCases.Venta;
 
 namespace MiComanderaApp;
 
@@ -136,6 +137,7 @@ sealed class Program
                 services.AddScoped<IOptionsMesas<VentaModel>, TablesRepository>();
                 services.AddScoped<IGetOpens<VentaModel>, TablesRepository>();
                 services.AddScoped<IMultipleCrud<ObservacionModel, ObservacionRequest>, ObservacionRepository>();
+                services.AddScoped<IOptionVenta, VentaRepository>();
 
 
                 // usescases 
@@ -149,6 +151,7 @@ sealed class Program
                 services.AddScoped<GetTablesOpenUseCase>();
                 services.AddScoped<GetAllIngredientesUseCase>();
                 services.AddScoped<GetAllObservacionUseCase>();
+                services.AddScoped<UpdatePaxUseCase>();
 
                 // signalR
                 services.AddSingleton<SignalRService>();

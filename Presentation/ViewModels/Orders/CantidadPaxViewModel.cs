@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MiComanderaApp.Core.Application.UseCases.Table;
+using MiComanderaApp.Core.Application.UseCases.Venta;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
 using MiComanderaApp.ViewModels.Mesas;
@@ -15,7 +16,7 @@ public partial class CantidadPaxViewModel : ViewModelBase
     private readonly INavigationService _navigationService;
     private readonly IViewModelFactory _factory;
     private readonly OcuparTableUseCase _ocuparCase;
-
+    private readonly UpdatePaxUseCase _updatePaxCase;
 
 
     [ObservableProperty] private int _mesa;
@@ -28,15 +29,17 @@ public partial class CantidadPaxViewModel : ViewModelBase
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Title))]
     private bool _newMesa = false;
-    [ObservableProperty] private VentaModel _dataVenta = new();
+    [ObservableProperty] private VentaModel? _dataVenta;
 
     public CantidadPaxViewModel(
         INavigationService navigationService,
         IViewModelFactory factory,
+        UpdatePaxUseCase updatePaxCase,
         OcuparTableUseCase ocuparCase)
     {
         _navigationService = navigationService;
         _ocuparCase = ocuparCase;
+        _updatePaxCase = updatePaxCase;
         _factory = factory;
     }
 
@@ -46,6 +49,13 @@ public partial class CantidadPaxViewModel : ViewModelBase
         DataVenta = ventaModel!;
         Instancia = ventaModel!.Instancia;
         State(true);
+    }
+
+    public async Task InitializeVenta(VentaModel ventaModel)
+    {
+        Mesa = ventaModel.NumeroMesa;
+        DataVenta = ventaModel;
+        Instancia = ventaModel.Instancia;
     }
 
     public void State(bool openTable)
@@ -91,22 +101,53 @@ public partial class CantidadPaxViewModel : ViewModelBase
     {
         if (!NewMesa) // abre la mesa 
         {
-            var venta = await OcuparMesa(int.Parse(CantidadPax));
-            Instancia = venta.Instancia;
-            var vm = _factory.Create<CantidadPaxViewModel>();
-            await vm.Initialize(int.Parse(CantidadPax), venta);
-            vm.State(true);
-            _navigationService.NavigateTo(vm);
-
+            await OpenTableAndNavigateAsync();
         }
         else // edita la cantidad de personas 
         {
-            var vm = _factory.Create<DataTableViewModel>();
-            vm.Initialize(DataVenta, int.Parse(CantidadPax));
-            _navigationService.NavigateTo(vm);
+            await SaveDataVentaAsync();
 
         }
         CantidadPax = string.Empty;
+    }
+
+    // ocupar mesa y navegar a la vista de cantidad de pax
+    private async Task OpenTableAndNavigateAsync()
+    {
+        try
+        {
+            var venta = await OcuparMesa(int.Parse(CantidadPax));
+            var vm = _factory.Create<CantidadPaxViewModel>();
+            await vm.InitializeVenta(venta);
+            vm.State(true);
+            _navigationService.NavigateTo(vm);
+        }
+        catch (Exception ex)
+        {
+            System.Console.WriteLine($"Error al ocupar la mesa: {ex.Message}");
+        }
+    }
+
+    // valida y actualiza el numero de personas
+    private async Task SaveDataVentaAsync()
+    {
+        try
+        {
+            var result = await _updatePaxCase.ExecuteAsync(DataVenta!.VentaId, int.Parse(CantidadPax));
+            if (!result) System.Console.WriteLine("Error al actualizar la cantidad de pax");
+            GoToDataTable();
+        }
+        catch (Exception ex)
+        {
+            System.Console.WriteLine($"Error al guardar la cantidad de pax: {ex.Message}");
+        }
+    }
+    // cambiar de vista a data table
+    private void GoToDataTable()
+    {
+        var vm = _factory.Create<DataTableViewModel>();
+        vm.Initialize(DataVenta!, int.Parse(CantidadPax));
+        _navigationService.NavigateTo(vm);
     }
 
     private bool CanAccept() => !string.IsNullOrEmpty(CantidadPax) && CantidadPax != "0";

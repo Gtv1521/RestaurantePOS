@@ -38,4 +38,10 @@ namespace MiComanderaApp.Interfaces
         Task<bool> LiberarMesa(int id);
         Task<bool> Reservar(int id, string? nota = null);
     }
+
+    public interface IOptionVenta
+    {
+        Task<bool> UptatePax(int id, int pax);
+    }
+
 }

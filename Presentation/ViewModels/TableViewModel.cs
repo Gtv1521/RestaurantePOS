@@ -120,7 +120,7 @@ public partial class TableViewModel : ViewModelBase
             Pax = true;
             Open = true;
             Instancia = table.VentasActivas.Count();
-            CantidadPax = table.VentasActivas.FirstOrDefault()?.Pax ?? 0;
+            CantidadPax = table.VentasActivas.FirstOrDefault()?.Pax;
         }
         else if (Status == "Libre")
         {
@@ -138,6 +138,7 @@ public partial class TableViewModel : ViewModelBase
 
     public void InicializeVenta(VentaModel venta)
     {
+        System.Console.WriteLine($"Inicializando venta para la mesa {venta.Pax}");
         Venta = venta;
         CantidadPax = venta.Pax;
         Cliente = venta.Alias;

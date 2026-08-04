@@ -80,7 +80,7 @@ public partial class TablesViewModel : ViewModelBase
         var vm = _factory.Create<ActiveTablesComponentViewModel>();
         vm.LoadSabeTable(message.Ventas);
 
-        // Mostrar en la UI
+        // Mostrar en la UI 
         VistaActual = vm;
     }
 
@@ -107,7 +107,7 @@ public partial class TablesViewModel : ViewModelBase
     public async Task AbirNuevaOrden()
     {
         // Abrir una nueva orden
-        _navigationService.NavigateTo<NewOrderViewModel>();
+        _navigationService.NavigateTo<CantidadPaxViewModel>();
     }
 
     [RelayCommand]
