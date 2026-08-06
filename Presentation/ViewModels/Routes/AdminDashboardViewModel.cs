@@ -9,6 +9,7 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
+using MiComanderaApp.Presentation.Views.Components.Admin;
 using MiComanderaApp.ViewModels.Components.Admin;
 using SkiaSharp;
 
@@ -72,6 +73,7 @@ public partial class AdminDashboardViewModel : ViewModelBase
             "Inicio" => _factory.Create<EstadisticasComponentViewModel>(),
             "Menu" => _factory.Create<MenuComponentViewModel>(),
             "Inventario" => _factory.Create<InventarioComponentViewModel>(),
+            "Empleados" => _factory.Create<UsuariosViewModel>(),
             _ => _factory.Create<EstadisticasComponentViewModel>(),
         };
     }

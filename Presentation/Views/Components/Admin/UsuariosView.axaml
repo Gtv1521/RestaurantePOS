@@ -1,0 +1,225 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="using:MiComanderaApp.Presentation.Views.Components.Admin"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Class="MiComanderaApp.Presentation.Views.Components.Admin.UsuariosView"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="local:UsuariosViewModel"
+             x:Name="Root">
+
+
+  <UserControl.Styles>
+    <!-- Estilos locales -->
+    <Style Selector="Border.Card">
+      <Setter Property="Background" Value="{DynamicResource FondoTarjeta}"/>
+      <Setter Property="CornerRadius" Value="12"/>
+      <Setter Property="Padding" Value="20"/>
+      <Setter Property="Margin" Value="0,0,0,16"/>
+      <Setter Property="Effect">
+        <Setter.Value>
+          <DropShadowEffect BlurRadius="8" OffsetY="2" Opacity="0.08"/>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
+    <Style Selector="TextBlock.Titulo">
+      <Setter Property="FontSize" Value="24"/>
+      <Setter Property="FontWeight" Value="Bold"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
+    </Style>
+
+    <Style Selector="TextBlock.Subtitulo">
+      <Setter Property="FontSize" Value="14"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextoColorSecundario}"/>
+    </Style>
+
+    <Style Selector="Button.Primary">
+      <Setter Property="Background" Value="#4A90D9"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="CornerRadius" Value="8"/>
+      <Setter Property="Padding" Value="16,10"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <Style Selector="Button.Primary:pointerover">
+      <Setter Property="Background" Value="#357ABD"/>
+    </Style>
+
+    <Style Selector="Button.Success">
+      <Setter Property="Background" Value="#27AE60"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="CornerRadius" Value="8"/>
+      <Setter Property="Padding" Value="12,8"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <Style Selector="Button.Danger">
+      <Setter Property="Background" Value="#E74C3C"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="CornerRadius" Value="8"/>
+      <Setter Property="Padding" Value="12,8"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <Style Selector="Button.Outline">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="#BDC3C7"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
+      <Setter Property="CornerRadius" Value="8"/>
+      <Setter Property="Padding" Value="12,8"/>
+      <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+
+    <Style Selector="Button.Outline:pointerover">
+      <Setter Property="Background" Value="#F0F0F0"/>
+    </Style>
+  </UserControl.Styles>
+
+  <ScrollViewer>
+    <Grid RowDefinitions="Auto,Auto,*" Margin="20">
+
+      <!-- HEADER -->
+      <Border Grid.Row="0" Classes="Card">
+        <Grid ColumnDefinitions="*,Auto">
+          <StackPanel>
+            <TextBlock Classes="Titulo" Text="👥 Gestión de Usuarios"/>
+            <TextBlock Classes="Subtitulo" Foreground="{DynamicResource TextoColor}" Text="Administra los usuarios del sistema"/>
+          </StackPanel>
+
+          <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+            <Button Classes="Primary" Command="{Binding AgregarUsuarioCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="➕"/>
+                <TextBlock Text="Agregar Usuario"/>
+              </StackPanel>
+            </Button>
+            <Button Classes="Outline" Command="{Binding CargarUsuariosCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="🔄"/>
+                <TextBlock Text="Actualizar"/>
+              </StackPanel>
+            </Button>
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <!-- FILTROS Y ESTADÍSTICAS -->
+      <Border Grid.Row="1" Classes="Card">
+        <Grid ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto" RowSpacing="10">
+
+          <!-- Buscador -->
+          <TextBox Grid.Row="0" Grid.Column="0"
+                   Text="{Binding SearchText}"
+                   Watermark="🔍 Buscar usuario..."
+                   Background="{DynamicResource FondoPrincipal}"
+                   CornerRadius="8"
+                   Padding="12,8"
+                   Margin="0,0,20,0">
+            <TextBox.InnerLeftContent>
+              <TextBlock Text="🔍" Margin="4,0,0,0"/>
+            </TextBox.InnerLeftContent>
+          </TextBox>
+
+          <!-- Filtro -->
+          <ComboBox Grid.Row="0" Grid.Column="1"
+                    ItemsSource="{Binding FilterOptions}"
+                    SelectedItem="{Binding SelectedFilter}"
+                    Width="150"
+                    Background="{DynamicResource FondoPrincipal}"
+                    CornerRadius="8"
+                    Padding="8,4"/>
+
+          <!-- Botón Filtrar -->
+          <Button Grid.Row="0" Grid.Column="2"
+                  Classes="Outline"
+                  Margin="10,0,0,0">
+            Aplicar Filtro
+            <!-- Command="{Binding FiltrarUsuariosCommand}" -->
+          </Button>
+
+          <!-- Estadísticas -->
+          <Grid Grid.Row="1" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Background="#E8F8F5" CornerRadius="8" Padding="12,8" Margin="0,0,5,0">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="👤" FontSize="18"/>
+                <TextBlock Text="Total:" Foreground="#6C757D"/>
+                <TextBlock Text="{Binding TotalUsuarios}" FontWeight="Bold" Foreground="#2C3E50"/>
+              </StackPanel>
+            </Border>
+
+            <Border Grid.Column="1" Background="#EAF2F8" CornerRadius="8" Padding="12,8" Margin="5,0">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="🟢" FontSize="18"/>
+                <TextBlock Text="Activos:" Foreground="#6C757D"/>
+                <TextBlock Text="{Binding UsuariosActivos}" FontWeight="Bold" Foreground="#27AE60"/>
+              </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2" Background="#270b09" CornerRadius="8" Padding="12,8" Margin="5,0,0,0">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="🔴" FontSize="18"/>
+                <TextBlock Text="Inactivos:" Foreground="#6C757D"/>
+                <TextBlock Text="{Binding UsuariosInactivos}" FontWeight="Bold" Foreground="#E74C3C"/>
+              </StackPanel>
+            </Border>
+          </Grid>
+        </Grid>
+      </Border>
+
+      <!-- LISTA DE USUARIOS -->
+      <Border Grid.Row="2" Classes="Card">
+        <Grid>
+          
+          <!-- Loading Overlay -->
+          <Border IsVisible="{Binding IsLoading}"
+                  Background="#80FFFFFF"
+                  CornerRadius="12">
+            <StackPanel VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Spacing="15">
+              <ProgressBar IsIndeterminate="True"
+                           Width="200"
+                           Height="4"/>
+              <TextBlock Text="Cargando usuarios..."
+                         Foreground="{DynamicResource TextoColor}"
+                         FontWeight="SemiBold"/>
+            </StackPanel>
+          </Border>
+
+          <!-- Empty State -->
+          <Border IsVisible="{Binding Users.Count, }"
+                  Background="Transparent"
+                  CornerRadius="12">
+            <StackPanel VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Spacing="15">
+              <TextBlock Text="📭" FontSize="48"/>
+              <TextBlock Text="No hay usuarios registrados"
+                         Foreground="{DynamicResource TextoColorSecundario}"
+                         FontSize="16"/>
+              <Button Classes="Primary"
+                      Command="{Binding AgregarUsuarioCommand}"
+                      Padding="20,10">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <TextBlock Text="➕"/>
+                  <TextBlock Text="Agregar el primer usuario"/>
+                </StackPanel>
+              </Button>
+            </StackPanel>
+          </Border>
+        </Grid>
+      </Border>
+    </Grid>
+  </ScrollViewer>
+</UserControl>

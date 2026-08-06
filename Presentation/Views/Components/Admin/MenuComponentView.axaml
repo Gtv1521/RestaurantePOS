@@ -5,13 +5,12 @@
              xmlns:vm="using:MiComanderaApp.ViewModels.Components.Admin"
              xmlns:i="using:Projektanker.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="MiComanderaApp.Views.Components.Admin.MenuComponent"
+             x:Class="MiComanderaApp.Views.Components.Admin.MenuComponentView"
              x:DataType="vm:MenuComponentViewModel"
              x:Name="Root">
 
 
   <Grid RowDefinitions="Auto,Auto,*" Margin="24">
-
     <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,20">
       <TextBlock Grid.Column="0"
                  Text="Configurador de Menú"
@@ -69,14 +68,10 @@
           </DataTemplate>
         </ItemsControl.ItemTemplate>
       </ItemsControl>
-
-
       <Button Content="+"/>
     </StackPanel>
 
-
     <Grid Grid.Row="2">
-
       <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                     VerticalScrollBarVisibility="Auto">
 

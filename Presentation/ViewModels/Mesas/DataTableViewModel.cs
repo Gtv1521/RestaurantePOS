@@ -122,16 +122,11 @@ public partial class DataTableViewModel : ViewModelBase
         CantidadPax = cantidad;
         Instancia = venta.Instancia.ToString();
         NombreMesaCustom = venta.Alias;
+        NombreMesero = venta.Mesero;
     }
 
     private async Task CargarDatosIniciales()
     {
-        // Recuperamos el mesero logueado usando el caso de uso de la sesión global
-        var usuarioLogueado = _getUserUseCase.Execute();
-        if (usuarioLogueado != null)
-        {
-            NombreMesero = usuarioLogueado.NombreCompleto;
-        }
 
         var catalogo = await _getCatalogoUseCase.Execute();
 
@@ -173,14 +168,11 @@ public partial class DataTableViewModel : ViewModelBase
         item.TotalProducto +
         item.Observaciones.Sum(obs => obs.Precio ?? 0));
 
-        // El precio ya incluye el 8% de impuesto al consumo
         TotalIpoconsumo = baseProductos - (baseProductos / 1.08m);
 
-        // El servicio sí se calcula aparte
         TotalServicio = baseProductos * 0.10m;
         TotalNeto = baseProductos;
 
-        // Solo se suma el servicio, porque el impuesto ya está incluido
         TotalCuenta = baseProductos + TotalServicio;
     }
 

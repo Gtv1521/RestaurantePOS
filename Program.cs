@@ -47,6 +47,7 @@ using MiComanderaApp.ViewModels.Dialogs.Modals;
 using MiComanderaApp.Views.Dialogs.Modals;
 using MiComanderaApp.Presentation.Services;
 using MiComanderaApp.Core.Application.UseCases.Venta;
+using MiComanderaApp.Presentation.Views.Components.Admin;
 
 namespace MiComanderaApp;
 
@@ -118,6 +119,7 @@ sealed class Program
                 services.AddTransient<MenuComponentViewModel>();
                 services.AddTransient<ProductViewModel>();
                 services.AddSingleton<CantidadPaxViewModel>();
+                services.AddSingleton<UsuariosViewModel>();
                 services.AddTransient<InventarioComponentViewModel>();
 
                 // modal

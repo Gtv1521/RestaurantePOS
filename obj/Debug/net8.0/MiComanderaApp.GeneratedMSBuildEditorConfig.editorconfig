@@ -52,16 +52,16 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Components/ActiveTablesComponent.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Components/Admin/EstadisticasComponent.axaml]
+[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Components/Admin/EstadisticasComponentView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Components/Admin/InventarioComponent.axaml]
+[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Components/Admin/InventarioComponentView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Components/Admin/MenuComponent.axaml]
+[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Components/Admin/MenuComponentView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Components/Admin/Usuarios.axaml]
+[/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Components/Admin/UsuariosView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [/home/gustavo/Desarrollo/C\#/RestorantePOS/MiComanderaApp/Presentation/Views/Components/AllTablesComponent.axaml]

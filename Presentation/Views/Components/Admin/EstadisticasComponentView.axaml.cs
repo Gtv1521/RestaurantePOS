@@ -4,9 +4,9 @@ using Avalonia.Markup.Xaml;
 
 namespace MiComanderaApp.Views.Components.Admin;
 
-public partial class EstadisticasComponent : UserControl
+public partial class EstadisticasComponentView : UserControl
 {
-    public EstadisticasComponent()
+    public EstadisticasComponentView()
     {
         InitializeComponent();
     }
