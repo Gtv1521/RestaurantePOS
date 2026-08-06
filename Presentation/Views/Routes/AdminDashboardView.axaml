@@ -19,12 +19,12 @@
   <UserControl.DataTemplates>
     <DataTemplate DataType="{x:Type vmTables:EstadisticasComponentViewModel}">
       <views:EstadisticasComponent />
-    </DataTemplate>
+    </DataTemplate> 
     <DataTemplate DataType="{x:Type vmTables:MenuComponentViewModel}">
       <views:MenuComponent />
     </DataTemplate>
     <DataTemplate DataType="{x:Type vmInventario:InventarioComponentViewModel}">
-      <viewsInventario:InventarioComponent />
+      
     </DataTemplate>
   </UserControl.DataTemplates>
 
