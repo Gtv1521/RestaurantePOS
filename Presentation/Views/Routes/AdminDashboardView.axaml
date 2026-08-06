@@ -3,14 +3,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:i="https://github.com/projektanker/icons.avalonia"
+             xmlns:inventario="using:MiComanderaApp.Presentation.ViewModels.Components.Inventario"
              xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
              xmlns:lvcLogic="using:LiveChartsCore.SkiaSharpView"
              xmlns:vm="using:MiComanderaApp.ViewModels.Routes"
              xmlns:models="using:MiComanderaApp.Models"
              xmlns:vmTables="using:MiComanderaApp.ViewModels.Components.Admin"
              xmlns:views="using:MiComanderaApp.Views.Components.Admin"
-             xmlns:vmInventario="using:MiComanderaApp.Presentation.ViewModels.Components.Inventario"
-             xmlns:viewsInventario="using:MiComanderaApp.Presentation.Views.Components.Inventario"
              mc:Ignorable="d" d:DesignWidth="1400" d:DesignHeight="900"
              Background="{DynamicResource FondoPrincipal}"
              x:Class="MiComanderaApp.Views.Routes.AdminDashboardView"
@@ -23,8 +22,8 @@
     <DataTemplate DataType="{x:Type vmTables:MenuComponentViewModel}">
       <views:MenuComponent />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vmInventario:InventarioComponentViewModel}">
-      
+    <DataTemplate DataType="{x:Type vmTables:InventarioComponentViewModel}">
+      <views:InventarioComponentView />
     </DataTemplate>
   </UserControl.DataTemplates>
 

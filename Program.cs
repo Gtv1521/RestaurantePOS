@@ -38,7 +38,6 @@ using MiComanderaApp.Views;
 using MiComanderaApp.Services;
 using MiComanderaApp.Core.Application.UseCases.Product;
 using MiComanderaApp.Core.Application.UseCases.Table;
-using MiComanderaApp.Core.Application.UseCases.Inventario.Ingredientes;
 using MiComanderaApp.Presentation.Messages;
 using CommunityToolkit.Mvvm.Messaging;
 using MiComanderaApp.Core.Application.UseCases.Observacion;
@@ -47,6 +46,9 @@ using MiComanderaApp.ViewModels.Dialogs.Modals;
 using MiComanderaApp.Views.Dialogs.Modals;
 using MiComanderaApp.Presentation.Services;
 using MiComanderaApp.Core.Application.UseCases.Venta;
+using RestaurantePOS.Core.Application.UseCases.Receta;
+using RestaurantePOS.Core.Domain.Models;
+using RestaurantePOS.Core.Application.UseCases.Ingrediente;
 
 namespace MiComanderaApp;
 
@@ -138,6 +140,9 @@ sealed class Program
                 services.AddScoped<IGetOpens<VentaModel>, TablesRepository>();
                 services.AddScoped<IMultipleCrud<ObservacionModel, ObservacionRequest>, ObservacionRepository>();
                 services.AddScoped<IOptionVenta, VentaRepository>();
+                services.AddScoped<IRecetaRepository, RecetaRepository>();
+
+
 
 
                 // usescases 
@@ -152,6 +157,11 @@ sealed class Program
                 services.AddScoped<GetAllIngredientesUseCase>();
                 services.AddScoped<GetAllObservacionUseCase>();
                 services.AddScoped<UpdatePaxUseCase>();
+                services.AddScoped<GetAllRecetasUseCase>();
+                services.AddScoped<CreateIngredienteUseCase>();
+                services.AddScoped<EditIngredienteUseCase>();
+
+
 
                 // signalR
                 services.AddSingleton<SignalRService>();
@@ -163,8 +173,8 @@ sealed class Program
                 services.AddSingleton<MainWindow>();
                 services.AddTransient<CreateProductViewModel>();
                 services.AddTransient<CreateProduct>();
-                services.AddTransient<IngredienteDialogViewModel>();
-                services.AddTransient<IngredienteDialog>();
+                services.AddTransient<CreateIngredienteDialogViewModel>();
+                services.AddTransient<CreateIngrediente>();
                 services.AddSingleton<IDialogService, DialogService>();
 
 

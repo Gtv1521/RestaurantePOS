@@ -5,16 +5,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:i="using:Projektanker.Icons.Avalonia"
              xmlns:models="using:MiComanderaApp.Core.Domain.Models"
+             xmlns:recetas="using:RestaurantePOS.Core.Domain.Models"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MiComanderaApp.Views.Components.Admin.InventarioComponentView"
              x:DataType="admin:InventarioComponentViewModel"
-             x:Name="Root"
-             >
+             x:Name="Root">
+    
     <UserControl.Resources>
+        <!-- Template para Ingredientes -->
         <DataTemplate x:Key="IngredientCardTemplate" DataType="{x:Type models:IngredienteModel}">
-            <Border Background="{DynamicResource FondoTarjeta}" Width="300" MinHeight="180" CornerRadius="12" ClipToBounds="True" Margin="5" >
+            <Border Background="{DynamicResource FondoTarjeta}" Width="300" MinHeight="180" CornerRadius="12" ClipToBounds="True" Margin="5">
                 <Grid RowDefinitions="Auto,*,Auto">
-
                     <Border Grid.Row="0" Padding="15,12">
                         <TextBlock Text="{Binding Name}" Foreground="{DynamicResource TextoColor}" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap"/>
                     </Border>
@@ -39,29 +40,59 @@
                     </StackPanel>
 
                     <Grid Grid.Row="2" ColumnDefinitions="*,Auto" ColumnSpacing="10" Margin="15,12">
-                        <Button Grid.Column="0" 
-                                Background="#222B36" 
-                                Height="32"
-                                HorizontalAlignment="Stretch" 
-                                HorizontalContentAlignment="Center" 
-                                VerticalContentAlignment="Center"
-                                Command="{Binding #Root.DataContext.EditIngredienteCommand}"
-                                CommandParameter="{Binding}"
-                                CornerRadius="6">
+                        <Button Grid.Column="0" Background="#222B36" Height="32"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                Command="{Binding #Root.DataContext.EditIngredienteCommand}" CommandParameter="{Binding}" CornerRadius="6">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <i:Icon Value="fa-solid fa-pen" Foreground="{DynamicResource BotonTextWhite}"/>
                                 <TextBlock Text="Editar" Foreground="{DynamicResource BotonTextWhite}" FontSize="13" FontWeight="SemiBold"/>
                             </StackPanel>
                         </Button>
+                        <Button Grid.Column="1" Background="{DynamicResource BotonDelete}" Width="35" Height="32"
+                                Command="{Binding #Root.DataContext.DeleteIngredienteCommand}" CommandParameter="{Binding}"
+                                HorizontalContentAlignment="Center" VerticalContentAlignment="Center" CornerRadius="6">
+                            <i:Icon Value="fa-solid fa-trash" Foreground="#c91815" FontSize="12"/>
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Border>
+        </DataTemplate>
 
-                        <Button Grid.Column="1" 
-                                Background="{DynamicResource BotonDelete}" 
-                                Width="35" Height="32"
-                                Command="{Binding #Root.DataContext.DeleteIngredienteCommand}"
-                                CommandParameter="{Binding}"
-                                HorizontalContentAlignment="Center" 
-                                VerticalContentAlignment="Center"
-                                CornerRadius="6">
+        <!-- Template para Recetas -->
+        <DataTemplate x:Key="RecipeCardTemplate" DataType="{x:Type recetas:RecetaModel}">
+            <Border Background="{DynamicResource FondoTarjeta}" Width="300" MinHeight="180" CornerRadius="12" ClipToBounds="True" Margin="5">
+                <Grid RowDefinitions="Auto,*,Auto">
+                    <Border Grid.Row="0" Padding="15,12">
+                        <TextBlock Text="{Binding ProductName}" Foreground="{DynamicResource TextoColor}" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                    </Border>
+                    
+                    <StackPanel Grid.Row="1" Orientation="Vertical" Spacing="5" Margin="15,0">
+                        <TextBlock Text="Ingredientes:" Foreground="{DynamicResource TextoColor}" Opacity="0.7"/>
+                        <ScrollViewer MaxHeight="80" VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{Binding Items}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type recetas:IngredientModel}">
+                                        <TextBlock Text="{Binding Name}" Foreground="{DynamicResource TextoColor}" FontSize="12" TextWrapping="Wrap" Margin="0,0,0,2"/>
+                                        <!-- datos adicionales como cantidad necesaria, unidad de medida, etc. -->
+                                         
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </StackPanel>
+
+                    <Grid Grid.Row="2" ColumnDefinitions="*,Auto" ColumnSpacing="10" Margin="15,12">
+                        <Button Grid.Column="0" Background="#222B36" Height="32"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                Command="{Binding #Root.DataContext.EditRecipeCommand}" CommandParameter="{Binding}" CornerRadius="6">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <i:Icon Value="fa-solid fa-pen" Foreground="{DynamicResource BotonTextWhite}"/>
+                                <TextBlock Text="Editar" Foreground="{DynamicResource BotonTextWhite}" FontSize="13" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Grid.Column="1" Background="{DynamicResource BotonDelete}" Width="35" Height="32"
+                                Command="{Binding #Root.DataContext.DeleteRecipeCommand}" CommandParameter="{Binding}"
+                                HorizontalContentAlignment="Center" VerticalContentAlignment="Center" CornerRadius="6">
                             <i:Icon Value="fa-solid fa-trash" Foreground="#c91815" FontSize="12"/>
                         </Button>
                     </Grid>
@@ -70,20 +101,45 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Grid RowDefinitions="Auto,Auto,*" Margin="24">
+    <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="24">
 
+        <!-- Header dinámico o estático -->
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,20">
-            <TextBlock Grid.Column="0" Text="Gestión de Inventario" Foreground="{DynamicResource TextoColor}" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="0" Text="Gestión de Inventario y Recetas" Foreground="{DynamicResource TextoColor}" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
 
-            <Button Grid.Column="1" Background="#E06A28" Padding="16,8" CornerRadius="6" Command="{Binding AddIngredienteCommand}">
+            <!-- Botón dinámico según la pestaña seleccionada -->
+            <Button Grid.Column="1" Background="#E06A28" Padding="16,8" CornerRadius="6" 
+                    Command="{Binding AddIngredienteCommand}" IsVisible="{Binding IsIngredientesSelected}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <i:Icon Value="fa-solid fa-plus" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
                     <TextBlock Text="Nuevo Ingrediente" Foreground="White" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-        </Grid>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10" Margin="0,0,0,25">
+            <Button Grid.Column="1" Background="#E06A28" Padding="16,8" CornerRadius="6" 
+                    Command="{Binding NewRecipeCommand}" IsVisible="{Binding !IsIngredientesSelected}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <i:Icon Value="fa-solid fa-plus" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
+                    <TextBlock Text="Nueva Receta" Foreground="White" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+        
+        <!-- Search Bar -->
+        <Border Grid.Row="1" CornerRadius="8" Background="{DynamicResource FondoInput}" Padding="12,0" Margin="0,0,0,20">
+            <Grid ColumnDefinitions="Auto,*">
+                <i:Icon Grid.Column="0" Value="fa-solid fa-search" Foreground="{DynamicResource TextoColor}" VerticalAlignment="Center" Margin="0,0,10,0" Opacity="0.5"/>
+                <TextBox Grid.Column="1"
+                         Text="{Binding SearchText, Mode=TwoWay}"
+                         Watermark="Buscar ingrediente o receta..."
+                         Background="Transparent"
+                         BorderThickness="0"
+                         VerticalContentAlignment="Center"/>
+            </Grid>
+        </Border>
+
+        <!-- Botones de Pestañas -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="10" Margin="0,0,0,25">
             <StackPanel.Styles>
                 <Style Selector="Button">
                     <Setter Property="Background" Value="#1A202C"/>
@@ -100,18 +156,40 @@
                 </Style>
             </StackPanel.Styles>
 
-            <Button Content="Ingredientes" Classes="Active"/>
-            <Button Content="Recetas"/>
+            <Button Content="Ingredientes" 
+                    Command="{Binding LoadIngredientesCommand}"
+                    Classes.Active="{Binding IsIngredientesSelected}"/>
+            
+            <Button Content="Recetas" 
+                    Command="{Binding LoadRecetasCommand}"
+                    Classes.Active="{Binding !IsIngredientesSelected}"/>
         </StackPanel>
 
-        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding Ingredientes}" ItemTemplate="{StaticResource IngredientCardTemplate}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
+        <!-- Contenedor scrolleable que cambia los ItemsSource y templates según la selección -->
+        <ScrollViewer Grid.Row="3" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <Panel>
+                <!-- Lista de Ingredientes -->
+                <ItemsControl ItemsSource="{Binding Ingredientes}" 
+                              ItemTemplate="{StaticResource IngredientCardTemplate}"
+                              IsVisible="{Binding IsIngredientesSelected}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+
+                <!-- Lista de Recetas -->
+                <ItemsControl ItemsSource="{Binding Recetas}" 
+                              ItemTemplate="{StaticResource RecipeCardTemplate}"
+                              IsVisible="{Binding !IsIngredientesSelected}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </Panel>
         </ScrollViewer>
     </Grid>
 </UserControl>

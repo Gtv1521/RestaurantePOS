@@ -66,10 +66,13 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [/Users/user/Documents/Desarrollo/C\#/RestaurantePOS/Presentation/Views/Components/Generales/TecladoComponent.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[/Users/user/Documents/Desarrollo/C\#/RestaurantePOS/Presentation/Views/Dialogs/Modals/CreateIngrediente.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [/Users/user/Documents/Desarrollo/C\#/RestaurantePOS/Presentation/Views/Dialogs/Modals/CreateProduct.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/Users/user/Documents/Desarrollo/C\#/RestaurantePOS/Presentation/Views/Dialogs/Modals/IngredienteDialog.axaml]
+[/Users/user/Documents/Desarrollo/C\#/RestaurantePOS/Presentation/Views/Dialogs/Modals/EditIngrediente.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [/Users/user/Documents/Desarrollo/C\#/RestaurantePOS/Presentation/Views/MainContentView.axaml]

@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -18,50 +20,25 @@ namespace MiComanderaApp.Core.Infrastructure.Api
         private readonly HttpClient _httpClient;
         private readonly string _baseUrl;
 
-        public RecetaRepository(HttpClient httpClient, IOptions<ApiSettings> apiSettings)
+        public RecetaRepository(IHttpClientFactory httpClientFactory, IOptions<ApiSettings> apiSettings)
         {
-            _httpClient = httpClient;
-            _baseUrl = apiSettings.Value.BaseUrl;
+            _httpClient = httpClientFactory.CreateClient("MiComanderaApi");
+            _baseUrl = $"{apiSettings.Value.BaseUrl}/api/Recipe";
         }
 
         public Task<string?> CreateAsync(RecetaRequest data)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Task<bool> DeleteAsync(string id)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public Task<RecetaModel> GetAsync(string id)
+        public async Task<List<RecetaModel>> GetAllRecetasAsync(int pageNumber, int pageSize)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public async Task<List<RecetaRequest>> GetByProductoIdAsync(int productId)
-        {
-            var url = $"{_baseUrl}/api/Product/{productId}/recipe";
-            var response = await _httpClient.GetAsync(url);
-            if (!response.IsSuccessStatusCode)
-            {
-                var error = await response.Content.ReadAsStringAsync();
-                throw response.StatusCode switch
-                {
-                    HttpStatusCode.NotFound => new NotFoundException(error),
-                    _ => new HttpRequestException($"Error {(int)response.StatusCode}: {error}")
-                };
-            }
-            var result = await response.Content.ReadFromJsonAsync<List<RecetaRequest>>();
-            return result ?? new List<RecetaRequest>();
-        }
-
-        public async Task UpdateAsync(int productId, List<RecetaRequest> receta)
-        {
-            // The user's example showed a POST to /product/{productId}
-            // A more RESTful approach might be POST or PUT to /product/{productId}/recipe
-            var url = $"{_baseUrl}/api/Product/{productId}";
-            var response = await _httpClient.PostAsJsonAsync(url, receta);
+            var response = await _httpClient.GetAsync($"{_baseUrl}/all?pageNumber={pageNumber}&pageSize={pageSize}");
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();
@@ -72,11 +49,28 @@ namespace MiComanderaApp.Core.Infrastructure.Api
                     _ => new HttpRequestException($"Error {(int)response.StatusCode}: {error}")
                 };
             }
+            var result = await response.Content.ReadFromJsonAsync<List<RecetaModel>>();
+            return result ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
+        }
+
+        public Task<RecetaModel> GetAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<RecetaModel>> GetByProductoIdAsync(int productId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateAsync(int productId, List<RecetaRequest> receta)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<bool> UpdateAsync(string id, RecetaRequest data)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

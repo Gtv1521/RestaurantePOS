@@ -2,13 +2,13 @@ using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MiComanderaApp.Core.Domain.Interfaces;
-using MiComanderaApp.Core.Application.Request;
+using MiComanderaApp.Core.Domain.Models;
 
 namespace MiComanderaApp.ViewModels.Dialogs.Modals
 {
-    public partial class IngredienteDialogViewModel : ObservableObject, IDialogViewModel<IngredienteRequest?>
+    public partial class CreateIngredienteDialogViewModel : ObservableObject, IDialogViewModel<IngredienteModel?>
     {
-        public event Action<IngredienteRequest?>? CloseRequested;
+        public event Action<IngredienteModel?>? CloseRequested;
 
         [ObservableProperty]
         private string _title = "Crear Ingrediente";
@@ -31,14 +31,15 @@ namespace MiComanderaApp.ViewModels.Dialogs.Modals
         [RelayCommand]
         private void Guardar()
         {
-            var request = new IngredienteRequest
+            var request = new IngredienteModel
             {
                 Name = Name,
-                InitialQuantity = InitialQuantity,
+                AvailableQuantity = InitialQuantity,
                 MinimumQuantity = MinimumQuantity,
                 UnitCost = UnitCost,
                 UnitOfMeasure = UnitOfMeasure
             };
+
             CloseRequested?.Invoke(request);
         }
 
