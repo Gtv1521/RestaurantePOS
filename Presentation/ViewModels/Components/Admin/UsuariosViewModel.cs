@@ -4,20 +4,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MiComanderaApp.Core.Application.UseCases.User;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
+using MiComanderaApp.Presentation.ViewModels.Components.Admin;
 using MiComanderaApp.ViewModels;
 
 namespace MiComanderaApp.Presentation.Views.Components.Admin;
 
 public partial class UsuariosViewModel : ViewModelBase
 {
-    // private readonly IViewModelFactory _factory;
-    // private readonly IUserService _userService;
+    private readonly IViewModelFactory _factory;
+    private readonly AllUserUseCase _allUsers;
     // private readonly IDialogService _dialogService;
 
-    [ObservableProperty]
-    private ObservableCollection<UsuarioModel> _users = new();
+    public ObservableCollection<UserViewModel> Users { get; } = new();
 
     [ObservableProperty]
     private string _searchText = string.Empty;
@@ -49,11 +50,13 @@ public partial class UsuariosViewModel : ViewModelBase
         };
 
     public UsuariosViewModel(
-        IViewModelFactory factory)
+        IViewModelFactory factory,
+        AllUserUseCase allUsers
+        )
     {
-        // _factory = factory;
-
-        LoadUsers();
+        _factory = factory;
+        _allUsers = allUsers;
+        _ = CargarUsuariosAsync();
     }
 
     private async void LoadUsers()
@@ -64,27 +67,29 @@ public partial class UsuariosViewModel : ViewModelBase
     [RelayCommand]
     public async Task CargarUsuariosAsync()
     {
-        // try
-        // {
-        //     IsLoading = true;
-        //     // var users = await _userService.GetAllUsersAsync();
+        try
+        {
+            IsLoading = true;
+            var usuarios = await _allUsers.ExecuteAsync();
 
-        //     // Users.Clear();
-        //     // foreach (var user in users)
-        //     // {
-        //     //     Users.Add(user);
-        //     // }
+            Users.Clear();
+            foreach (var user in usuarios)
+            {  
+                var vm = _factory.Create<UserViewModel>();
+                vm.Initialize(user);
+                Users.Add(vm);
+            }
 
-        //     ActualizarEstadisticas();
-        // }
-        // catch (Exception ex)
-        // {
-        //     // await _dialogService.ShowErrorAsync("Error", $"No se pudieron cargar los usuarios: {ex.Message}");
-        // }
-        // finally
-        // {
-        //     IsLoading = false;
-        // }
+            ActualizarEstadisticas();
+        }
+        catch (Exception ex)
+        {
+            System.Console.WriteLine($"Error al cargar los usuarios: {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
     [RelayCommand]
@@ -96,10 +101,11 @@ public partial class UsuariosViewModel : ViewModelBase
         // var result = await _dialogService.ShowDialogAsync<UserModel>(dialogVm);
         // if (result != null)
         // {
-        //     var newUser = new UserItemViewModel(result);
+        //     var newUser = new UserViewModel();
+        //     newUser.Initialize(result);
         //     Users.Add(newUser);
         //     ActualizarEstadisticas();
-        //     await _dialogService.ShowSuccessAsync("Éxito", "Usuario agregado correctamente");
+        //     System.Console.WriteLine($"Usuario agregado: {result.NombreCompleto} ({result.Email})");
         // }
     }
 
@@ -150,10 +156,10 @@ public partial class UsuariosViewModel : ViewModelBase
     [RelayCommand]
     public async Task ToggleEstadoAsync(UsuarioModel userItem)
     {
-        // if (userItem == null) return;
+        if (userItem == null) return;
 
-        // var nuevoEstado = !userItem.Activo;
-        // var estadoTexto = nuevoEstado ? "activar" : "desactivar";
+        var nuevoEstado = !userItem.Activo;
+        var estadoTexto = nuevoEstado ? "activar" : "desactivar";
 
         // var confirm = await _dialogService.ShowConfirmAsync(
         //     "Confirmar",
@@ -166,11 +172,13 @@ public partial class UsuariosViewModel : ViewModelBase
         //         userItem.Activo = nuevoEstado;
         //         await _userService.UpdateUserAsync(userItem);
         //         ActualizarEstadisticas();
-        //         await _dialogService.ShowSuccessAsync("Éxito", $"Usuario {estadoTexto} correctamente");
+        //         System.Console.WriteLine($"Usuario {estadoTexto}: {userItem.NombreCompleto} ({userItem.Email})");
+        //         // await _dialogService.ShowSuccessAsync("Éxito", $"Usuario {estadoTexto} correctamente");
         //     }
         //     catch (Exception ex)
         //     {
-        //         await _dialogService.ShowErrorAsync("Error", $"No se pudo {estadoTexto} el usuario: {ex.Message}");
+        //         System.Console.WriteLine($"Error al {estadoTexto} el usuario: {ex.Message}");
+        //         // await _dialogService.ShowErrorAsync("Error", $"No se pudo {estadoTexto} el usuario: {ex.Message}");
         //     }
         // }
     }
@@ -186,7 +194,7 @@ public partial class UsuariosViewModel : ViewModelBase
     {
         var filtered = string.IsNullOrEmpty(SearchText)
             ? Users
-            : new ObservableCollection<UsuarioModel>(
+            : new ObservableCollection<UserViewModel>(
                 Users.Where(u => u.NombreCompleto.Contains(SearchText, StringComparison.OrdinalIgnoreCase)));
 
         TotalUsuarios = filtered.Count;

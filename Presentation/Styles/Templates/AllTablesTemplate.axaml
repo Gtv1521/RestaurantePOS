@@ -1,0 +1,109 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:i="https://github.com/projektanker/icons.avalonia"
+                    xmlns:viewmodels="using:MiComanderaApp.ViewModels"
+                    >
+<DataTemplate x:Key="AllMesaTemplate" DataType="{x:Type viewmodels:TableViewModel}">
+        <Border Width="90" Height="90" Margin="4" CornerRadius="12" BorderThickness="1" BorderBrush="{Binding ColorEstado}">
+            
+            <Border.Tag>
+                <Binding Path="Status" />
+            </Border.Tag>
+
+            <Border.Styles>
+                <Style Selector="Border[Tag=Libre]"><Setter Property="Background" Value="#34AA55" /></Style>
+                <Style Selector="Border[Tag=Ocupada]"><Setter Property="Background" Value="#2B6CB0" /></Style>
+                <Style Selector="Border[Tag=Disponible]"><Setter Property="Background" Value="#ED8936" /></Style>
+            </Border.Styles>
+                
+            <Button HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    BorderThickness="0"
+                    CornerRadius="12"
+                    Padding="0"
+                    Background="{Binding ColorEstado}"
+                    Cursor="Hand"
+                    Command="{Binding OpenTableCommand}"> 
+
+                <Button.Styles>
+                    <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+                        <Setter Property="Background" Value="Transparent" />
+                    </Style>
+                    <Style Selector="Button:pressed /template/ ContentPresenter#PART_ContentPresenter">
+                        <Setter Property="Background" Value="#B05B5463" />
+                    </Style>
+                </Button.Styles>
+
+                <Grid RowDefinitions="*,*">
+                    <StackPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="1">
+                        <TextBlock Text="{Binding TableNumber}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="30"
+                                   FontWeight="Black"
+                                   Foreground="{DynamicResource TextoColor}" />
+                    </StackPanel>
+                    <Border Grid.Row="1"
+                                Background="#40FFFFFF"
+                                CornerRadius="8"
+                                Padding="8,4"
+                                Margin="10,0,10,4"
+                                IsVisible="{Binding Open}">
+                            
+                            <Grid ColumnDefinitions="*,*" HorizontalAlignment="Center" ColumnSpacing="12">
+                                
+                                <!-- Columna 1: Pax con ícono -->
+                                <StackPanel Grid.Column="0" 
+                                            VerticalAlignment="Center" 
+                                            HorizontalAlignment="Center"
+                                            Spacing="0">
+                                    <TextBlock Text="👤"
+                                            FontSize="12"
+                                            HorizontalAlignment="Center"/>
+                                    <TextBlock Text="{Binding CantidadPax}"
+                                            FontSize="14"
+                                            FontWeight="SemiBold"
+                                            Foreground="{DynamicResource TextoColor}"
+                                            HorizontalAlignment="Center"/>
+                                </StackPanel>
+                                
+                                <!-- Columna 2: Ins con ícono -->
+                                <StackPanel Grid.Column="1" 
+                                            VerticalAlignment="Center" 
+                                            HorizontalAlignment="Center"
+                                            Spacing="0">
+                                    <TextBlock Text="📋"
+                                            FontSize="12"
+                                            HorizontalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Instancia}"
+                                            FontSize="14"
+                                            FontWeight="SemiBold"
+                                            Foreground="{DynamicResource TextoColor}"
+                                            HorizontalAlignment="Center"/>
+                                </StackPanel>
+                                
+                            </Grid>
+                        </Border>
+
+                    <StackPanel Grid.Row="1" 
+                                    Orientation="Horizontal" 
+                                    HorizontalAlignment="Center"
+                                    IsVisible="{Binding Vacio}"
+                                    Spacing="8">
+                            <Button Classes="MesaActionButton"
+                                    Content="📝"
+                                    IsEnabled="{Binding Open}"
+                                    />
+                            <Button Classes="MesaActionButton"
+                                    i:Attached.Icon="fa-solid fa-plus"
+                                    FontWeight="Black"
+                                    Foreground="Blue"
+                                    IsEnabled="{Binding Vacio}"
+                                    />
+                        </StackPanel>
+                </Grid>
+           
+            </Button>
+        </Border>
+    </DataTemplate>    
+</ResourceDictionary>

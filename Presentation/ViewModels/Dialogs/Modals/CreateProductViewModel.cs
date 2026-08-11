@@ -1,48 +1,84 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MiComanderaApp.Core.Application.Request;
+using MiComanderaApp.Core.Application.UseCases.Catalogo;
+using MiComanderaApp.Core.Application.UseCases.Product;
 using MiComanderaApp.Core.Domain.Interfaces;
+using MiComanderaApp.Core.Domain.Models;
 using MiComanderaApp.ViewModels;
 
 namespace MiComanderaApp.Presentation.Views.Dialogs.Modals;
 
 public partial class CreateProductViewModel : ObservableObject, IDialogViewModel<ProductoRequest>
 {
+    private readonly GetAllCatalogoUseCase _allCatalogoCase;
+    private readonly InsertProductUseCase _insertProductUseCase;
+
+
+    public CreateProductViewModel(GetAllCatalogoUseCase allCatalogoCase, InsertProductUseCase insertProductUseCase)
+    {
+        _allCatalogoCase = allCatalogoCase;
+        _insertProductUseCase = insertProductUseCase;
+        _ = LoadCategories();
+    }
+
 
     public event Action<ProductoRequest?>? CloseRequested;
 
-    [ObservableProperty] private string nombre = "";
-    [ObservableProperty] private string codigo = "";
-    [ObservableProperty] private decimal precio;
-    [ObservableProperty] private string descripcion = "";
-    [ObservableProperty] private bool activo = true;
-    [ObservableProperty] private string categoriaSeleccionada = "";
+    [ObservableProperty] private string _nombre = "";
+    [ObservableProperty] private string _codigo = "";
+    [ObservableProperty] private decimal _precio;
+    [ObservableProperty] private string _descripcion = "";
+    [ObservableProperty] private bool _activo = true;
+    [ObservableProperty] private bool _loading = true;
+    [ObservableProperty] private CatalogoModel _categoriaSeleccionada = new();
+    public ObservableCollection<CatalogoModel> Categorias { get; } = new();
 
 
-    public ObservableCollection<string> Categorias { get; } =
-        new()
+    private async Task LoadCategories()
+    {
+        var categorias = await _allCatalogoCase.Execute();
+        foreach (var item in categorias)
         {
-            "Comidas",
-            "Bebidas",
-            "Postres"
-        };
-
+            Categorias.Add(item);
+        }
+    }
 
 
     [RelayCommand]
-    private void Guardar()
+    private async Task GuardarAsync()
     {
-        var producto = new ProductoRequest
+        try
         {
-            Name = Nombre,
-            CategoryName = "",
-            Price = (double)Precio
-        };
+            Loading = true;
 
-        CloseRequested?.Invoke(producto);
+            var producto = new ProductoRequest
+            {
+                Name = Nombre,
+                CategoryId = CategoriaSeleccionada.Id,
+                Price = (double)Precio,
+                Description = Descripcion,
+                IsAvailable = Activo,
+                ImageUrl = ""
+            };
+
+            var insertar = await _insertProductUseCase.Execute(producto);
+            CloseRequested?.Invoke(producto);
+
+        }
+        catch (System.Exception ex)
+        {
+            System.Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            Loading = false;
+        }
     }
+
 
 
     [RelayCommand]

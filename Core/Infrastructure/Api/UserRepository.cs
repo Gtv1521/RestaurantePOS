@@ -13,14 +13,14 @@ using Microsoft.Extensions.Options;
 
 namespace MiComanderaApp.Infrastructure.Api
 {
-    public class UserService : IMultipleCrud<UsuarioModel, UserRequest>
+    public class UserRepository : IMultipleCrud<UsuarioModel, UserRequest>
     {
         private readonly HttpClient _httpClient;
         private readonly string _url;
-        public UserService(HttpClient httpClient, IOptions<ApiSettings> apiSettings)
+        public UserRepository(IHttpClientFactory _factory, IOptions<ApiSettings> apiSettings)
         {
-            _url = $"{apiSettings.Value.BaseUrl}/api/Users";
-            _httpClient = httpClient;
+            _url = $"{apiSettings.Value.BaseUrl}/api/User";
+            _httpClient = _factory.CreateClient("MiComanderaApi");
         }
 
         public async Task<string?> CreateAsync(UserRequest data)

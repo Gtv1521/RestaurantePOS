@@ -225,7 +225,7 @@
                         <Border Width="40" Height="40"
                                 Background="#4A90D9"
                                 CornerRadius="20">
-                            <TextBlock Text="GB"
+                            <TextBlock Text="{Binding User.Iniciales}"
                                        Foreground="White"
                                        FontWeight="Bold"
                                        FontSize="16"

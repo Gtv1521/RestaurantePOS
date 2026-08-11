@@ -1,0 +1,66 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:i="https://github.com/projektanker/icons.avalonia"
+                    xmlns:viewmodels="using:MiComanderaApp.ViewModels">
+
+    <DataTemplate x:Key="Tables" DataType="{x:Type viewmodels:TableViewModel}">
+
+        <!-- TARJETA DE MESA -->
+        <Button Classes="MesaCard"
+                Background="{Binding TiempoEstimado}"
+                Margin="3,3"
+                MinWidth="170"
+                CornerRadius="18"
+                HorizontalAlignment="Stretch"
+                Command="{Binding SelectTableCommand}"
+                Tag="{Binding}">
+
+            <Grid RowDefinitions="Auto,*,Auto">
+
+                <TextBlock Grid.Row="0"
+                           Foreground="{DynamicResource TextoColor}" Classes="MesaNumero" >
+                    <Run Text="{Binding TableNumber}" Classes="MesaNumero"/>
+                    <Run Text="/" FontSize="22" FontWeight="Light"/>
+                    <Run Text="{Binding Venta.Instancia}" FontSize="14" FontWeight="SemiBold" Foreground="#07033B"/>
+                </TextBlock>
+
+                <!-- Información -->
+                <StackPanel Grid.Row="1"
+                            Spacing="2"
+                            VerticalAlignment="Center">
+
+                    <TextBlock Text="{Binding CantidadPax}"
+                               Foreground="{DynamicResource TextoColor}"
+                               Classes="MesaEstado"/>
+
+                    <TextBlock Text="{Binding Cliente}"
+                               Foreground="{DynamicResource TextoColor}"
+                               Classes="MesaCliente"
+                               IsVisible="True"/>
+
+                    <TextBlock Text="{Binding TiempoTranscurrido}"
+                               Foreground="{DynamicResource TextoColor}"
+                               Classes="MesaTiempo"
+                               IsVisible="True"/>
+                </StackPanel>
+
+                <!-- Acciones -->
+                <StackPanel Grid.Row="2"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            Spacing="8">
+                    <Button Classes="MesaActionButton"
+                            Content="📝"
+                            IsVisible="True"
+                            />
+                    <Button Classes="MesaActionButton"
+                            i:Attached.Icon="fa-solid fa-plus"
+                            IsVisible="True"
+                            />
+                </StackPanel>
+            </Grid>
+
+        </Button>
+    </DataTemplate>
+
+</ResourceDictionary>

@@ -1,4 +1,5 @@
 <Application xmlns="https://github.com/avaloniaui"
+             xmlns:converters="using:MiComanderaApp.Presentation.Converters"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:MiComanderaApp.Services.Routing"
              xmlns:vm="using:MiComanderaApp.ViewModels"
@@ -6,9 +7,19 @@
 
     <Application.Resources>
         <ResourceDictionary>
+            <converters:ZeroToBooleanConverter x:Key="ZeroToBooleanConverter"/>
+            <converters:GreaterThanZeroToBooleanConverter x:Key="GreaterThanZeroToBooleanConverter"/>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceInclude Source="avares://MiComanderaApp/Presentation/Styles/DataTemplates.axaml" />
+                <!-- colores temas -->
                 <ResourceInclude Source="avares://MiComanderaApp/Presentation/Styles/Themes/DarkTheme.axaml"/>
+                
+                <!-- recursos Plantillas -->
+                <ResourceInclude Source="avares://MiComanderaApp/Presentation/Styles/DataTemplates.axaml" />
+                <ResourceInclude Source="avares://MiComanderaApp/Presentation/Styles/Templates/TableOpenTemplate.axaml" />
+                <ResourceInclude Source="avares://MiComanderaApp/Presentation/Styles/Templates/AllTablesTemplate.axaml" />
+                <ResourceInclude Source="avares://MiComanderaApp/Presentation/Styles/Templates/ProductTemplate.axaml" />
+                <ResourceInclude Source="avares://MiComanderaApp/Presentation/Styles/Templates/UserTemplate.axaml" />
+
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

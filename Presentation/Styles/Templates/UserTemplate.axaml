@@ -1,0 +1,161 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:admin="using:MiComanderaApp.Presentation.ViewModels.Components.Admin"
+                    xmlns:i="https://github.com/projektanker/icons.avalonia">
+
+        <DataTemplate x:Key="ShowUsers" DataType="{x:Type admin:UserViewModel}">
+                <Border Background="{DynamicResource FondoModal}"
+                        Width="300"
+                        MaxHeight="280"
+                        CornerRadius="12"
+                        ClipToBounds="True"
+                        Margin="5"
+                        Effect="{StaticResource SombraSuave}">
+
+                        <Grid RowDefinitions="110,*">
+
+                                <!-- ========== HEADER CON AVATAR ========== -->
+                                <Grid Grid.Row="0">
+
+                                        <!-- Avatar / Imagen de fondo -->
+                                        <Border Background="{DynamicResource FondoModal}">
+                                                <TextBlock Text="{Binding Iniciales}"
+                                                           Foreground="White"
+                                                           FontSize="48"
+                                                           FontWeight="Bold"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"
+                                                           Opacity="0.3"/>
+                                        </Border>
+
+                                        <!-- Overlay oscuro -->
+                                        <Border Background="#15000000"/>
+
+                                        <!-- Estado (Activo/Inactivo) -->
+                                        <Border Background="blue"
+                                                CornerRadius="4"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top"
+                                                Margin="12"
+                                                Padding="8,4">
+                                                <TextBlock Text="{Binding Estado}"
+                                                           Foreground="White"
+                                                           FontSize="11"
+                                                           FontWeight="Bold"/>
+                                        </Border>
+
+                                        <!-- Rol del usuario -->
+                                        <Border Background="{DynamicResource Estadistica}"
+                                                CornerRadius="4"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Top"
+                                                Margin="12"
+                                                Padding="8,4">
+                                                <TextBlock Text="{Binding Rol}"
+                                                           Foreground="White"
+                                                           FontSize="11"
+                                                           FontWeight="Bold"/>
+                                        </Border>
+
+                                        <!-- Avatar circular -->
+                                        <Border Width="60"
+                                                Height="60"
+                                                CornerRadius="30"
+                                                Background="white"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Bottom"
+                                                Margin="0,0,0,-30"
+                                                BorderBrush="White"
+                                                BorderThickness="3">
+                                                <TextBlock Text="{Binding Iniciales}"
+                                                           Foreground="Black"
+                                                           FontSize="20"
+                                                           FontWeight="Bold"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"/>
+                                        </Border>
+                                </Grid>
+
+                                <!-- ========== INFORMACIÓN DEL USUARIO ========== -->
+                                <Border Grid.Row="1"
+                                        Padding="15,12"
+                                        Margin="0,15,0,0">
+
+                                        <Grid RowDefinitions="Auto,Auto,Auto,Auto">
+
+                                                <!-- Nombre -->
+                                                <TextBlock Grid.Row="0"
+                                                           Text="{Binding NombreCompleto}"
+                                                           Foreground="{DynamicResource TextoColor}"
+                                                           FontSize="16"
+                                                           FontWeight="SemiBold"
+                                                           HorizontalAlignment="Center"
+                                                           TextTrimming="CharacterEllipsis"/>
+
+                                                <!-- Email -->
+                                                <TextBlock Grid.Row="1"
+                                                           Text="{Binding Email}"
+                                                           Foreground="{DynamicResource TextoColor}"
+                                                           FontSize="13"
+                                                           HorizontalAlignment="Center"
+                                                           Margin="0,2,0,8"/>
+
+                                                <!-- Divider -->
+                                                <Border Grid.Row="2"
+                                                        Height="1"
+                                                        Background="{DynamicResource PanelName}"
+                                                        Margin="0,0,0,10"/>
+
+                                                <!-- Datos adicionales -->
+                                                <Grid Grid.Row="3"
+                                                      ColumnDefinitions="*,*,*"
+                                                      HorizontalAlignment="Center">
+
+                                                        <!-- Teléfono -->
+                                                        <StackPanel Grid.Column="0"
+                                                                    Orientation="Horizontal"
+                                                                    Spacing="4"
+                                                                    Margin="0,0,15,0">
+                                                                <i:Icon Value="fa-solid fa-phone"
+                                                                        Foreground="{DynamicResource TextoColor}"
+                                                                        FontSize="12"
+                                                                        VerticalAlignment="Center"/>
+                                                                <TextBlock Text="{Binding Email}"
+                                                                           Foreground="{DynamicResource TextoColor}"
+                                                                           FontSize="12"/>
+                                                        </StackPanel>
+
+                                                        <!-- Fecha Registro -->
+                                                        <StackPanel Grid.Column="1"
+                                                                    Orientation="Horizontal"
+                                                                    Spacing="4">
+                                                                <i:Icon Value="fa-solid fa-calendar"
+                                                                        Foreground="{DynamicResource TextoColor}"
+                                                                        FontSize="12"
+                                                                        VerticalAlignment="Center"/>
+                                                                <TextBlock Text="{Binding FechaCreacion, StringFormat='dd/MM/yyyy'}"
+                                                                           Foreground="{DynamicResource TextoColor}"
+                                                                           FontSize="12"/>
+                                                        </StackPanel>
+
+                                                        <!-- Último acceso (opcional) -->
+                                                        <!-- <StackPanel Grid.Column="2"
+                                                        Orientation="Horizontal"
+                                                        Spacing="4"
+                                                        Margin="15,0,0,0">
+                                                        <i:Icon Value="fa-solid fa-clock"
+                                                        Foreground="{DynamicResource TextoColorSecundario}"
+                                                        FontSize="12"
+                                                        VerticalAlignment="Center"/>
+                                                        <TextBlock Text="{Binding UltimoAcceso, StringFormat='{0:HH:mm}'}"
+                                                        Foreground="{DynamicResource TextoColor}"
+                                                        FontSize="12"/>
+                                                        </StackPanel> -->
+
+                                                </Grid>
+                                        </Grid>
+                                </Border>
+                        </Grid>
+                </Border>
+        </DataTemplate>
+</ResourceDictionary>

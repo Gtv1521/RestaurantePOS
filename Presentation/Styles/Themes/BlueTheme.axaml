@@ -14,7 +14,7 @@
 
   <!-- Teclado -->
   <SolidColorBrush x:Key="NumBotton" Color="#2BAFBFD0"/>
-  <SolidColorBrush x:Key="SaveBotton" Color="#F7E1E7EC"/>
+  <SolidColorBrush x:Key="SaveBotton" Color="#F734546F"/>
 
   <!-- Botones  -->
   <SolidColorBrush x:Key="BorderEditar" Color="#222B36"/> <!-- Boton de editar menu -->

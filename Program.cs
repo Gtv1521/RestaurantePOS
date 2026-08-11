@@ -48,6 +48,9 @@ using MiComanderaApp.Views.Dialogs.Modals;
 using MiComanderaApp.Presentation.Services;
 using MiComanderaApp.Core.Application.UseCases.Venta;
 using MiComanderaApp.Presentation.Views.Components.Admin;
+using MiComanderaApp.Presentation.ViewModels.Components.Admin;
+using MiComanderaApp.Request;
+using MiComanderaApp.Core.Application.UseCases.User;
 
 namespace MiComanderaApp;
 
@@ -118,8 +121,9 @@ sealed class Program
                 services.AddTransient<EstadisticasComponentViewModel>();
                 services.AddTransient<MenuComponentViewModel>();
                 services.AddTransient<ProductViewModel>();
-                services.AddSingleton<CantidadPaxViewModel>();
-                services.AddSingleton<UsuariosViewModel>();
+                services.AddTransient<CantidadPaxViewModel>();
+                services.AddTransient<UsuariosViewModel>();
+                services.AddTransient<UserViewModel>();
                 services.AddTransient<InventarioComponentViewModel>();
 
                 // modal
@@ -140,7 +144,7 @@ sealed class Program
                 services.AddScoped<IGetOpens<VentaModel>, TablesRepository>();
                 services.AddScoped<IMultipleCrud<ObservacionModel, ObservacionRequest>, ObservacionRepository>();
                 services.AddScoped<IOptionVenta, VentaRepository>();
-
+                services.AddScoped<IMultipleCrud<UsuarioModel, UserRequest>, UserRepository>();
 
                 // usescases 
                 services.AddScoped<GetSessionSave>();
@@ -154,6 +158,7 @@ sealed class Program
                 services.AddScoped<GetAllIngredientesUseCase>();
                 services.AddScoped<GetAllObservacionUseCase>();
                 services.AddScoped<UpdatePaxUseCase>();
+                services.AddScoped<AllUserUseCase>();
 
                 // signalR
                 services.AddSingleton<SignalRService>();
