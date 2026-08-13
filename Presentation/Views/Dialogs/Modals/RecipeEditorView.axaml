@@ -1,0 +1,75 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:MiComanderaApp.ViewModels.Dialogs.Modals"
+             xmlns:models="using:RestaurantePOS.Core.Domain.Models"
+             xmlns:domainModels="using:MiComanderaApp.Core.Domain.Models"
+             xmlns:i="using:Projektanker.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="600"
+             x:Class="MiComanderaApp.Views.Dialogs.Modals.RecipeEditorView"
+             x:Name="root"
+             x:DataType="vm:RecipeEditorViewModel">
+
+    <Border Background="{DynamicResource FondoTarjeta}" CornerRadius="8" Padding="20">
+        <Grid RowDefinitions="Auto, *, Auto, Auto">
+            
+            <!-- Title -->
+            <TextBlock Grid.Row="0" Text="{Binding Recipe.ProductName, StringFormat='Editar Receta: {0}'}" 
+                       FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource TextoColor}" 
+                       Margin="0,0,0,20"/>
+
+            <!-- Ingredients List -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding RecipeIngredients}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:IngredientModel}">
+                            <Border Background="{DynamicResource FondoModal}" CornerRadius="6" Padding="10" Margin="0,0,0,5">
+                                <Grid ColumnDefinitions="*, Auto, Auto, Auto">
+                                    <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" Foreground="{DynamicResource TextoColor}"/>
+                                    <TextBox Grid.Column="1" Text="{Binding Quantity, Mode=TwoWay}" VerticalAlignment="Center" Width="80" Margin="10,0"
+                                             Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextoColor}" FontWeight="SemiBold"/>
+                                    <TextBlock Grid.Column="2" Text="{Binding UnitOfMeasure}" VerticalAlignment="Center" Foreground="{DynamicResource TextoColor}" Opacity="0.7" Margin="10,0"/>
+                                        <Button Grid.Column="3" Command="{Binding DataContext.RemoveIngredientCommand, ElementName=root}" CommandParameter="{Binding}"
+                                            Background="Transparent" BorderThickness="0" Padding="6" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <i:Icon Value="fa-solid fa-trash" Foreground="#E06A28" FontSize="14"/>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <!-- Add Ingredient Section -->
+            <StackPanel Grid.Row="2" Margin="0,20,0,0">
+                <TextBlock Text="Añadir Ingrediente" Foreground="{DynamicResource TextoColor}" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                <Grid ColumnDefinitions="*, Auto, Auto" ColumnSpacing="10">
+                    <ComboBox Grid.Column="0" ItemsSource="{Binding AllIngredients}" SelectedItem="{Binding SelectedIngredient, Mode=TwoWay}"
+                              PlaceholderText="Seleccionar ingrediente" VerticalContentAlignment="Center">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type domainModels:IngredienteModel}">
+                                <TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    
+                    <Grid Grid.Column="1" ColumnDefinitions="Auto, Auto" ColumnSpacing="8">
+                        <TextBox Text="{Binding Quantity, Mode=TwoWay}" Watermark="Cant." Width="80" VerticalContentAlignment="Center"/>
+                        <TextBlock Text="{Binding SelectedIngredient.UnitOfMeasure}" VerticalAlignment="Center" Foreground="{DynamicResource TextoColor}" Opacity="0.8" Margin="8,0,0,0"/>
+                    </Grid>
+
+                    <Button Grid.Column="2" Command="{Binding AddIngredientCommand}" Background="{DynamicResource BotonFondo}" CornerRadius="4" Padding="15, 8">
+                        <TextBlock Text="Añadir" Foreground="{DynamicResource BotonText}" FontWeight="SemiBold"/>
+                    </Button>
+                </Grid>
+            </StackPanel>
+
+            <!-- Action Buttons -->
+                <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" Margin="0,20,0,0">
+                <Button Content="Cancelar" Command="{Binding CancelCommand}" Background="{DynamicResource FondoModal}" Foreground="{DynamicResource TextoColor}"/>
+                <Button Content="Guardar" Command="{Binding SaveCommand}" Background="{DynamicResource BotonFondo}" Foreground="{DynamicResource BotonText}"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

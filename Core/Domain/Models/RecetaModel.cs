@@ -13,6 +13,9 @@ namespace RestaurantePOS.Core.Domain.Models
         public string ProductName { get; set; } = string.Empty;
         [JsonPropertyName("items")]
         public List<IngredientModel> Items { get; set; } = new List<IngredientModel>();
+
+        [JsonIgnore]
+        public bool HasRecipe { get; set; }
     }
     public class IngredientModel
     {

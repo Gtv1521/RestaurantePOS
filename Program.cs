@@ -160,6 +160,11 @@ sealed class Program
                 services.AddScoped<GetAllRecetasUseCase>();
                 services.AddScoped<CreateIngredienteUseCase>();
                 services.AddScoped<EditIngredienteUseCase>();
+                services.AddScoped<DeleteIngredienteUseCase>();
+                services.AddScoped<CreateRecetaUseCase>();
+                services.AddScoped<UpdateRecetaUseCase>();
+                services.AddScoped<DeleteRecetaUseCase>();
+
 
 
 

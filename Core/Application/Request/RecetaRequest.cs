@@ -9,8 +9,8 @@ namespace MiComanderaApp.Core.Application.Request
         public int ProductId { get; set; }
         [JsonPropertyName("productName")]
         public string ProductName { get; set; } = string.Empty;
-        [JsonPropertyName("items")]
-        public List<IngredienteRequest> Items { get; set; } = new List<IngredienteRequest>();
+        [JsonPropertyName("recipeItems")]
+        public List<RecipeItemRequest> RecipeItems { get; set; } = new List<RecipeItemRequest>();
 
     }
 }

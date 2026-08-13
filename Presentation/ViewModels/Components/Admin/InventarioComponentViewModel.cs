@@ -14,7 +14,11 @@ using MiComanderaApp.Core.Domain.Interfaces;
 using MiComanderaApp.Views.Dialogs.Modals;
 using Avalonia;
 using RestaurantePOS.Core.Application.UseCases.Ingrediente;
+using MiComanderaApp.Models;
+using MiComanderaApp.Core.Application.UseCases.Product;
 using MiComanderaApp.Core.Application.Request;
+using System.Text.Json;
+using System.Diagnostics;
 
 namespace MiComanderaApp.ViewModels.Components.Admin
 {
@@ -47,12 +51,21 @@ namespace MiComanderaApp.ViewModels.Components.Admin
 
         private readonly IDialogService _dialogService;
 
+        private readonly GetAllProductUseCase _getAllProductUseCase;
+        private readonly CreateRecetaUseCase _createRecetaUseCase;
+        private readonly UpdateRecetaUseCase _updateRecetaUseCase;
+        private readonly DeleteRecetaUseCase _deleteRecetaUseCase;
+
         public InventarioComponentViewModel(
-            GetAllIngredientesUseCase getAllIngredientesUseCase, 
-            GetAllRecetasUseCase getAllRecetasUseCase, 
-            IDialogService dialogService, 
-            CreateIngredienteUseCase createIngredienteUseCase, 
-            EditIngredienteUseCase editIngredienteUseCase
+            GetAllIngredientesUseCase getAllIngredientesUseCase,
+            GetAllRecetasUseCase getAllRecetasUseCase,
+            IDialogService dialogService,
+            CreateIngredienteUseCase createIngredienteUseCase,
+            EditIngredienteUseCase editIngredienteUseCase,
+            GetAllProductUseCase getAllProductUseCase,
+            CreateRecetaUseCase createRecetaUseCase,
+            UpdateRecetaUseCase updateRecetaUseCase,
+            DeleteRecetaUseCase deleteRecetaUseCase
         )
         {
             _getAllIngredientesUseCase = getAllIngredientesUseCase;
@@ -60,6 +73,10 @@ namespace MiComanderaApp.ViewModels.Components.Admin
             _dialogService = dialogService;
             _createIngredienteUseCase = createIngredienteUseCase;
             _editIngredienteUseCase = editIngredienteUseCase;
+            _getAllProductUseCase = getAllProductUseCase;
+            _createRecetaUseCase = createRecetaUseCase;
+            _updateRecetaUseCase = updateRecetaUseCase;
+            _deleteRecetaUseCase = deleteRecetaUseCase;
             LoadIngredientesCommand.Execute(null);
         }
 
@@ -109,8 +126,29 @@ namespace MiComanderaApp.ViewModels.Components.Admin
 
         private async Task LoadRecetasAsync()
         {
-            var recetasList = await _getAllRecetasUseCase.ExecuteAsync(1, 100);
-            _allRecetas = new List<RecetaModel>(recetasList);
+            var allProducts = await _getAllProductUseCase.Execute();
+            var allRecipes = await _getAllRecetasUseCase.ExecuteAsync(1, 1000); // Assuming 1000 is enough
+
+            var productRecipes = allProducts.Select(p =>
+            {
+                var existingRecipe = allRecipes.FirstOrDefault(r => r.ProductId == p.Id);
+                if (existingRecipe != null)
+                {
+                    existingRecipe.HasRecipe = true;
+                    return existingRecipe;
+                }
+                else
+                {
+                    return new RecetaModel
+                    {
+                        ProductId = p.Id,
+                        ProductName = p.Name,
+                        HasRecipe = false
+                    };
+                }
+            }).ToList();
+            
+            _allRecetas = new List<RecetaModel>(productRecipes);
             FilterRecetas();
         }
 
@@ -153,10 +191,85 @@ namespace MiComanderaApp.ViewModels.Components.Admin
         }
         
         [RelayCommand]
-        private void NewRecipe()
+        private async Task NewRecipe()
         {
-            Debug.WriteLine("New Recipe action");
+            Debug.WriteLine("NewRecipe command invoked");
+            var allProducts = await _getAllProductUseCase.Execute();
+            var allRecipes = await _getAllRecetasUseCase.ExecuteAsync(1, 1000); // Assuming 1000 is enough to get all recipes
+
+            // Previously we only allowed creating recipes for products without recipe.
+            // Open selector with all products so user can pick any product to create a recipe for.
+            var productsWithoutRecipe = allProducts.Where(p => !allRecipes.Any(r => r.ProductId == p.Id)).ToList();
+            var selectList = allProducts.ToList();
+
+            var selectProductViewModel = new SelectProductForRecipeViewModel(selectList);
+            Debug.WriteLine($"Opening SelectProduct dialog with {productsWithoutRecipe.Count} candidates");
+            var selectedProduct = await _dialogService.ShowDialogAsync<SelectProductForRecipeViewModel, ProductoModel?>(selectProductViewModel);
+            Debug.WriteLine($"SelectProduct dialog closed. Selected: {selectedProduct?.Name ?? "<null>"}");
+
+            if (selectedProduct != null)
+            {
+                var newReceta = new RecetaModel
+                {
+                    ProductId = selectedProduct.Id,
+                    ProductName = selectedProduct.Name,
+                    Items = new List<RestaurantePOS.Core.Domain.Models.IngredientModel>()
+                };
+
+                var recipeEditorViewModel = new RecipeEditorViewModel(newReceta, _getAllIngredientesUseCase);
+                var recipeResult = await _dialogService.ShowDialogAsync<RecipeEditorViewModel, RecetaModel?>(recipeEditorViewModel);
+
+                if (recipeResult != null)
+                {
+                    var request = new RecetaRequest
+                    {
+                        ProductId = recipeResult.ProductId,
+                        ProductName = recipeResult.ProductName,
+                        RecipeItems = recipeResult.Items.Select(i => new RecipeItemRequest
+                        {
+                            IngredientId = i.Id,
+                            Quantity = i.Quantity
+                        }).ToList()
+                    };
+
+                    await _createRecetaUseCase.Execute(request);
+                    await LoadRecetasAsync();
+                }
+            }
         }
+
+        [RelayCommand]
+        private async Task CreateRecipeFromProduct(RecetaModel product)
+            {
+                if (product == null) return;
+
+                var newReceta = new RecetaModel
+                {
+                    ProductId = product.ProductId,
+                    ProductName = product.ProductName,
+                    Items = new List<RestaurantePOS.Core.Domain.Models.IngredientModel>()
+                };
+
+                var recipeEditorViewModel = new RecipeEditorViewModel(newReceta, _getAllIngredientesUseCase);
+                var recipeResult = await _dialogService.ShowDialogAsync<RecipeEditorViewModel, RecetaModel?>(recipeEditorViewModel);
+
+                if (recipeResult != null)
+                {
+                    var request = new RecetaRequest 
+                    {
+                        ProductId = recipeResult.ProductId,
+                        ProductName = recipeResult.ProductName,
+                        RecipeItems = recipeResult.Items.Select(i => new RecipeItemRequest
+                        {
+                            IngredientId = i.Id,
+                            Quantity = i.Quantity
+                        }).ToList()
+                    };
+
+                    await _createRecetaUseCase.Execute(request);
+                    await LoadRecetasAsync();
+                }
+            }
 
         [RelayCommand]
         private async Task EditIngrediente(IngredienteModel ingrediente)
@@ -187,19 +300,73 @@ namespace MiComanderaApp.ViewModels.Components.Admin
         }
 
         [RelayCommand]
-        private void EditRecipe(RecetaModel receta)
+        private async Task EditRecipe(RecetaModel receta)
         {
             if (receta == null) return;
-            // TODO: Implementar la lógica para abrir el modal de edición de receta
-            Debug.WriteLine($"Edit Recipe: {receta.ProductName}");
+
+            var viewModel = new RecipeEditorViewModel(receta, _getAllIngredientesUseCase);
+            var result = await _dialogService.ShowDialogAsync<RecipeEditorViewModel, RecetaModel?>(viewModel, new PixelPoint(250, 30));
+
+            if (result is RecetaModel updatedReceta)
+            {
+                var request = new RecetaRequest
+                {
+                    ProductId = updatedReceta.ProductId,
+                    ProductName = updatedReceta.ProductName,
+                    RecipeItems = updatedReceta.Items.Select(i => new RecipeItemRequest
+                    {
+                        IngredientId = i.Id,
+                        Quantity = i.Quantity
+                    }).ToList()
+                };
+
+                // Log payload to help debug incorrect ingredient ids
+                try
+                {
+                    var payload = JsonSerializer.Serialize(request);
+                    Debug.WriteLine($"UpdateReceta payload: {payload}");
+                    foreach (var item in request.RecipeItems)
+                    {
+                        Debug.WriteLine($"RecipeItem -> IngredientId: {item.IngredientId}, Quantity: {item.Quantity}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Failed to serialize request: {ex.Message}");
+                }
+
+                // If any ingredient id is 0, try to resolve it by matching the name against AllIngredientes
+                for (int idx = 0; idx < request.RecipeItems.Count; idx++)
+                {
+                    var ri = request.RecipeItems[idx];
+                    if (ri.IngredientId == 0)
+                    {
+                        var match = AllIngredientes.FirstOrDefault(a => string.Equals(a.Name, updatedReceta.Items[idx].Name, StringComparison.OrdinalIgnoreCase));
+                        if (match != null && match.Id > 0)
+                        {
+                            Debug.WriteLine($"Resolving missing IngredientId for item '{updatedReceta.Items[idx].Name}' -> {match.Id}");
+                            ri.IngredientId = match.Id;
+                        }
+                        else
+                        {
+                            Debug.WriteLine($"Warning: IngredientId is 0 and no match found for '{updatedReceta.Items[idx].Name}'. Aborting update.");
+                            return;
+                        }
+                    }
+                }
+
+                await _updateRecetaUseCase.Execute(request.ProductId.ToString(), request);
+                await LoadRecetasAsync();
+            }
         }
 
         [RelayCommand]
-        private void DeleteRecipe(RecetaModel receta)
+        private async Task DeleteRecipe(RecetaModel receta)
         {
             if (receta == null) return;
-            // TODO: Implementar la lógica para confirmar y eliminar la receta
-            Debug.WriteLine($"Delete Recipe: {receta.ProductName}");
+            // TODO: Add confirmation dialog
+            await _deleteRecetaUseCase.Execute(receta.ProductId.ToString());
+            await LoadRecetasAsync();
         }
     }
 }

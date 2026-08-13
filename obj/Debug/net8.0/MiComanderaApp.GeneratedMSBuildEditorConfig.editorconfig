@@ -75,6 +75,12 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [/Users/user/Documents/Desarrollo/C\#/RestaurantePOS/Presentation/Views/Dialogs/Modals/EditIngrediente.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[/Users/user/Documents/Desarrollo/C\#/RestaurantePOS/Presentation/Views/Dialogs/Modals/RecipeEditorView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/user/Documents/Desarrollo/C\#/RestaurantePOS/Presentation/Views/Dialogs/Modals/SelectProductForRecipeView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [/Users/user/Documents/Desarrollo/C\#/RestaurantePOS/Presentation/Views/MainContentView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
