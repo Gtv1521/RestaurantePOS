@@ -13,5 +13,11 @@ namespace MiComanderaApp.Core.Domain.Interfaces
         Task<TResult?> ShowDialogAsync<TView, TViewModel, TResult>(TViewModel viewModel, PixelPoint? position = null)
             where TView : Window, new()
             where TViewModel : class, IDialogViewModel<TResult>;
+
+        Task<TResult?> ShowDialogAsync<TViewModel, TResult>(TViewModel viewModel, PixelPoint? position = null)
+            where TViewModel : class, IDialogViewModel<TResult>;
+
+        Task<TResult?> ShowDialogAsync<TViewModel, TResult>(PixelPoint? position = null)
+            where TViewModel : class, IDialogViewModel<TResult>;
     }
 }

@@ -8,7 +8,8 @@ namespace MiComanderaApp.Core.Domain.Interfaces
 {
     public interface IRecetaRepository: ICrud<RecetaModel, RecetaRequest>
     {
-        Task<List<RecetaRequest>> GetByProductoIdAsync(int productId);
+        Task<List<RecetaModel>> GetByProductoIdAsync(int productId);
         Task UpdateAsync(int productId, List<RecetaRequest> receta);
+        Task<List<RecetaModel>> GetAllRecetasAsync(int pageNumber, int pageSize);
     }
 }

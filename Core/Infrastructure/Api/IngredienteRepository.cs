@@ -87,9 +87,21 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             throw new System.NotImplementedException();
         }
 
-        public Task<bool> UpdateAsync(string id, IngredienteRequest data)
+        public async Task<bool> UpdateAsync(string id, IngredienteRequest data)
         {
-            throw new System.NotImplementedException();
+            var response = await _httpClient.PutAsJsonAsync($"{_url}/{id}", data);
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw response.StatusCode switch
+                {
+                    HttpStatusCode.BadRequest => new BadRequestException(error),
+                    HttpStatusCode.NotFound => new NotFoundException(error),
+                    _ => new HttpRequestException(
+                        $"Error {(int)response.StatusCode}: {error}")
+                };
+            }
+            return response.IsSuccessStatusCode;
         }
     }
 }

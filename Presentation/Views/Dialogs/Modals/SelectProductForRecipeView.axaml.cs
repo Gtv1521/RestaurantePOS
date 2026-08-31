@@ -2,9 +2,9 @@ using Avalonia.Controls;
 
 namespace MiComanderaApp.Views.Dialogs.Modals
 {
-    public partial class IngredienteDialog : Window
+    public partial class SelectProductForRecipeView : UserControl
     {
-        public IngredienteDialog()
+        public SelectProductForRecipeView()
         {
             InitializeComponent();
         }

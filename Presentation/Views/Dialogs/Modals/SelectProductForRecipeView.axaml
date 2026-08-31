@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:MiComanderaApp.ViewModels.Dialogs.Modals"
+             xmlns:models="using:MiComanderaApp.Models"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300"
+             x:Class="MiComanderaApp.Views.Dialogs.Modals.SelectProductForRecipeView"
+             x:DataType="vm:SelectProductForRecipeViewModel">
+    <Border Background="{DynamicResource FondoTarjeta}" CornerRadius="8" Padding="16">
+        <Grid RowDefinitions="Auto, Auto, Auto, *, Auto" RowSpacing="8">
+            <TextBlock Grid.Row="0" Text="Seleccionar Producto para Receta" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextoColor}" Margin="0,0,0,6"/>
+
+            <TextBlock Grid.Row="1" Text="Elige el producto al que quieres asignar la receta:" Foreground="{DynamicResource TextoColor}" Opacity="0.8"/>
+
+            <TextBox Grid.Row="2" Text="{Binding SearchText, Mode=TwoWay}" Watermark="Buscar producto..." Background="{DynamicResource FondoModal}" Foreground="{DynamicResource TextoColor}" BorderBrush="{DynamicResource Border}"/>
+
+            <ListBox Grid.Row="3" ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct, Mode=TwoWay}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="models:ProductoModel">
+                        <Border Padding="10" Margin="0,0,0,6" Background="{DynamicResource FondoInput}" CornerRadius="6">
+                            <Grid ColumnDefinitions="*, Auto" ColumnSpacing="8">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="{DynamicResource TextoColor}"/>
+                                    <TextBlock Text="{Binding CategoryName}" FontSize="12" Opacity="0.7" Foreground="{DynamicResource TextoColor}"/>
+                                </StackPanel>
+                                <TextBlock Grid.Column="1" Text="{Binding Price, StringFormat='{}{0:C}'}" VerticalAlignment="Center" Foreground="{DynamicResource TextoColor}" Opacity="0.9"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" Margin="0,12,0,0">
+                <Button Content="Cancelar" Command="{Binding CancelCommand}" Background="{DynamicResource FondoModal}" Foreground="{DynamicResource TextoColor}"/>
+                <Button Content="Seleccionar" Command="{Binding SelectCommand}" Background="{DynamicResource BotonFondo}" Foreground="{DynamicResource BotonText}" IsDefault="True"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>
