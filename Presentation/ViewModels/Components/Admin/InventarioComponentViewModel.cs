@@ -18,7 +18,6 @@ using MiComanderaApp.Models;
 using MiComanderaApp.Core.Application.UseCases.Product;
 using MiComanderaApp.Core.Application.Request;
 using System.Text.Json;
-using System.Diagnostics;
 
 namespace MiComanderaApp.ViewModels.Components.Admin
 {

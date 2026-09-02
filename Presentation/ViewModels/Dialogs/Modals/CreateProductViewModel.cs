@@ -8,6 +8,8 @@ using MiComanderaApp.Core.Application.UseCases.Catalogo;
 using MiComanderaApp.Core.Application.UseCases.Product;
 using MiComanderaApp.Core.Domain.Interfaces;
 using MiComanderaApp.Core.Domain.Models;
+using MiComanderaApp.Interfaces;
+using MiComanderaApp.Presentation.Views.Components.Generales;
 using MiComanderaApp.ViewModels;
 
 namespace MiComanderaApp.Presentation.Views.Dialogs.Modals;
@@ -16,19 +18,30 @@ public partial class CreateProductViewModel : ObservableObject, IDialogViewModel
 {
     private readonly GetAllCatalogoUseCase _allCatalogoCase;
     private readonly InsertProductUseCase _insertProductUseCase;
+    private readonly IViewModelFactory _factory;
 
 
-    public CreateProductViewModel(GetAllCatalogoUseCase allCatalogoCase, InsertProductUseCase insertProductUseCase)
+    public CreateProductViewModel(
+        GetAllCatalogoUseCase allCatalogoCase, 
+        InsertProductUseCase insertProductUseCase,
+        IViewModelFactory factory
+        )
     {
         _allCatalogoCase = allCatalogoCase;
         _insertProductUseCase = insertProductUseCase;
+        _factory = factory;
         _ = LoadCategories();
+        _vistaActual = _factory.Create<TecladoComponentViewModel>();
+
     }
 
 
     public event Action<ProductoRequest?>? CloseRequested;
 
     [ObservableProperty] private string _nombre = "";
+    [ObservableProperty] private bool _teclado = false;
+    [ObservableProperty] private bool _botonTeclado = true;
+     [ObservableProperty] private object? _vistaActual;
     [ObservableProperty] private string _codigo = "";
     [ObservableProperty] private decimal _precio;
     [ObservableProperty] private string _descripcion = "";
@@ -79,7 +92,12 @@ public partial class CreateProductViewModel : ObservableObject, IDialogViewModel
         }
     }
 
-
+    [RelayCommand]
+    private void VerTeclado()
+    {
+        Teclado = !Teclado;
+        BotonTeclado = !BotonTeclado;
+    }
 
     [RelayCommand]
     private void Cancelar()

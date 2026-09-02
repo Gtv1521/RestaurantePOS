@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="https://github.com/projektanker/icons.avalonia"
         xmlns:local="using:MiComanderaApp.Presentation.Views.Dialogs.Modals"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -13,113 +14,136 @@
         x:DataType="local:CreateProductViewModel"
         WindowState="Maximized">
 
-        <Border Padding="25"
-                CornerRadius="15"
-                Background="{DynamicResource FondoPrincipal}"
-                VerticalAlignment="Top"
-                Margin="0,10,0,0"
-                HorizontalAlignment="Center"
-                MaxHeight="450"
-                Width="900">
 
+        <Grid RowDefinitions="*, *">
+                <Border Grid.Row="0" Padding="25"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        >
 
-                <Border Padding="25"
-                        CornerRadius="15">
+                        <StackPanel Spacing="15"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Stretch" >
 
-                        <StackPanel Spacing="15">
+                                <Border CornerRadius="15"
+                                        Width="900"
+                                        Padding="20"
+                                        Background="{DynamicResource FondoPrincipal}"
+                                        >
+                                        <Grid ColumnDefinitions="*, *"
+                                              RowDefinitions="*,*,*"
+                                              RowSpacing="10"
+                                              ColumnSpacing="10"
+                                              >
 
-                                <Grid ColumnDefinitions="*, *" RowDefinitions="*,*,*"  ColumnSpacing="10" RowSpacing="10">
-                                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Crear Producto"
-                                                   FontSize="24"
-                                                   FontWeight="Bold"
-                                                   HorizontalAlignment="Center"
-                                                   Foreground="{DynamicResource TextoBrush}"
-                                                   />
-
-                                        <StackPanel Spacing="15" Grid.Row="1" Grid.Column="0">
-
-                                                <TextBlock Text="Nombre" Foreground="{DynamicResource TextoColor}"/>
-
-                                                <TextBox Text="{Binding Nombre}"
-                                                         Watermark="Ej: Hamburguesa clásica" BorderBrush="{DynamicResource Border}"/>
-
-
-                                                <TextBlock Text="Código"
-                                                           Foreground="{DynamicResource TextoColor}"/>
-
-                                                <TextBox Text="{Binding Codigo}"
-                                                         BorderBrush="{DynamicResource Border}"
-                                                         Watermark="Código interno" Foreground="{DynamicResource TextoColor}"/>
-
-
-                                                <TextBlock Text="Precio"
-                                                           Foreground="{DynamicResource TextoColor}"
+                                                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Crear Producto"
+                                                           FontSize="24"
+                                                           FontWeight="Bold"
+                                                           HorizontalAlignment="Center"
+                                                           Foreground="{DynamicResource TextoBrush}"
                                                            />
 
-                                                <TextBox Text="{Binding Precio}"
-                                                         Foreground="{DynamicResource TextoColor}"
-                                                         BorderBrush="{DynamicResource Border}"
-                                                         Watermark="0.00"/>
-                                        </StackPanel>
+                                                <StackPanel Spacing="15" Grid.Row="1" Grid.Column="0">
 
-                                        <StackPanel Spacing="15" Grid.Row="1" Grid.Column="1">
+                                                        <TextBlock Text="Nombre" Foreground="{DynamicResource TextoColor}"/>
 
-                                                <TextBlock Text="Categoría"
-                                                           Foreground="{DynamicResource TextoColor}"/>
-
-                                                <ComboBox ItemsSource="{Binding Categorias}"
-                                                          SelectedItem="{Binding CategoriaSeleccionada}"
-                                                          Foreground="{DynamicResource TextoColor}"
-                                                          BorderBrush="{DynamicResource Border}">
-
-                                                        <ComboBox.ItemTemplate>
-                                                                <DataTemplate>
-                                                                        <TextBlock Text="{Binding Name}" />
-                                                                </DataTemplate>
-                                                        </ComboBox.ItemTemplate>
-
-                                                </ComboBox>
-
-                                                <TextBlock Text="Descripción" Foreground="{DynamicResource TextoColor}"/>
-
-                                                <TextBox Text="{Binding Descripcion}"
-                                                         Height="80"
-                                                         Foreground="{DynamicResource TextoColor}"
-                                                         AcceptsReturn="True"
-                                                         TextWrapping="Wrap"/>
+                                                        <TextBox Text="{Binding Nombre}"
+                                                                 Watermark="Ej: Hamburguesa clásica" BorderBrush="{DynamicResource Border}"/>
 
 
-                                                <CheckBox Content="Producto activo"
-                                                          IsChecked="{Binding Activo}"/>
+                                                        <TextBlock Text="Código"
+                                                                   Foreground="{DynamicResource TextoColor}"/>
 
-                                        </StackPanel>
+                                                        <TextBox Text="{Binding Codigo}"
+                                                                 BorderBrush="{DynamicResource Border}"
+                                                                 Watermark="Código interno" Foreground="{DynamicResource TextoColor}"/>
 
-                                        <StackPanel Grid.Row="2" Grid.ColumnSpan="2"
-                                                    Orientation="Horizontal"
-                                                    HorizontalAlignment="Right"
-                                                    Spacing="10"
-                                                    Margin="0,20,0,0">
 
-                                                <Button Content="Cancelar"
-                                                        Width="200"
-                                                        Height="40"
-                                                        Classes="btn-rojo"
-                                                        Command="{Binding CancelarCommand}"/>
+                                                        <TextBlock Text="Precio"
+                                                                   Foreground="{DynamicResource TextoColor}"
+                                                                   />
 
-                                                <Button Content="Guardar"
-                                                        Width="200"
-                                                        Height="40"
-                                                        Classes="btn-verde"
-                                                        Background="#4CAF50"
-                                                        Command="{Binding GuardarCommand}"/>
+                                                        <TextBox Text="{Binding Precio}"
+                                                                 Foreground="{DynamicResource TextoColor}"
+                                                                 BorderBrush="{DynamicResource Border}"
+                                                                 Watermark="0.00"/>
+                                                </StackPanel>
 
-                                        </StackPanel>
+                                                <StackPanel Spacing="15" Grid.Row="1" Grid.Column="1">
 
-                                </Grid>
+                                                        <TextBlock Text="Categoría"
+                                                                   Foreground="{DynamicResource TextoColor}"/>
+
+                                                        <ComboBox ItemsSource="{Binding Categorias}"
+                                                                  SelectedItem="{Binding CategoriaSeleccionada}"
+                                                                  Foreground="{DynamicResource TextoColor}"
+                                                                  BorderBrush="{DynamicResource Border}">
+
+                                                                <ComboBox.ItemTemplate>
+                                                                        <DataTemplate>
+                                                                                <TextBlock Text="{Binding Name}" />
+                                                                        </DataTemplate>
+                                                                </ComboBox.ItemTemplate>
+
+                                                        </ComboBox>
+
+                                                        <TextBlock Text="Descripción" Foreground="{DynamicResource TextoColor}"/>
+
+                                                        <TextBox Text="{Binding Descripcion}"
+                                                                 Height="80"
+                                                                 Foreground="{DynamicResource TextoColor}"
+                                                                 AcceptsReturn="True"
+                                                                 TextWrapping="Wrap"/>
+
+
+                                                        <CheckBox Content="Producto activo"
+                                                                  IsChecked="{Binding Activo}"/>
+
+                                                </StackPanel>
+
+                                                <StackPanel Grid.Row="2" Grid.ColumnSpan="2"
+                                                            Orientation="Horizontal"
+                                                            HorizontalAlignment="Right"
+                                                            Spacing="10"
+                                                            Margin="0,20,0,0">
+
+                                                        <Button Content="Cancelar"
+                                                                Width="200"
+                                                                Height="40"
+                                                                Classes="btn-rojo"
+                                                                Command="{Binding CancelarCommand}"/>
+
+                                                        <Button Content="Guardar"
+                                                                Width="200"
+                                                                Height="40"
+                                                                Classes="btn-verde"
+                                                                Background="#4CAF50"
+                                                                Command="{Binding GuardarCommand}"/>
+
+                                                </StackPanel>
+
+                                        </Grid>
+                                </Border>
 
                         </StackPanel>
 
                 </Border>
 
-        </Border>
+                <Grid RowDefinitions="*" Grid.Row="1" VerticalAlignment="Bottom" >
+
+                        <Border Padding="10"
+                                Margin="20"
+                                Height="35"
+                                Width="100"
+                                HorizontalAlignment="Left"
+                                IsVisible="{Binding BotonTeclado}"
+                                >
+                                <StackPanel>
+                                        <Button i:Attached.Icon="fa-solid fa-chevron-up" Background="{DynamicResource FondoPrincipal}"  Classes="KeypadBtn" Command="{Binding VerTecladoCommand}" />
+                                </StackPanel>
+                        </Border>
+
+                        <ContentControl Padding="10" Height="500" IsVisible="{Binding Teclado}" Grid.Row="1" Content="{Binding VistaActual}" />
+                </Grid>
+        </Grid>
 </Window>

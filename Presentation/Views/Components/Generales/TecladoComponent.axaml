@@ -1,111 +1,116 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="https://github.com/projektanker/icons.avalonia"
              xmlns:local="using:MiComanderaApp.Presentation.Views.Components.Generales"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="MiComanderaApp.Presentation.Views.Components.Generales.TecladoComponent"
+             x:Class="MiComanderaApp.Presentation.Views.Components.Generales.TecladoComponentView"
              x:DataType="local:TecladoComponentViewModel"
              >
 
-  <Border Background="{DynamicResource FondoTarjeta}"
-          CornerRadius="20"
-          Padding="15"
-          BoxShadow="0 8 30 #50000000">
+        <Border Background="{DynamicResource FondoPrincipal}"
+                CornerRadius="20"
+                Padding="15"
+                BoxShadow="0 8 30 #50000000">
 
-    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
-          RowSpacing="8">
+                <Grid RowDefinitions="*,*,*,*,*"
+                      RowSpacing="6">
 
-      <!-- Números -->
-      <Grid Grid.Row="0"
-            ColumnDefinitions="*,*,*,*,*,*,*,*,*,*"
-            ColumnSpacing="6">
+                        <!-- Números -->
+                        <Grid Grid.Row="0"
+                              ColumnDefinitions="*,*,*,*,*,*,*,*,*,*,*,*,*,2.5*"
+                              ColumnSpacing="6">
 
-        <Button Content="1" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="1"/>
-        <Button Content="2" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="2"/>
-        <Button Content="3" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="3"/>
-        <Button Content="4" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="4"/>
-        <Button Content="5" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="5"/>
-        <Button Content="6" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="6"/>
-        <Button Content="7" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="7"/>
-        <Button Content="8" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="8"/>
-        <Button Content="9" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="9"/>
-        <Button Content="0" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="0"/>
+                                <Button Grid.Column="0" i:Attached.Icon="fa-solid fa-chevron-down" Classes="KeypadBtn" Command="{Binding TabKeyCommand}"/>
+                                <Button Grid.Column="1" Content="1" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="1"/>
+                                <Button Grid.Column="2" Content="2" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="2"/>
+                                <Button Grid.Column="3" Content="3" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="3"/>
+                                <Button Grid.Column="4" Content="4" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="4"/>
+                                <Button Grid.Column="5" Content="5" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="5"/>
+                                <Button Grid.Column="6" Content="6" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="6"/>
+                                <Button Grid.Column="7" Content="7" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="7"/>
+                                <Button Grid.Column="8" Content="8" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="8"/>
+                                <Button Grid.Column="9" Content="9" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="9"/>
+                                <Button Grid.Column="10" Content="0" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="0"/>
+                                <Button Grid.Column="11" Content="-" Classes="KeypadBtn" Command="{Binding BackSpaceCommand}" />
+                                <Button Grid.Column="12" Content="=" Classes="KeypadBtn" Command="{Binding BackSpaceCommand}" />
+                                <Button Grid.Column="13" Content="Backspace" Classes="KeypadBtn" Command="{Binding BackSpaceCommand}" />
 
-      </Grid>
+                        </Grid>
 
-      <!-- QWERTY -->
-      <Grid Grid.Row="1"
-            ColumnDefinitions="*,*,*,*,*,*,*,*,*,*"
-            ColumnSpacing="6">
+                        <!-- QWERTY -->
+                        <Grid Grid.Row="1"
+                              ColumnDefinitions="1.8*,*,*,*,*,*,*,*,*,*,*,*,*,*"
+                              ColumnSpacing="6">
 
-        <Button Content="Q" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="Q"/>
-        <Button Content="W" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="W"/>
-        <Button Content="E" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="E"/>
-        <Button Content="R" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="R"/>
-        <Button Content="T" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="T"/>
-        <Button Content="Y" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="Y"/>
-        <Button Content="U" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="U"/>
-        <Button Content="I" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="I"/>
-        <Button Content="O" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="O"/>
-        <Button Content="P" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="P"/>
+                                <Button Grid.Column="0" Content="Tab" Classes="KeypadBtn" Command="{Binding TabKeyCommand}"/>
+                                <Button Grid.Column="1" Content="Q" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="Q"/>
+                                <Button Grid.Column="2" Content="W" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="W"/>
+                                <Button Grid.Column="3" Content="E" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="E"/>
+                                <Button Grid.Column="4" Content="R" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="R"/>
+                                <Button Grid.Column="5" Content="T" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="T"/>
+                                <Button Grid.Column="6" Content="Y" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="Y"/>
+                                <Button Grid.Column="7" Content="U" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="U"/>
+                                <Button Grid.Column="8" Content="I" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="I"/>
+                                <Button Grid.Column="9" Content="O" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="O"/>
+                                <Button Grid.Column="10" Content="P" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="P"/>
+                                <Button Grid.Column="11" Content="[" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="P"/>
+                                <Button Grid.Column="12" Content="]" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="P"/>
+                                <Button Grid.Column="13" Content="\" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="P"/>
 
-      </Grid>
+                        </Grid>
 
-      <Grid Grid.Row="2"
-            ColumnDefinitions="*,*,*,*,*,*,*,*,*,*"
-            ColumnSpacing="6">
+                        <Grid Grid.Row="2"
+                              ColumnDefinitions="2*,*,*,*,*,*,*,*,*,*,*,*,2*"
+                              ColumnSpacing="6">
 
-        <Button Content="A" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="A"/>
-        <Button Content="S" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="S"/>
-        <Button Content="D" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="D"/>
-        <Button Content="F" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="F"/>
-        <Button Content="G" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="G"/>
-        <Button Content="H" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="H"/>
-        <Button Content="J" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="J"/>
-        <Button Content="K" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="K"/>
-        <Button Content="L" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="L"/>
+                                <Button Grid.Column="0" Content="Mayus" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="A"/>
+                                <Button Grid.Column="1" Content="A" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="A"/>
+                                <Button Grid.Column="2" Content="S" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="S"/>
+                                <Button Grid.Column="3" Content="D" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="D"/>
+                                <Button Grid.Column="4" Content="F" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="F"/>
+                                <Button Grid.Column="5" Content="G" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="G"/>
+                                <Button Grid.Column="6" Content="H" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="H"/>
+                                <Button Grid.Column="7" Content="J" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="J"/>
+                                <Button Grid.Column="8" Content="K" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="K"/>
+                                <Button Grid.Column="9" Content="L" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="L"/>
+                                <Button Grid.Column="10" Content="." Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="L"/>
+                                <Button Grid.Column="11" Content="´" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="L"/>
+                                <Button Grid.Column="12" Content="Enter" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="L"/>
 
-      </Grid>
+                        </Grid>
 
-      <Grid Grid.Row="3"
-            ColumnDefinitions="*,*,*,*,*,*,*,*,*,*"
-            ColumnSpacing="6">
+                        <Grid Grid.Row="3"
+                              ColumnDefinitions="2*,*,*,*,*,*,*,*,*,*,*,2*"
+                              ColumnSpacing="6">
 
-        <Button Content="Z" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="Z"/>
-        <Button Content="X" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="X"/>
-        <Button Content="C" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="C"/>
-        <Button Content="V" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="V"/>
-        <Button Content="B" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="B"/>
-        <Button Content="N" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="N"/>
-        <Button Content="M" Classes="key" Command="{Binding InsertKeyCommand}" CommandParameter="M"/>
+                                <Button Grid.Column="0" Content="Shif" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="Z"/>
+                                <Button Grid.Column="1" Content="Z" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="Z"/>
+                                <Button Grid.Column="2" Content="X" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="X"/>
+                                <Button Grid.Column="3" Content="C" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="C"/>
+                                <Button Grid.Column="4" Content="V" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="V"/>
+                                <Button Grid.Column="5" Content="B" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="B"/>
+                                <Button Grid.Column="6" Content="N" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="N"/>
+                                <Button Grid.Column="7" Content="M" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="M"/>
+                                <Button Grid.Column="8" Content="," Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="M"/>
+                                <Button Grid.Column="9" Content="." Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="M"/>
+                                <Button Grid.Column="10" Content="/" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="M"/>
+                                <Button Grid.Column="11" Content="Si" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="M"/>
 
-      </Grid>
+                        </Grid>
 
-      <!-- Acciones -->
-      <Grid Grid.Row="4"
-            ColumnDefinitions="*,3*,*,*"
-            ColumnSpacing="8">
+                        <!-- Acciones -->
+                        <Grid Grid.Row="4"
+                              ColumnDefinitions="1.75*,7*,*,*,1.75*"
+                              ColumnSpacing="8">
 
-        <Button Grid.Column="0"
-                Content="⇧"
-                Classes="key-action"/>
-
-        <Button Grid.Column="1"
-                Content="ESPACIO"
-                Command="{Binding InsertKeyCommand}" CommandParameter=" "
-                Classes="key"/>
-
-        <Button Grid.Column="2"
-                Content="⌫"
-                Command=""
-                Classes="key-action"/>
-
-        <Button Grid.Column="3"
-                Content="ENTER"
-                Command=""
-                Classes="key-enter"/>
-      </Grid>
-    </Grid>
-  </Border>
+                                <Button Grid.Column="0" Content="Ctrl" Classes="KeypadBtn"/>
+                                <Button Grid.Column="1" Content="ESPACIO" Command="{Binding InsertKeyCommand}" CommandParameter=" " Classes="KeypadBtn"/>
+                                <Button Grid.Column="2" i:Attached.Icon="fa-solid fa-arrow-left" Command="" Classes="KeypadBtn"/>
+                                <Button Grid.Column="3" i:Attached.Icon="fa-solid fa-arrow-right" Command="" Classes="KeypadBtn"/>
+                                <Button Grid.Column="4" Content="NO" Command="" Classes="KeypadBtn"/>
+                        </Grid>
+                </Grid>
+        </Border>
 </UserControl>

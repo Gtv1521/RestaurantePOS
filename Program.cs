@@ -53,6 +53,7 @@ using MiComanderaApp.Presentation.Views.Components.Admin;
 using MiComanderaApp.Presentation.ViewModels.Components.Admin;
 using MiComanderaApp.Core.Application.UseCases.User;
 using MiComanderaApp.Request;
+using MiComanderaApp.Presentation.Views.Components.Generales;
 
 namespace MiComanderaApp;
 
@@ -126,6 +127,7 @@ sealed class Program
                 services.AddTransient<CantidadPaxViewModel>();
                 services.AddTransient<UsuariosViewModel>();
                 services.AddTransient<UserViewModel>();
+                services.AddTransient<TecladoComponentViewModel>();
                 services.AddTransient<InventarioComponentViewModel>();
 
                 // modal

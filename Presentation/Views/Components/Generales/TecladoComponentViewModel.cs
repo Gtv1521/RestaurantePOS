@@ -17,4 +17,16 @@ public partial class TecladoComponentViewModel : ViewModelBase
         KeyPressed?.Invoke(key);
         System.Console.WriteLine(key);
     }
+
+    [RelayCommand]
+    private void BackSpace()
+    {
+        System.Console.WriteLine("Borrar");
+    }
+
+    [RelayCommand]
+    private void TabKey()
+    {
+        System.Console.WriteLine("Tabular");
+    }
 }
