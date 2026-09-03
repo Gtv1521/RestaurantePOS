@@ -109,6 +109,7 @@ sealed class Program
                 services.AddSingleton<IWindowProvider, WindowProvider>();
                 services.AddSingleton<IDialogService, DialogService>();
                 services.AddSingleton<INavigationService, NavigationService>();
+                services.AddSingleton<IFocusService, FocusService>();
 
                 // 🖥️ 2. Ventana principal
                 services.AddSingleton<MainWindowViewModel>();

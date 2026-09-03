@@ -1,4 +1,5 @@
 <UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:converters="using:MiComanderaApp.Presentation.Converters"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="https://github.com/projektanker/icons.avalonia"
@@ -8,6 +9,11 @@
              x:Class="MiComanderaApp.Presentation.Views.Components.Generales.TecladoComponentView"
              x:DataType="local:TecladoComponentViewModel"
              >
+
+        <UserControl.Resources>
+                <converters:MayusculasConverter x:Key="MayusculasConverter" />
+                <converters:LedConverter x:Key="LedConverter" />
+        </UserControl.Resources>
 
         <Border Background="{DynamicResource FondoPrincipal}"
                 CornerRadius="20"
@@ -45,19 +51,19 @@
                               ColumnSpacing="6">
 
                                 <Button Grid.Column="0" Content="Tab" Classes="KeypadBtn" Command="{Binding TabKeyCommand}"/>
-                                <Button Grid.Column="1" Content="Q" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="Q"/>
-                                <Button Grid.Column="2" Content="W" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="W"/>
-                                <Button Grid.Column="3" Content="E" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="E"/>
-                                <Button Grid.Column="4" Content="R" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="R"/>
-                                <Button Grid.Column="5" Content="T" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="T"/>
-                                <Button Grid.Column="6" Content="Y" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="Y"/>
-                                <Button Grid.Column="7" Content="U" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="U"/>
-                                <Button Grid.Column="8" Content="I" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="I"/>
-                                <Button Grid.Column="9" Content="O" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="O"/>
-                                <Button Grid.Column="10" Content="P" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="P"/>
-                                <Button Grid.Column="11" Content="[" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="P"/>
-                                <Button Grid.Column="12" Content="]" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="P"/>
-                                <Button Grid.Column="13" Content="\" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="P"/>
+                                <Button Grid.Column="1" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter}, ConverterParameter='q'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="q"/>
+                                <Button Grid.Column="2" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter}, ConverterParameter='w'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="w"/>
+                                <Button Grid.Column="3" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter}, ConverterParameter='e'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="e"/>
+                                <Button Grid.Column="4" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter}, ConverterParameter='r'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="r"/>
+                                <Button Grid.Column="5" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter}, ConverterParameter='t'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="t"/>
+                                <Button Grid.Column="6" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter}, ConverterParameter='y'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="y"/>
+                                <Button Grid.Column="7" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter}, ConverterParameter='u'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="u"/>
+                                <Button Grid.Column="8" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter}, ConverterParameter='i'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="i"/>
+                                <Button Grid.Column="9" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter}, ConverterParameter='o'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="o"/>
+                                <Button Grid.Column="10" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter}, ConverterParameter='p'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="p"/>
+                                <Button Grid.Column="11" Content="[" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="["/>
+                                <Button Grid.Column="12" Content="]" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="]"/>
+                                <Button Grid.Column="13" Content="\" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="\"/>
 
                         </Grid>
 
@@ -65,20 +71,42 @@
                               ColumnDefinitions="2*,*,*,*,*,*,*,*,*,*,*,*,2*"
                               ColumnSpacing="6">
 
-                                <Button Grid.Column="0" Content="Mayus" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="A"/>
-                                <Button Grid.Column="1" Content="A" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="A"/>
-                                <Button Grid.Column="2" Content="S" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="S"/>
-                                <Button Grid.Column="3" Content="D" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="D"/>
-                                <Button Grid.Column="4" Content="F" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="F"/>
-                                <Button Grid.Column="5" Content="G" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="G"/>
-                                <Button Grid.Column="6" Content="H" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="H"/>
-                                <Button Grid.Column="7" Content="J" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="J"/>
-                                <Button Grid.Column="8" Content="K" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="K"/>
-                                <Button Grid.Column="9" Content="L" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="L"/>
+                                <Button Grid.Column="0"
+                                        HorizontalContentAlignment="Stretch"
+                                        VerticalContentAlignment="Stretch"
+                                        Classes="KeypadBtn"
+                                        Command="{Binding MayusculasKeyCommand}">
+                                        <UniformGrid Rows="1" Columns="1">
+                                                <Grid>
+                                                        <TextBlock Text="Mayus"
+                                                                   HorizontalAlignment="Center"
+                                                                   VerticalAlignment="Center" />
+
+                                                        <Ellipse Width="10"
+                                                                 Height="10"
+                                                                 Fill="{Binding IsMayusculas,
+                                                                 Converter={StaticResource LedConverter},
+                                                                 ConverterParameter=#007AFF}"
+                                                                 Stroke="Gray"
+                                                                 StrokeThickness="0.5"
+                                                                 HorizontalAlignment="Right"
+                                                                 VerticalAlignment="Top"
+                                                                 Margin="0,2,2,0" />
+                                                </Grid>
+                                        </UniformGrid>
+                                </Button>
+                                <Button Grid.Column="1" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter},ConverterParameter='a'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="a"/>
+                                <Button Grid.Column="2" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter},ConverterParameter='s'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="s"/>
+                                <Button Grid.Column="3" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter},ConverterParameter='d'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="d"/>
+                                <Button Grid.Column="4" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter},ConverterParameter='f'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="f"/>
+                                <Button Grid.Column="5" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter},ConverterParameter='g'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="g"/>
+                                <Button Grid.Column="6" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter},ConverterParameter='h'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="h"/>
+                                <Button Grid.Column="7" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter},ConverterParameter='j'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="j"/>
+                                <Button Grid.Column="8" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter},ConverterParameter='k'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="k"/>
+                                <Button Grid.Column="9" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter},ConverterParameter='l'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="l"/>
                                 <Button Grid.Column="10" Content="." Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="L"/>
                                 <Button Grid.Column="11" Content="´" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="L"/>
                                 <Button Grid.Column="12" Content="Enter" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="L"/>
-
                         </Grid>
 
                         <Grid Grid.Row="3"
@@ -86,13 +114,13 @@
                               ColumnSpacing="6">
 
                                 <Button Grid.Column="0" Content="Shif" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="Z"/>
-                                <Button Grid.Column="1" Content="Z" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="Z"/>
-                                <Button Grid.Column="2" Content="X" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="X"/>
-                                <Button Grid.Column="3" Content="C" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="C"/>
-                                <Button Grid.Column="4" Content="V" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="V"/>
-                                <Button Grid.Column="5" Content="B" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="B"/>
-                                <Button Grid.Column="6" Content="N" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="N"/>
-                                <Button Grid.Column="7" Content="M" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="M"/>
+                                <Button Grid.Column="1" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter},ConverterParameter='z'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="z"/>
+                                <Button Grid.Column="2" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter},ConverterParameter='x'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="x"/>
+                                <Button Grid.Column="3" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter},ConverterParameter='c'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="c"/>
+                                <Button Grid.Column="4" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter},ConverterParameter='v'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="v"/>
+                                <Button Grid.Column="5" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter},ConverterParameter='b'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="b"/>
+                                <Button Grid.Column="6" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter},ConverterParameter='n'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="n"/>
+                                <Button Grid.Column="7" Content="{Binding IsMayusculas, Converter={StaticResource MayusculasConverter},ConverterParameter='m'}" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="m"/>
                                 <Button Grid.Column="8" Content="," Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="M"/>
                                 <Button Grid.Column="9" Content="." Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="M"/>
                                 <Button Grid.Column="10" Content="/" Classes="KeypadBtn" Command="{Binding InsertKeyCommand}" CommandParameter="M"/>
@@ -106,10 +134,10 @@
                               ColumnSpacing="8">
 
                                 <Button Grid.Column="0" Content="Ctrl" Classes="KeypadBtn"/>
-                                <Button Grid.Column="1" Content="ESPACIO" Command="{Binding InsertKeyCommand}" CommandParameter=" " Classes="KeypadBtn"/>
-                                <Button Grid.Column="2" i:Attached.Icon="fa-solid fa-arrow-left" Command="" Classes="KeypadBtn"/>
-                                <Button Grid.Column="3" i:Attached.Icon="fa-solid fa-arrow-right" Command="" Classes="KeypadBtn"/>
-                                <Button Grid.Column="4" Content="NO" Command="" Classes="KeypadBtn"/>
+                                <Button Grid.Column="1" Content="ESPACIO" Command="{Binding SpaceKeyCommand}" Classes="KeypadBtn"/>
+                                <Button Grid.Column="2" i:Attached.Icon="fa-solid fa-arrow-left" Command="{Binding MoverFocoIzquierdaCommand}" Classes="KeypadBtn"/>
+                                <Button Grid.Column="3" i:Attached.Icon="fa-solid fa-arrow-right" Command="{Binding MoverFocoDerechaCommand}" Classes="KeypadBtn"/>
+                                <Button Grid.Column="4" Content="NO" Command="{Binding InsertKeyCommand}" CommandParameter="NO" Classes="KeypadBtn"/>
                         </Grid>
                 </Grid>
         </Border>

@@ -44,6 +44,7 @@
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.18" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.18" />
     <PackageReference Include="Avalonia.Diagnostics" Version="11.3.18" />
+    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.3.0.6" />
 
     <!-- Infraestructura y SignalR -->
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.1" />
