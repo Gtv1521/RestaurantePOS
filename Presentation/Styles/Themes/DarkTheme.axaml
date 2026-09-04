@@ -7,7 +7,7 @@
   <SolidColorBrush x:Key="Name" Color="#D1D0DF"/>
   
   <SolidColorBrush x:Key="TextoColor" Color="#DCE3E9"/>
-  <SolidColorBrush x:Key="TextoBrush" Color="#B1B7BE"/>
+  <SolidColorBrush x:Key="TextoBrush" Color="#E7EEEE"/>
   <SolidColorBrush x:Key="Resalto" Color="#98A2B3"/>
   
   <SolidColorBrush x:Key="Subtitle" Color="#E5EFA2"/>

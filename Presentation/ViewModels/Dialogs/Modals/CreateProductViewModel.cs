@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -14,7 +15,7 @@ using MiComanderaApp.ViewModels;
 
 namespace MiComanderaApp.Presentation.Views.Dialogs.Modals;
 
-public partial class CreateProductViewModel : ObservableObject, IDialogViewModel<ProductoRequest>
+public partial class CreateProductViewModel : ObservableValidator, IDialogViewModel<ProductoRequest>
 {
     private readonly GetAllCatalogoUseCase _allCatalogoCase;
     private readonly InsertProductUseCase _insertProductUseCase;
@@ -22,7 +23,7 @@ public partial class CreateProductViewModel : ObservableObject, IDialogViewModel
 
 
     public CreateProductViewModel(
-        GetAllCatalogoUseCase allCatalogoCase, 
+        GetAllCatalogoUseCase allCatalogoCase,
         InsertProductUseCase insertProductUseCase,
         IViewModelFactory factory
         )
@@ -38,17 +39,27 @@ public partial class CreateProductViewModel : ObservableObject, IDialogViewModel
 
     public event Action<ProductoRequest?>? CloseRequested;
 
-    [ObservableProperty] private string _nombre = "";
+    [ObservableProperty] private bool _mostrarErrores;
+    [ObservableProperty]
+    [Required(ErrorMessage = "El nombre es obligatorio.")]
+    private string? _nombre;
     [ObservableProperty] private bool _teclado = false;
     [ObservableProperty] private bool _botonTeclado = true;
-     [ObservableProperty] private object? _vistaActual;
-    [ObservableProperty] private string _codigo = "";
-    [ObservableProperty] private decimal _precio;
-    [ObservableProperty] private string _descripcion = "";
+    [ObservableProperty] private object? _vistaActual;
+    [Required(ErrorMessage = "El código es obligatorio.")]
+    [ObservableProperty]
+    private string? _codigo;
+    [ObservableProperty]
+    [Range(0.01, double.MaxValue, ErrorMessage = "El precio debe ser mayor que 0.")]
+    private decimal? _precio;
+    [ObservableProperty]
+    [Required(ErrorMessage = "La descripción es obligatoria.")]
+    private string? _descripcion;
     [ObservableProperty] private bool _activo = true;
     [ObservableProperty] private bool _loading = true;
     [ObservableProperty] private CatalogoModel _categoriaSeleccionada = new();
     public ObservableCollection<CatalogoModel> Categorias { get; } = new();
+    public ObservableCollection<string> Errores { get; } = new();
 
 
     private async Task LoadCategories()
@@ -66,14 +77,21 @@ public partial class CreateProductViewModel : ObservableObject, IDialogViewModel
     {
         try
         {
+            MostrarErrores = true;
+
+            ValidateAllProperties();
+
+            if (HasErrors)
+                return;
+
             Loading = true;
 
             var producto = new ProductoRequest
             {
-                Name = Nombre,
+                Name = Nombre!,
                 CategoryId = CategoriaSeleccionada.Id,
-                Price = (double)Precio,
-                Description = Descripcion,
+                Price = (double)Precio!,
+                Description = Descripcion!,
                 IsAvailable = Activo,
                 ImageUrl = ""
             };

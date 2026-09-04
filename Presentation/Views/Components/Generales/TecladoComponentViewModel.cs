@@ -64,12 +64,6 @@ public partial class TecladoComponentViewModel : ViewModelBase
             textBox.CaretIndex =
                 cursorPos + teclaFinal.Length;
         }
-
-        Console.WriteLine(
-            $"DESPUES INSERTAR -> Text: '{textBox.Text}', " +
-            $"Caret: {textBox.CaretIndex}, " +
-            $"Start: {textBox.SelectionStart}, " +
-            $"End: {textBox.SelectionEnd}");
     }
 
     [RelayCommand]
@@ -105,12 +99,6 @@ public partial class TecladoComponentViewModel : ViewModelBase
 
             textBox.CaretIndex = cursorPos - 1;
         }
-
-        Console.WriteLine(
-            $"DESPUES BORRAR -> Text: '{textBox.Text}', " +
-            $"Caret: {textBox.CaretIndex}, " +
-            $"Start: {textBox.SelectionStart}, " +
-            $"End: {textBox.SelectionEnd}");
     }
 
     [RelayCommand]
@@ -201,7 +189,6 @@ public partial class TecladoComponentViewModel : ViewModelBase
             textBox.SelectionEnd = cursorPos + key.Length;
         }
 
-        // _focusService.SetFocus(textBox);
     }
 
     private TextBox? GetPreviousTextBox(TextBox current)

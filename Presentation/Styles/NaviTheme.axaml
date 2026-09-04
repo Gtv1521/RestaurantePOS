@@ -205,7 +205,7 @@
         <Setter Property="FontWeight" Value="Bold"/>
 
     </Style>
-    
+
     <!-- Styles for ListBox as DataGrid -->
     <Style Selector="Grid.DataGridHeader TextBlock">
         <Setter Property="FontWeight" Value="Bold"/>
@@ -226,12 +226,20 @@
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="Margin" Value="5,0"/>
     </Style>
-    
+
     <Style Selector="Grid.DataGridRow Button.Flat.danger">
         <Setter Property="Foreground" Value="{DynamicResource PosRedBg}"/>
     </Style>
 
     <Style Selector="Grid.DataGridRow Button.Flat:pointerover /template/ ContentPresenter">
         <Setter Property="Background" Value="{DynamicResource PosGrayBg}"/>
+    </Style>
+
+    <Style Selector="DataValidationErrors TextBlock">
+        <Setter Property="Foreground" Value="#3AB5DB"/>
+    </Style>
+
+    <Style Selector="DataValidationErrors TextBox">
+        <Setter Property="BorderBrush" Value="#3AB5DB"/>
     </Style>
 </Styles>

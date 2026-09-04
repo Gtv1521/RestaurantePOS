@@ -30,7 +30,7 @@
   <SolidColorBrush x:Key="Border" Color="#D0687168"/>
 
   <SolidColorBrush x:Key="FondoPanelModal" Color="#5B36363A"/>
-  <SolidColorBrush x:Key="FondoModal" Color="#1A0E26"/>
+  <SolidColorBrush x:Key="FondoModal" Color="#71484D4D"/>
   <SolidColorBrush x:Key="BorderModal" Color="#615fb368"/>
   <SolidColorBrush x:Key="BotonFondo" Color="#970E2A48"/>
 

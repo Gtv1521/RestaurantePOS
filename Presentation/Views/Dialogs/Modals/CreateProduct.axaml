@@ -14,7 +14,9 @@
         WindowStartupLocation="Manual"
         Background="{DynamicResource FondoModal}"
         x:DataType="local:CreateProductViewModel"
-        WindowState="Maximized">
+        WindowState="Maximized"
+        x:Name="Root"
+        >
 
 
         <Grid RowDefinitions="*, *">
@@ -49,41 +51,46 @@
 
                                                         <TextBlock Text="Nombre" Foreground="{DynamicResource TextoColor}"/>
 
-                                                        <TextBox Text="{Binding Nombre, Mode=TwoWay}"
-                                                                 x:Name="TxtNombre"
-                                                                 Watermark="Ej: Hamburguesa clásica" BorderBrush="{DynamicResource Border}">
-                                                                <in:Interaction.Behaviors>
-                                                                        <b:KeyboardFocusBehavior />
-                                                                </in:Interaction.Behaviors>
-                                                        </TextBox>
+                                                        <DataValidationErrors>
+                                                                <TextBox Text="{Binding Nombre, Mode=TwoWay}"
+                                                                         x:Name="TxtNombre"
+                                                                         Watermark="Ej: Hamburguesa clásica" BorderBrush="{DynamicResource Border}">
+                                                                        <in:Interaction.Behaviors>
+                                                                                <b:KeyboardFocusBehavior />
+                                                                        </in:Interaction.Behaviors>
+                                                                </TextBox>
+                                                        </DataValidationErrors>
 
 
                                                         <TextBlock Text="Código"
                                                                    Foreground="{DynamicResource TextoColor}"/>
 
-                                                        <TextBox Text="{Binding Codigo, Mode=TwoWay}"
-                                                                 x:Name="TxtCodigo"
-                                                                 BorderBrush="{DynamicResource Border}"
-                                                                 Watermark="Código interno" Foreground="{DynamicResource TextoColor}">
-                                                                <in:Interaction.Behaviors>
-                                                                        <b:KeyboardFocusBehavior />
-                                                                </in:Interaction.Behaviors>
-                                                        </TextBox>
-
+                                                        <DataValidationErrors>
+                                                                <TextBox Text="{Binding Codigo, Mode=TwoWay}"
+                                                                         x:Name="TxtCodigo"
+                                                                         BorderBrush="{DynamicResource Border}"
+                                                                         Watermark="Código interno" Foreground="{DynamicResource TextoColor}">
+                                                                        <in:Interaction.Behaviors>
+                                                                                <b:KeyboardFocusBehavior />
+                                                                        </in:Interaction.Behaviors>
+                                                                </TextBox>
+                                                        </DataValidationErrors>
 
                                                         <TextBlock Text="Precio"
                                                                    Foreground="{DynamicResource TextoColor}"
                                                                    />
 
-                                                        <TextBox Text="{Binding Precio, Mode=TwoWay}"
-                                                                 x:Name="TxtPrecio"
-                                                                 Foreground="{DynamicResource TextoColor}"
-                                                                 BorderBrush="{DynamicResource Border}"
-                                                                 Watermark="0.00">
-                                                                <in:Interaction.Behaviors>
-                                                                        <b:KeyboardFocusBehavior />
-                                                                </in:Interaction.Behaviors>
-                                                        </TextBox>
+                                                        <DataValidationErrors>
+                                                                <TextBox Text="{Binding Precio, Mode=TwoWay}"
+                                                                         x:Name="TxtPrecio"
+                                                                         Foreground="{DynamicResource TextoColor}"
+                                                                         BorderBrush="{DynamicResource Border}"
+                                                                         Watermark="0.00">
+                                                                        <in:Interaction.Behaviors>
+                                                                                <b:KeyboardFocusBehavior />
+                                                                        </in:Interaction.Behaviors>
+                                                                </TextBox>
+                                                        </DataValidationErrors>
                                                 </StackPanel>
 
                                                 <StackPanel Spacing="15" Grid.Row="1" Grid.Column="1">
@@ -106,17 +113,18 @@
 
                                                         <TextBlock Text="Descripción" Foreground="{DynamicResource TextoColor}"/>
 
-                                                        <TextBox Text="{Binding Descripcion, Mode=TwoWay}"
-                                                                 Height="80"
-                                                                 x:Name="TxtDescripcion"
-                                                                 Foreground="{DynamicResource TextoColor}"
-                                                                 AcceptsReturn="True"
-                                                                 TextWrapping="Wrap">
-                                                                <in:Interaction.Behaviors>
-                                                                        <b:KeyboardFocusBehavior />
-                                                                </in:Interaction.Behaviors>
-                                                        </TextBox>
-
+                                                        <DataValidationErrors>
+                                                                <TextBox Text="{Binding Descripcion, Mode=TwoWay}"
+                                                                         Height="80"
+                                                                         x:Name="TxtDescripcion"
+                                                                         Foreground="{DynamicResource TextoColor}"
+                                                                         AcceptsReturn="True"
+                                                                         TextWrapping="Wrap">
+                                                                        <in:Interaction.Behaviors>
+                                                                                <b:KeyboardFocusBehavior />
+                                                                        </in:Interaction.Behaviors>
+                                                                </TextBox>
+                                                        </DataValidationErrors>
 
                                                         <CheckBox Content="Producto activo"
                                                                   IsChecked="{Binding Activo}"/>
