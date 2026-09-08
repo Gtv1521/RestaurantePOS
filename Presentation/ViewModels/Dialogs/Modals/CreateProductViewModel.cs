@@ -97,6 +97,14 @@ public partial class CreateProductViewModel : ObservableValidator, IDialogViewMo
             };
 
             var insertar = await _insertProductUseCase.Execute(producto);
+            
+            if (insertar == null)
+            {
+                Errores.Clear();
+                Errores.Add("Error al guardar el producto.");
+                return;
+            }
+
             CloseRequested?.Invoke(producto);
 
         }

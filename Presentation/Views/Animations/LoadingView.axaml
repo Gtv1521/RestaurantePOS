@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:behaviors="using:MiComanderaApp.Presentation.Services"
+             xmlns:componentes="using:MiComanderaApp.Presentation.Views.Components.Icon"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MiComanderaApp.Presentation.Views.Animations.LoadingView">
+
+
+  <Grid Background="{DynamicResource FondoModal}"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch">
+
+    <componentes:EngraneView
+      IconWidth="50"
+      IconHeight="50"
+      Color="{DynamicResource TextoColor}"
+      />
+
+  </Grid>
+
+</UserControl>

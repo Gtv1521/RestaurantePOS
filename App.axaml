@@ -9,10 +9,11 @@
         <ResourceDictionary>
             <converters:ZeroToBooleanConverter x:Key="ZeroToBooleanConverter"/>
             <converters:GreaterThanZeroToBooleanConverter x:Key="GreaterThanZeroToBooleanConverter"/>
+            <converters:InvertBoolConverter x:Key="InvertBoolConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <!-- colores temas -->
                 <ResourceInclude Source="avares://MiComanderaApp/Presentation/Styles/Themes/DarkTheme.axaml"/>
-                
+
                 <!-- recursos Plantillas -->
                 <ResourceInclude Source="avares://MiComanderaApp/Presentation/Styles/DataTemplates.axaml" />
                 <ResourceInclude Source="avares://MiComanderaApp/Presentation/Styles/Templates/TableOpenTemplate.axaml" />
