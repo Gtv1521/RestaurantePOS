@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -10,6 +11,7 @@ using MiComanderaApp.Core.Application.UseCases.Product;
 using MiComanderaApp.Core.Domain.Interfaces;
 using MiComanderaApp.Core.Domain.Models;
 using MiComanderaApp.Interfaces;
+using MiComanderaApp.Models;
 using MiComanderaApp.Presentation.Views.Components.Generales;
 using MiComanderaApp.ViewModels;
 
@@ -40,6 +42,7 @@ public partial class CreateProductViewModel : ObservableValidator, IDialogViewMo
     public event Action<ProductoRequest?>? CloseRequested;
 
     [ObservableProperty] private bool _mostrarErrores;
+    [ObservableProperty] private bool _editar;
     [ObservableProperty]
     [Required(ErrorMessage = "El nombre es obligatorio.")]
     private string? _nombre;
@@ -61,6 +64,20 @@ public partial class CreateProductViewModel : ObservableValidator, IDialogViewMo
     public ObservableCollection<CatalogoModel> Categorias { get; } = new();
     public ObservableCollection<string> Errores { get; } = new();
 
+
+    public void Initialize(ProductoModel? model)
+    {
+        Editar = true;
+        if (model != null)
+        {
+            Nombre = model.Name;
+            Codigo = model.Name;
+            Precio = (decimal)model.Price;
+            Descripcion = model.Description;
+            Activo = model.IsAvailable;
+            CategoriaSeleccionada = Categorias.FirstOrDefault(c => c.Id == model.Id) ?? new CatalogoModel();
+        }
+    }
 
     private async Task LoadCategories()
     {
@@ -97,7 +114,7 @@ public partial class CreateProductViewModel : ObservableValidator, IDialogViewMo
             };
 
             var insertar = await _insertProductUseCase.Execute(producto);
-            
+
             if (insertar == null)
             {
                 Errores.Clear();

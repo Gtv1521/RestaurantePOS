@@ -24,10 +24,11 @@ namespace MiComanderaApp.Infrastructure.Api
             _url = $"{apiSettings.Value.BaseUrl}/api/Auth";
         }
 
-        public SessionModel? Model { get; set; }
+        public SessionModel? Model { get; private set; }
 
         public async Task<SessionModel> LoginAsync(string pinCode)
         {
+            _ = ClearSessionAsync();
             var response = await _httpClient.PostAsJsonAsync($"{_url}/Login", new { pin = pinCode });
 
             if (response.StatusCode == HttpStatusCode.BadRequest)
@@ -39,13 +40,27 @@ namespace MiComanderaApp.Infrastructure.Api
             response.EnsureSuccessStatusCode();
 
             var result = await response.Content.ReadFromJsonAsync<SessionModel?>();
+            Console.WriteLine($"Resultado del login: {result?.NombreCompleto}");
             Model = result;
             return result ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
         }
 
+        public Task ClearSessionAsync()
+        {
+            Model = new SessionModel
+            {
+                UserId = 0,
+                NombreCompleto = string.Empty,
+                Rol = string.Empty,
+                Token = string.Empty
+            }
+            ;
+            return Task.CompletedTask;
+        }
         public Task<bool> LogoutAsync()
         {
-            throw new NotImplementedException();
+            ClearSessionAsync();
+            return Task.FromResult(true);
         }
     }
 }

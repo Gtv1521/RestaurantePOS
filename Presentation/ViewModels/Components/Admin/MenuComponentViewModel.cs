@@ -102,6 +102,25 @@ public partial class MenuComponentViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private async Task UpdateProducto(ProductoModel producto)
+    {
+
+        var updatedProduct =
+            await _dialogService
+            .ShowDialogAsync<CreateProduct, CreateProductViewModel, ProductoRequest>(
+                new PixelPoint(250, 30)
+                );
+
+
+        if (updatedProduct != null)
+        {
+            System.Console.WriteLine(updatedProduct);
+            await LoadProducts();
+        }
+
+    }
+
+    [RelayCommand]
     private async Task NuevoProducto()
     {
         var producto =

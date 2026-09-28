@@ -130,6 +130,7 @@ sealed class Program
                 services.AddTransient<UserViewModel>();
                 services.AddTransient<TecladoComponentViewModel>();
                 services.AddTransient<InventarioComponentViewModel>();
+                services.AddTransient<ReportesComponentViewModel>();
 
                 // modal
                 services.AddTransient<NewUserModalViewModel>();

@@ -25,6 +25,9 @@
     <DataTemplate DataType="{x:Type vmTables:InventarioComponentViewModel}">
       <views:InventarioComponentView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vmTables:ReportesComponentViewModel}">
+      <views:ReportesComponentView />
+    </DataTemplate>
   </UserControl.DataTemplates>
 
   <UserControl.Styles>
@@ -52,7 +55,7 @@
         <Button Grid.Column="1" Content="DASHBOARD" Classes.Active="{Binding IsInicio}" Classes="NavBtn"  Command="{Binding ChangeViewCommand}"  CommandParameter="Inicio"/>
         <Button Grid.Column="2" Content="CONFIGURAR MENÚ" Classes.Active="{Binding IsMenu}" Classes="NavBtn" Command="{Binding ChangeViewCommand}" CommandParameter="Menu" />
         <Button Grid.Column="3" Content="MESAS" Classes="NavBtn" Command="{Binding IrAMesasCommand}" />
-        <Button Grid.Column="4" Content="REPORTES" Classes="NavBtn" Command="{Binding IrAMesasCommand}" />
+        <Button Grid.Column="4" Content="REPORTES" Classes.Active="{Binding IsReportes}" Classes="NavBtn" Command="{Binding ChangeViewCommand}" CommandParameter="Reportes" />
         <Button Grid.Column="5" Content="EMPLEADOS" Classes="NavBtn" Command="{Binding ChangeViewCommand}" CommandParameter="Empleados" />
         <Button Grid.Column="6" Content="INVENTARIO" Classes.Active="{Binding IsInventario}" Classes="NavBtn" Command="{Binding ChangeViewCommand}" CommandParameter="Inventario" />
 
