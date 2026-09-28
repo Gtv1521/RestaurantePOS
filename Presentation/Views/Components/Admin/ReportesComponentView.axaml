@@ -1,0 +1,370 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:MiComanderaApp.ViewModels.Components.Admin"
+             xmlns:i="using:Projektanker.Icons.Avalonia"
+             xmlns:conv="using:MiComanderaApp.Presentation.Converters"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+             x:Class="MiComanderaApp.Views.Components.Admin.ReportesComponentView"
+             x:DataType="vm:ReportesComponentViewModel"
+             x:Name="Root">
+
+  <UserControl.Resources>
+    <conv:InvertBoolConverter x:Key="InvertBoolConverter"/>
+    <conv:MayusculasConverter x:Key="MayusculasConverter"/>
+  </UserControl.Resources>
+
+  <Grid>
+    <!-- Loading Overlay -->
+    <Border Background="{DynamicResource FondoPrincipal}" Opacity="0.8" IsVisible="{Binding IsLoading}">
+      <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="15">
+        <ProgressBar IsIndeterminate="True" Width="60" Height="60"/>
+        <TextBlock Text="Cargando reporte..." Foreground="{DynamicResource TextoColor}" FontSize="14"/>
+      </StackPanel>
+    </Border>
+
+    <Grid RowDefinitions="Auto,Auto,*" Background="{DynamicResource FondoPrincipal}" IsVisible="{Binding IsLoading, Converter={StaticResource InvertBoolConverter}}" Margin="24">
+      
+      <!-- Header -->
+      <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,20">
+        <TextBlock Grid.Column="0"
+                   Text="Reportes y Análisis"
+                   Foreground="{DynamicResource TextoColor}"
+                   FontSize="24"
+                   FontWeight="Bold"
+                   VerticalAlignment="Center"/>
+
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+          <Button Background="#1A202C"
+                  Foreground="{DynamicResource Subtitle}"
+                  Padding="14,8"
+                  CornerRadius="6"
+                  Command="{Binding ExportarReporteCommand}"
+                  ToolTip.Tip="Exportar a Excel/PDF">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <i:Icon Value="fa-solid fa-file-export" FontSize="14" VerticalAlignment="Center"/>
+              <TextBlock Text="Exportar" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+            </StackPanel>
+          </Button>
+
+          <Button Background="#1A202C"
+                  Foreground="{DynamicResource Subtitle}"
+                  Padding="14,8"
+                  CornerRadius="6"
+                  Command="{Binding ImprimirReporteCommand}"
+                  ToolTip.Tip="Imprimir reporte">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <i:Icon Value="fa-solid fa-print" FontSize="14" VerticalAlignment="Center"/>
+              <TextBlock Text="Imprimir" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+            </StackPanel>
+          </Button>
+        </StackPanel>
+      </Grid>
+
+      <!-- Report Type Selector -->
+      <Border Grid.Row="1" Classes="DashboardCard" Margin="0,0,0,20">
+        <Grid ColumnDefinitions="Auto,*,Auto" Margin="10">
+          <TextBlock Grid.Column="0" 
+                     Text="Tipo de Reporte:" 
+                     Foreground="{DynamicResource TextoColor}" 
+                     FontSize="14" 
+                     FontWeight="SemiBold"
+                     VerticalAlignment="Center"
+                     Margin="0,0,15,0"/>
+
+          <ComboBox Grid.Column="1"
+                    ItemsSource="{Binding ReportTypes}"
+                    SelectedItem="{Binding SelectedReportType}"
+                    Width="280"
+                    HorizontalAlignment="Left"
+                    Background="{DynamicResource FondoInput}"
+                    Foreground="{DynamicResource TextoBrush}"
+                    FontSize="14"
+                    Padding="12,8"
+                    CornerRadius="6"/>
+
+          <!-- Date Selectors (Visible based on report type) -->
+          <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center" IsVisible="{Binding SelectedReportType, Converter={x:Static conv:StringToBoolConverter.Instance}, ConverterParameter='Diario'}">
+            <TextBlock Text="Fecha:" Foreground="{DynamicResource TextoColor}" FontSize="14" VerticalAlignment="Center"/>
+            <DatePicker SelectedDate="{Binding SelectedDate}"
+                        Width="180"
+                        Background="{DynamicResource FondoInput}"
+                        Foreground="{DynamicResource TextoBrush}"
+                        FontSize="13"/>
+          </StackPanel>
+
+          <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" IsVisible="{Binding SelectedReportType, Converter={x:Static conv:StringToBoolConverter.Instance}, ConverterParameter='Balances Mensuales|Balance de Devoluciones'}">
+            <TextBlock Text="Desde:" Foreground="{DynamicResource TextoColor}" FontSize="14" VerticalAlignment="Center"/>
+            <DatePicker SelectedDate="{Binding StartDate}"
+                        Width="160"
+                        Background="{DynamicResource FondoInput}"
+                        Foreground="{DynamicResource TextoBrush}"
+                        FontSize="13"/>
+            <TextBlock Text="Hasta:" Foreground="{DynamicResource TextoColor}" FontSize="14" VerticalAlignment="Center"/>
+            <DatePicker SelectedDate="{Binding EndDate}"
+                        Width="160"
+                        Background="{DynamicResource FondoInput}"
+                        Foreground="{DynamicResource TextoBrush}"
+                        FontSize="13"/>
+          </StackPanel>
+
+          <!-- Purge Button (Only for System Purge) -->
+          <Button Grid.Column="2"
+                  Content="Ejecutar Purga"
+                  Background="#DC2626"
+                  Foreground="White"
+                  Padding="16,8"
+                  CornerRadius="6"
+                  FontWeight="SemiBold"
+                  FontSize="13"
+                  Command="{Binding EjecutarPurgaCommand}"
+                  IsVisible="{Binding SelectedReportType, Converter={x:Static conv:StringToBoolConverter.Instance}, ConverterParameter='Purga de Sistema'}"
+                  IsEnabled="{Binding IsLoading, Converter={StaticResource InvertBoolConverter}}"/>
+        </Grid>
+      </Border>
+
+      <!-- Report Content -->
+      <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="20">
+        
+        <!-- DAILY REPORT -->
+        <StackPanel IsVisible="{Binding SelectedReportType, Converter={x:Static conv:StringToBoolConverter.Instance}, ConverterParameter='Diario'}" Spacing="20">
+          
+          <!-- KPI Cards -->
+          <ItemsControl ItemsSource="{Binding DailyKPIs}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <UniformGrid Rows="1" HorizontalAlignment="Stretch"/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Border Classes="DashboardCard" Margin="0,0,15,0">
+                  <StackPanel Spacing="5">
+                    <TextBlock Text="{Binding Title}" Classes="CardTitle" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding Value}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextoColor}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding Subtitle}" FontSize="12" Foreground="{DynamicResource Subtitle}" HorizontalAlignment="Center"/>
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+
+          <!-- Daily Sales Detail Table -->
+          <Border Classes="DashboardCard">
+            <Grid RowDefinitions="Auto,*">
+              <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,15">
+                <i:Icon Value="fa-solid fa-receipt" Foreground="#E06A28" FontSize="18" VerticalAlignment="Center"/>
+                <TextBlock Text="Detalle de Ventas del Día" Foreground="{DynamicResource TextoColor}" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
+              </StackPanel>
+
+              <DataGrid Grid.Row="1"
+                        ItemsSource="{Binding DetalleVentasDiarias}"
+                        AutoGenerateColumns="False"
+                        CanUserSortColumns="True"
+                        CanUserResizeColumns="True"
+                        IsReadOnly="True"
+                        GridLinesVisibility="None"
+                        RowHeight="45"
+                        ColumnHeaderHeight="40"
+                        Background="Transparent"
+                        BorderThickness="0">
+                <DataGrid.Columns>
+                  <DataGridTextColumn Header="Hora" Binding="{Binding Hora}" Width="100"/>
+                  <DataGridTextColumn Header="Mesa" Binding="{Binding Mesa}" Width="120"/>
+                  <DataGridTextColumn Header="Items" Binding="{Binding Items}" Width="80"/>
+                  <DataGridTextColumn Header="Total" Binding="{Binding Total, StringFormat='S/ {0:N2}'}" Width="140"/>
+                  <DataGridTextColumn Header="Mesero" Binding="{Binding Mesero}" Width="*"/>
+                </DataGrid.Columns>
+              </DataGrid>
+            </Grid>
+          </Border>
+        </StackPanel>
+
+        <!-- SYSTEM PURGE -->
+        <StackPanel IsVisible="{Binding SelectedReportType, Converter={x:Static conv:StringToBoolConverter.Instance}, ConverterParameter='Purga de Sistema'}" Spacing="20">
+          
+          <!-- Purge Summary Cards -->
+          <ItemsControl ItemsSource="{Binding PurgeKPIs}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <UniformGrid Rows="1" HorizontalAlignment="Stretch"/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Border Classes="DashboardCard" Margin="0,0,15,0">
+                  <StackPanel Spacing="5">
+                    <TextBlock Text="{Binding Title}" Classes="CardTitle" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding Value}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextoColor}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding Subtitle}" FontSize="12" Foreground="{DynamicResource Subtitle}" HorizontalAlignment="Center"/>
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+
+          <!-- Purge History -->
+          <Border Classes="DashboardCard">
+            <Grid RowDefinitions="Auto,*">
+              <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,15">
+                <i:Icon Value="fa-solid fa-history" Foreground="#E06A28" FontSize="18" VerticalAlignment="Center"/>
+                <TextBlock Text="Historial de Purgas" Foreground="{DynamicResource TextoColor}" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
+              </StackPanel>
+
+              <DataGrid Grid.Row="1"
+                        ItemsSource="{Binding HistorialPurgas}"
+                        AutoGenerateColumns="False"
+                        CanUserSortColumns="True"
+                        CanUserResizeColumns="True"
+                        IsReadOnly="True"
+                        GridLinesVisibility="None"
+                        RowHeight="45"
+                        ColumnHeaderHeight="40"
+                        Background="Transparent"
+                        BorderThickness="0">
+                <DataGrid.Columns>
+                  <DataGridTextColumn Header="Fecha" Binding="{Binding Fecha, StringFormat='dd/MM/yyyy'}" Width="140"/>
+                  <DataGridTextColumn Header="Registros Eliminados" Binding="{Binding RegistrosEliminadosFormatted}" Width="180"/>
+                  <DataGridTextColumn Header="Espacio Liberado" Binding="{Binding EspacioMBFormatted}" Width="160"/>
+                  <DataGridTextColumn Header="Duración" Binding="{Binding Duracion}" Width="120"/>
+                  <DataGridTemplateColumn Header="Estado" Width="140">
+                    <DataGridTemplateColumn.CellTemplate>
+                      <DataTemplate>
+                        <Border Background="{Binding Estado, Converter={x:Static conv:EstadoToBrushConverter.Instance}}" 
+                                CornerRadius="12" Padding="8,4" HorizontalAlignment="Center">
+                          <TextBlock Text="{Binding Estado}" Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                        </Border>
+                      </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                  </DataGridTemplateColumn>
+                </DataGrid.Columns>
+              </DataGrid>
+            </Grid>
+          </Border>
+        </StackPanel>
+
+        <!-- MONTHLY BALANCES -->
+        <StackPanel IsVisible="{Binding SelectedReportType, Converter={x:Static conv:StringToBoolConverter.Instance}, ConverterParameter='Balances Mensuales'}" Spacing="20">
+          
+          <!-- Summary Cards -->
+          <ItemsControl ItemsSource="{Binding MonthlySummaryKPIs}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <UniformGrid Rows="1" HorizontalAlignment="Stretch"/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Border Classes="DashboardCard" Margin="0,0,15,0">
+                  <StackPanel Spacing="5">
+                    <TextBlock Text="{Binding Title}" Classes="CardTitle" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding Value}" FontSize="28" FontWeight="Bold" Foreground="{Binding Color}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding Subtitle}" FontSize="12" Foreground="{DynamicResource Subtitle}" HorizontalAlignment="Center"/>
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+
+          <!-- Monthly Balances Table -->
+          <Border Classes="DashboardCard">
+            <Grid RowDefinitions="Auto,*">
+              <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,15">
+                <i:Icon Value="fa-solid fa-chart-line" Foreground="#E06A28" FontSize="18" VerticalAlignment="Center"/>
+                <TextBlock Text="Balances Mensuales" Foreground="{DynamicResource TextoColor}" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
+              </StackPanel>
+
+              <DataGrid Grid.Row="1"
+                        ItemsSource="{Binding BalancesMensuales}"
+                        AutoGenerateColumns="False"
+                        CanUserSortColumns="True"
+                        CanUserResizeColumns="True"
+                        IsReadOnly="True"
+                        GridLinesVisibility="None"
+                        RowHeight="50"
+                        ColumnHeaderHeight="40"
+                        Background="Transparent"
+                        BorderThickness="0">
+                <DataGrid.Columns>
+                  <DataGridTextColumn Header="Mes" Binding="{Binding Mes}" Width="180"/>
+                  <DataGridTextColumn Header="Ingresos" Binding="{Binding Ingresos, StringFormat='S/ {0:N2}'}" Width="180"/>
+                  <DataGridTextColumn Header="Egresos" Binding="{Binding Egresos, StringFormat='S/ {0:N2}'}" Width="180"/>
+                  <DataGridTemplateColumn Header="Balance Neto" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                      <DataTemplate>
+                        <TextBlock Text="{Binding Balance, StringFormat='S/ {0:N2}'}" 
+                                   Foreground="{Binding Balance, Converter={x:Static conv:DecimalToBrushConverter.Instance}}" 
+                                   FontWeight="Bold" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,20,0"/>
+                      </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                  </DataGridTemplateColumn>
+                </DataGrid.Columns>
+              </DataGrid>
+            </Grid>
+          </Border>
+        </StackPanel>
+
+        <!-- RETURNS BALANCE -->
+        <StackPanel IsVisible="{Binding SelectedReportType, Converter={x:Static conv:StringToBoolConverter.Instance}, ConverterParameter='Balance de Devoluciones'}" Spacing="20">
+          
+          <!-- Summary Cards -->
+          <ItemsControl ItemsSource="{Binding ReturnsSummaryKPIs}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <UniformGrid Rows="1" HorizontalAlignment="Stretch"/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Border Classes="DashboardCard" Margin="0,0,15,0">
+                  <StackPanel Spacing="5">
+                    <TextBlock Text="{Binding Title}" Classes="CardTitle" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding Value}" FontSize="28" FontWeight="Bold" Foreground="#DC2626" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding Subtitle}" FontSize="12" Foreground="{DynamicResource Subtitle}" HorizontalAlignment="Center"/>
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+
+          <!-- Returns Detail Table -->
+          <Border Classes="DashboardCard">
+            <Grid RowDefinitions="Auto,*">
+              <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,15">
+                <i:Icon Value="fa-solid fa-rotate-left" Foreground="#DC2626" FontSize="18" VerticalAlignment="Center"/>
+                <TextBlock Text="Detalle de Devoluciones" Foreground="{DynamicResource TextoColor}" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
+              </StackPanel>
+
+              <DataGrid Grid.Row="1"
+                        ItemsSource="{Binding Devoluciones}"
+                        AutoGenerateColumns="False"
+                        CanUserSortColumns="True"
+                        CanUserResizeColumns="True"
+                        IsReadOnly="True"
+                        GridLinesVisibility="None"
+                        RowHeight="45"
+                        ColumnHeaderHeight="40"
+                        Background="Transparent"
+                        BorderThickness="0">
+                <DataGrid.Columns>
+                  <DataGridTextColumn Header="Fecha" Binding="{Binding Fecha, StringFormat='dd/MM/yyyy'}" Width="120"/>
+                  <DataGridTextColumn Header="Orden" Binding="{Binding Orden}" Width="120"/>
+                  <DataGridTextColumn Header="Producto" Binding="{Binding Producto}" Width="*"/>
+                  <DataGridTextColumn Header="Cant." Binding="{Binding Cantidad}" Width="70"/>
+                  <DataGridTextColumn Header="Monto" Binding="{Binding Monto, StringFormat='S/ {0:N2}'}" Width="120"/>
+                  <DataGridTextColumn Header="Motivo" Binding="{Binding Motivo}" Width="180"/>
+                  <DataGridTextColumn Header="Mesero" Binding="{Binding Mesero}" Width="150"/>
+                </DataGrid.Columns>
+              </DataGrid>
+            </Grid>
+          </Border>
+        </StackPanel>
+
+      </StackPanel>
+      </ScrollViewer>
+    </Grid>
+  
+  </Grid>
+</UserControl>

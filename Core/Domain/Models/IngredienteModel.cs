@@ -7,13 +7,9 @@ namespace MiComanderaApp.Core.Domain.Models
     {
         [JsonPropertyName("id")]
         public int Id { get; set; }
-
-        [JsonPropertyName("name")]
-        public string Name { get; set; } = "";
-
+        public string Name { get; set; } = string.Empty;
         [JsonPropertyName("availableQuantity")]
         public double AvailableQuantity { get; set; }
-
         [JsonPropertyName("minimumQuantity")]
         public double MinimumQuantity { get; set; }
 

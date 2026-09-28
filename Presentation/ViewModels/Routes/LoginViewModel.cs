@@ -83,11 +83,13 @@ public partial class LoginViewModel : ViewModelBase
             PinCode = string.Empty;
             if (session.Rol.Equals("Mesero", StringComparison.OrdinalIgnoreCase))
             {
-                _navigation.NavigateTo<TablesViewModel>();
+               var vm = _navigation.NavigateTo<TablesViewModel>();
+               vm.InitializeComponent();
             }
             if (session.Rol.Equals("Administrador", StringComparison.OrdinalIgnoreCase))
             {
-                _navigation.NavigateTo<AdminDashboardViewModel>();
+                var vm = _navigation.NavigateTo<AdminDashboardViewModel>();
+                vm.InitializeComponent();
             }
         }
         catch (System.Exception ex)

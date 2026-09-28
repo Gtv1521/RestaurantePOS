@@ -4,9 +4,9 @@ using Avalonia.Markup.Xaml;
 
 namespace MiComanderaApp.Presentation.Views.Components.Generales;
 
-public partial class TecladoComponent : UserControl
+public partial class TecladoComponentView : UserControl
 {
-    public TecladoComponent()
+    public TecladoComponentView()
     {
         InitializeComponent();
     }

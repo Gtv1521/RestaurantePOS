@@ -1,99 +1,179 @@
 <Window xmlns="https://github.com/avaloniaui"
+        xmlns:b="using:MiComanderaApp.Presentation.Services"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="https://github.com/projektanker/icons.avalonia"
         xmlns:local="using:MiComanderaApp.Presentation.Views.Dialogs.Modals"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:in="using:Avalonia.Xaml.Interactivity"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="MiComanderaApp.Presentation.Views.Dialogs.Modals.CreateProduct"
         Title="CreateProduct"
         ShowInTaskbar="False"
         SystemDecorations="None"
         WindowStartupLocation="Manual"
-        Background="Transparent"
+        Background="{DynamicResource FondoModal}"
         x:DataType="local:CreateProductViewModel"
-        Height="600"
-        Width="1000"
+        WindowState="Maximized"
+        x:Name="Root"
         >
-        <Border Padding="25"
-                CornerRadius="15"
-                Background="{DynamicResource FondoTarjeta}">
-
-                <StackPanel Spacing="15">
-
-                        <TextBlock Text="Crear Producto"
-                                   FontSize="24"
-                                   FontWeight="Bold"
-                                   HorizontalAlignment="Center"
-                                   Foreground="{DynamicResource TextoBrush}"
-                                   />
 
 
-                        <TextBlock Text="Nombre" Foreground="{DynamicResource TextoColor}"/>
+        <Grid RowDefinitions="*, *">
+                <Border Grid.Row="0" Padding="25"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        >
 
-                        <TextBox Text="{Binding Nombre}"
-                                 Watermark="Ej: Hamburguesa clásica" BorderBrush="{DynamicResource Border}"/>
+                        <StackPanel Spacing="15"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Stretch" >
 
+                                <Border CornerRadius="15"
+                                        Width="900"
+                                        Padding="20"
+                                        Background="{DynamicResource FondoPrincipal}"
+                                        >
+                                        <Grid ColumnDefinitions="*, *"
+                                              RowDefinitions="*,*,*"
+                                              RowSpacing="10"
+                                              ColumnSpacing="10"
+                                              >
 
-                        <TextBlock Text="Código"
-                                   Foreground="{DynamicResource TextoColor}"/>
+                                                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Crear Producto"
+                                                           FontSize="24"
+                                                           FontWeight="Bold"
+                                                           HorizontalAlignment="Center"
+                                                           Foreground="{DynamicResource TextoBrush}"
+                                                           />
 
-                        <TextBox Text="{Binding Codigo}"
-                                 BorderBrush="{DynamicResource Border}"
-                                 Watermark="Código interno" Foreground="{DynamicResource TextoColor}"/>
+                                                <StackPanel Spacing="15" Grid.Row="1" Grid.Column="0">
 
+                                                        <TextBlock Text="Nombre" Foreground="{DynamicResource TextoColor}"/>
 
-                        <TextBlock Text="Precio"
-                                   Foreground="{DynamicResource TextoColor}"
-                                   />
-
-                        <TextBox Text="{Binding Precio}"
-                                 Foreground="{DynamicResource TextoColor}"
-                                 BorderBrush="{DynamicResource Border}"
-                                 Watermark="0.00"/>
-
-
-                        <TextBlock Text="Categoría"
-                                   Foreground="{DynamicResource TextoColor}"/>
-
-                        <ComboBox ItemsSource="{Binding Categorias}"
-                                  Foreground="{DynamicResource TextoColor}"
-                                  BorderBrush="{DynamicResource Border}"
-                                  SelectedItem="{Binding CategoriaSeleccionada}"/>
-
-
-                        <TextBlock Text="Descripción" Foreground="{DynamicResource TextoColor}"/>
-
-                        <TextBox Text="{Binding Descripcion}"
-                                 Height="80"
-                                 Foreground="{DynamicResource TextoColor}"
-                                 AcceptsReturn="True"
-                                 TextWrapping="Wrap"/>
-
-
-                        <CheckBox Content="Producto activo"
-                                  IsChecked="{Binding Activo}"/>
+                                                        <DataValidationErrors>
+                                                                <TextBox Text="{Binding Nombre, Mode=TwoWay}"
+                                                                         x:Name="TxtNombre"
+                                                                         Watermark="Ej: Hamburguesa clásica" BorderBrush="{DynamicResource Border}">
+                                                                        <in:Interaction.Behaviors>
+                                                                                <b:KeyboardFocusBehavior />
+                                                                        </in:Interaction.Behaviors>
+                                                                </TextBox>
+                                                        </DataValidationErrors>
 
 
-                        <StackPanel Orientation="Horizontal"
-                                    HorizontalAlignment="Right"
-                                    Spacing="10"
-                                    Margin="0,20,0,0">
+                                                        <TextBlock Text="Código"
+                                                                   Foreground="{DynamicResource TextoColor}"/>
 
-                                <Button Content="Cancelar"
-                                        Width="100"
-                                        Classes="btn-rojo"
-                                        Command="{Binding CancelarCommand}"/>
+                                                        <DataValidationErrors>
+                                                                <TextBox Text="{Binding Codigo, Mode=TwoWay}"
+                                                                         x:Name="TxtCodigo"
+                                                                         BorderBrush="{DynamicResource Border}"
+                                                                         Watermark="Código interno" Foreground="{DynamicResource TextoColor}">
+                                                                        <in:Interaction.Behaviors>
+                                                                                <b:KeyboardFocusBehavior />
+                                                                        </in:Interaction.Behaviors>
+                                                                </TextBox>
+                                                        </DataValidationErrors>
 
-                                <Button Content="Guardar"
-                                        Width="100"
-                                        Classes="btn-verde"
-                                        Background="#4CAF50"
-                                        Command="{Binding GuardarCommand}"/>
+                                                        <TextBlock Text="Precio"
+                                                                   Foreground="{DynamicResource TextoColor}"
+                                                                   />
+
+                                                        <DataValidationErrors>
+                                                                <TextBox Text="{Binding Precio, Mode=TwoWay}"
+                                                                         x:Name="TxtPrecio"
+                                                                         Foreground="{DynamicResource TextoColor}"
+                                                                         BorderBrush="{DynamicResource Border}"
+                                                                         Watermark="0.00">
+                                                                        <in:Interaction.Behaviors>
+                                                                                <b:KeyboardFocusBehavior />
+                                                                        </in:Interaction.Behaviors>
+                                                                </TextBox>
+                                                        </DataValidationErrors>
+                                                </StackPanel>
+
+                                                <StackPanel Spacing="15" Grid.Row="1" Grid.Column="1">
+
+                                                        <TextBlock Text="Categoría"
+                                                                   Foreground="{DynamicResource TextoColor}"/>
+
+                                                        <ComboBox ItemsSource="{Binding Categorias}"
+                                                                  SelectedItem="{Binding CategoriaSeleccionada}"
+                                                                  Foreground="{DynamicResource TextoColor}"
+                                                                  BorderBrush="{DynamicResource Border}">
+
+                                                                <ComboBox.ItemTemplate>
+                                                                        <DataTemplate>
+                                                                                <TextBlock Text="{Binding Name}" />
+                                                                        </DataTemplate>
+                                                                </ComboBox.ItemTemplate>
+
+                                                        </ComboBox>
+
+                                                        <TextBlock Text="Descripción" Foreground="{DynamicResource TextoColor}"/>
+
+                                                        <DataValidationErrors>
+                                                                <TextBox Text="{Binding Descripcion, Mode=TwoWay}"
+                                                                         Height="80"
+                                                                         x:Name="TxtDescripcion"
+                                                                         Foreground="{DynamicResource TextoColor}"
+                                                                         AcceptsReturn="True"
+                                                                         TextWrapping="Wrap">
+                                                                        <in:Interaction.Behaviors>
+                                                                                <b:KeyboardFocusBehavior />
+                                                                        </in:Interaction.Behaviors>
+                                                                </TextBox>
+                                                        </DataValidationErrors>
+
+                                                        <CheckBox Content="Producto activo"
+                                                                  IsChecked="{Binding Activo}"/>
+
+                                                </StackPanel>
+
+                                                <StackPanel Grid.Row="2" Grid.ColumnSpan="2"
+                                                            Orientation="Horizontal"
+                                                            HorizontalAlignment="Right"
+                                                            Spacing="10"
+                                                            Margin="0,20,0,0">
+
+                                                        <Button Content="Cancelar"
+                                                                Width="200"
+                                                                Height="40"
+                                                                Classes="btn-rojo"
+                                                                Command="{Binding CancelarCommand}"/>
+
+                                                        <Button Content="Guardar"
+                                                                Width="200"
+                                                                Height="40"
+                                                                Classes="btn-verde"
+                                                                Background="#4CAF50"
+                                                                Command="{Binding GuardarCommand}"/>
+
+                                                </StackPanel>
+
+                                        </Grid>
+                                </Border>
 
                         </StackPanel>
 
+                </Border>
 
-                </StackPanel>
+                <Grid RowDefinitions="*" Grid.Row="1" VerticalAlignment="Bottom" >
 
-        </Border>
+                        <Border Padding="10"
+                                Margin="20"
+                                Height="35"
+                                Width="100"
+                                HorizontalAlignment="Left"
+                                IsVisible="{Binding BotonTeclado}"
+                                >
+                                <StackPanel>
+                                        <Button i:Attached.Icon="fa-solid fa-chevron-up" Background="{DynamicResource FondoPrincipal}"  Classes="KeypadBtn" Command="{Binding VerTecladoCommand}" />
+                                </StackPanel>
+                        </Border>
+
+                        <ContentControl Padding="10" Height="500" IsVisible="{Binding Teclado}" Grid.Row="1" Content="{Binding VistaActual}" />
+                </Grid>
+        </Grid>
 </Window>

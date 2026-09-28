@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -61,7 +62,7 @@ public partial class TablesViewModel : ViewModelBase
         _messenger.Register<TableOpenedMessage>(this, OnTableOpened);
     }
 
-    private void InitializeComponent()
+    public void InitializeComponent()
     {
         User = _userSesion.Execute();
         UsuarioRol = User!.Rol;
@@ -69,8 +70,6 @@ public partial class TablesViewModel : ViewModelBase
 
     private void OnTableOpened(object recipient, TableOpenedMessage message)
     {
-        Console.WriteLine($"📥 Mensaje recibido: Mesa {message.TableNumber} - {message.Ventas.Count} ventas");
-
         // Cambiar a vista de mesas abiertas
         IsShowingAllTables = false;
         ToggleButtonText = "Mesas Abiertas";

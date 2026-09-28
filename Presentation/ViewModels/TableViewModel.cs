@@ -138,7 +138,6 @@ public partial class TableViewModel : ViewModelBase
 
     public void InicializeVenta(VentaModel venta)
     {
-        System.Console.WriteLine($"Inicializando venta para la mesa {venta.Pax}");
         Venta = venta;
         CantidadPax = venta.Pax;
         Cliente = venta.Alias;
@@ -164,10 +163,7 @@ public partial class TableViewModel : ViewModelBase
                 }
                 else
                 {
-                    // Si la mesa está ocupada, vamos directo a la vista de la comanda.
                     var dataTableVm = _factory.Create<DataTableViewModel>();
-                    // Aquí asumimos que VentaModel se obtiene de otra parte,
-                    // por ahora se inicializa con valores del TableModel.
                     var venta = Table!.VentasActivas.FirstOrDefault(); // Ejemplo
                     dataTableVm.Initialize(venta!, venta!.Pax);
                     _navigationService.NavigateTo(dataTableVm);
@@ -183,7 +179,6 @@ public partial class TableViewModel : ViewModelBase
                 break;
 
             case "Reservada":
-                // Lógica para mesas reservadas (puedes implementarla aquí).
                 System.Diagnostics.Debug.WriteLine($"La mesa {TableNumber} está reservada.");
                 break;
         }

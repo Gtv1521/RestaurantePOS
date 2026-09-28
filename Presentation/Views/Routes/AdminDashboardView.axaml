@@ -3,14 +3,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:i="https://github.com/projektanker/icons.avalonia"
+             xmlns:inventario="using:MiComanderaApp.Presentation.ViewModels.Components.Inventario"
              xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
              xmlns:lvcLogic="using:LiveChartsCore.SkiaSharpView"
              xmlns:vm="using:MiComanderaApp.ViewModels.Routes"
              xmlns:models="using:MiComanderaApp.Models"
              xmlns:vmTables="using:MiComanderaApp.ViewModels.Components.Admin"
              xmlns:views="using:MiComanderaApp.Views.Components.Admin"
-             xmlns:vmInventario="using:MiComanderaApp.Presentation.ViewModels.Components.Inventario"
-             xmlns:viewsInventario="using:MiComanderaApp.Presentation.Views.Components.Inventario"
              mc:Ignorable="d" d:DesignWidth="1400" d:DesignHeight="900"
              Background="{DynamicResource FondoPrincipal}"
              x:Class="MiComanderaApp.Views.Routes.AdminDashboardView"
@@ -18,13 +17,16 @@
 
   <UserControl.DataTemplates>
     <DataTemplate DataType="{x:Type vmTables:EstadisticasComponentViewModel}">
-      <views:EstadisticasComponent />
-    </DataTemplate>
+      <views:EstadisticasComponentView />
+    </DataTemplate> 
     <DataTemplate DataType="{x:Type vmTables:MenuComponentViewModel}">
-      <views:MenuComponent />
+      <views:MenuComponentView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vmInventario:InventarioComponentViewModel}">
-      <viewsInventario:InventarioComponent />
+    <DataTemplate DataType="{x:Type vmTables:InventarioComponentViewModel}">
+      <views:InventarioComponentView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vmTables:ReportesComponentViewModel}">
+      <views:ReportesComponentView />
     </DataTemplate>
   </UserControl.DataTemplates>
 
@@ -43,7 +45,7 @@
 
   <Grid RowDefinitions="Auto,*">
 
-    <Border Grid.Row="0" Background="{DynamicResource FondoTarjeta}" Height="60" Padding="20,0">
+    <Border Grid.Row="0" Background="{DynamicResource FondoTarjeta}" Height="60" Padding="20,0"> 
       <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,*,Auto">
         <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="8">
           <i:Icon Value="fa-solid fa-fire" Foreground="#E06A28" FontSize="20"/>
@@ -53,8 +55,8 @@
         <Button Grid.Column="1" Content="DASHBOARD" Classes.Active="{Binding IsInicio}" Classes="NavBtn"  Command="{Binding ChangeViewCommand}"  CommandParameter="Inicio"/>
         <Button Grid.Column="2" Content="CONFIGURAR MENÚ" Classes.Active="{Binding IsMenu}" Classes="NavBtn" Command="{Binding ChangeViewCommand}" CommandParameter="Menu" />
         <Button Grid.Column="3" Content="MESAS" Classes="NavBtn" Command="{Binding IrAMesasCommand}" />
-        <Button Grid.Column="4" Content="REPORTES" Classes="NavBtn" Command="{Binding IrAMesasCommand}" />
-        <Button Grid.Column="5" Content="EMPLEADOS" Classes="NavBtn" Command="{Binding IrAMesasCommand}" />
+        <Button Grid.Column="4" Content="REPORTES" Classes.Active="{Binding IsReportes}" Classes="NavBtn" Command="{Binding ChangeViewCommand}" CommandParameter="Reportes" />
+        <Button Grid.Column="5" Content="EMPLEADOS" Classes="NavBtn" Command="{Binding ChangeViewCommand}" CommandParameter="Empleados" />
         <Button Grid.Column="6" Content="INVENTARIO" Classes.Active="{Binding IsInventario}" Classes="NavBtn" Command="{Binding ChangeViewCommand}" CommandParameter="Inventario" />
 
         <StackPanel Grid.Column="8" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">

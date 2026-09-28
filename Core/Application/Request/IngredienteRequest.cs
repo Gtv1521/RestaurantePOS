@@ -5,6 +5,9 @@ namespace MiComanderaApp.Core.Application.Request
 {
     public class IngredienteRequest
     {
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+        
         [JsonPropertyName("name")]
         public string Name { get; set; } = "";
 
