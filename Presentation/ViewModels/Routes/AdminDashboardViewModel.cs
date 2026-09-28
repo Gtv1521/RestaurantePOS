@@ -32,6 +32,7 @@ public partial class AdminDashboardViewModel : ViewModelBase
     public bool IsClientes => CurrentView == "Clientes";
     public bool IsConfiguracion => CurrentView == "Configuracion";
     public bool IsInventario => CurrentView == "Inventario";
+    public bool IsReportes => CurrentView == "Reportes";
 
     public AdminDashboardViewModel(IViewModelFactory factory, INavigationService navigation, ISession<SessionModel> userSesion)
     {
@@ -41,8 +42,9 @@ public partial class AdminDashboardViewModel : ViewModelBase
         InitializeComponent();
     }
 
-    private void InitializeComponent()
+    public void InitializeComponent()
     {
+        Console.WriteLine($"Usuario en login: {_userSesion.Model?.NombreCompleto}");
         User = _userSesion.Model!;
         VistaActual = _factory.Create<EstadisticasComponentViewModel>();
     }
@@ -55,11 +57,13 @@ public partial class AdminDashboardViewModel : ViewModelBase
         OnPropertyChanged(nameof(IsClientes));
         OnPropertyChanged(nameof(IsConfiguracion));
         OnPropertyChanged(nameof(IsInventario));
+        OnPropertyChanged(nameof(IsReportes));
     }
 
     [RelayCommand]
     private void Salir()
     {
+        _userSesion.LogoutAsync();
         _navigation.NavigateTo<LoginViewModel>();
     }
 
@@ -73,6 +77,7 @@ public partial class AdminDashboardViewModel : ViewModelBase
             "Inicio" => _factory.Create<EstadisticasComponentViewModel>(),
             "Menu" => _factory.Create<MenuComponentViewModel>(),
             "Inventario" => _factory.Create<InventarioComponentViewModel>(),
+            "Reportes" => _factory.Create<ReportesComponentViewModel>(),
             "Empleados" => _factory.Create<UsuariosViewModel>(),
             _ => _factory.Create<EstadisticasComponentViewModel>(),
         };

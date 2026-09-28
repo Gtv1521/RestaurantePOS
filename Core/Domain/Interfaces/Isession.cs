@@ -7,8 +7,9 @@ namespace MiComanderaApp.Interfaces
 {
     public interface ISession<R>
     {
-        R? Model { get; set; }
+        R? Model { get; }
         Task<R> LoginAsync(string pinCode);
         Task<bool> LogoutAsync();
+        Task ClearSessionAsync();
     }
 }

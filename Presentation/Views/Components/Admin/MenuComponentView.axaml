@@ -38,7 +38,7 @@
         </Button>
       </Grid>
 
-      <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10" Margin="0,0,0,25">
+      <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10" Margin="0,0,0,25" Background="red">
         <StackPanel.Styles>
           <Style Selector="Button">
             <Setter Property="Background" Value="#1A202C"/>
@@ -68,7 +68,6 @@
             <DataTemplate>
               <Button Content="{Binding Name}"
                       Classes="Botton"
-
                       Command="{Binding #Root.DataContext.ChangeCatalogoCommand}"
                       CommandParameter="{Binding Id}"
                       />

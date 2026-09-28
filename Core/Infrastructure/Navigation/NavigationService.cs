@@ -10,55 +10,60 @@ namespace MiComanderaApp.Services.Routing
 {
     public partial class NavigationService : ObservableObject, INavigationService
     {
-        private readonly Func<Type, ViewModelBase> _viewModelFactory;
+        private readonly IViewModelFactory _factory;
+        private readonly IServiceProvider _services;
 
-    // Vista principal (con animación)
-    [ObservableProperty] private ViewModelBase? _currentView;
 
-    // Vista overlay (modal flotante)
-    [ObservableProperty] private ViewModelBase? _overlayView;
+        // private readonly Func<Type, ViewModelBase> _viewModelFactory;
 
-    [ObservableProperty]
-    private bool _isOverlayVisible;
+        // Vista principal (con animación)
+        [ObservableProperty] private ViewModelBase? _currentView;
+        [ObservableProperty] private ViewModelBase? _overlayView;
+        [ObservableProperty] private bool _isOverlayVisible;
 
-    public NavigationService(Func<Type, ViewModelBase> viewModelFactory)
-    {
-        _viewModelFactory = viewModelFactory;
-    }
+        public NavigationService(IViewModelFactory factory, IServiceProvider services)
+        {
+            _factory = factory;
+            _services = services;
+        }
 
-    // Navegación normal (con animación)
-    public void NavigateTo<TViewModel>() where TViewModel : ViewModelBase
-    {
-        CurrentView = _viewModelFactory(typeof(TViewModel));
-    }
+        // Navegación normal (con animación)
+        public TViewModel NavigateTo<TViewModel>() where TViewModel : ViewModelBase
+        {
+            var vm = _factory.Create<TViewModel>();
+            CurrentView = vm;
+            return vm;
+        }
 
-    public void NavigateTo(ViewModelBase viewModel)
-    {
-        CurrentView = viewModel;
-    }
+        public ViewModelBase NavigateTo(ViewModelBase viewModel)
+        {
+            CurrentView = viewModel;
+            return viewModel;
+        }
 
-    // Mostrar overlay (sin animación, superpuesto)
-    public void ShowOverlay<TViewModel>() where TViewModel : ViewModelBase
-    {
-        OverlayView = _viewModelFactory(typeof(TViewModel));
-        IsOverlayVisible = true;
-    }
+        // Mostrar overlay (sin animación, superpuesto)
+        public TViewModel ShowOverlay<TViewModel>() where TViewModel : ViewModelBase
+        {
+            var vm = _factory.Create<TViewModel>();
+            OverlayView = vm;
+            return vm;
+        }
 
-    public void ShowOverlay(ViewModelBase viewModel)
-    {
-        OverlayView = viewModel;
-        IsOverlayVisible = true;
-    }
+        public ViewModelBase ShowOverlay(ViewModelBase viewModel)
+        {
+            OverlayView = viewModel;
+            return viewModel;
+        }
 
-    // Cerrar overlay
-    public void CloseOverlay()
-    {
-        IsOverlayVisible = false;
-        OverlayView = null;
-    }
+        // Cerrar overlay
+        public void CloseOverlay()
+        {
+            IsOverlayVisible = false;
+            OverlayView = null;
+        }
 
-    // Verificar si hay overlay abierto
-    public bool IsOverlayOpen() => IsOverlayVisible;
+        // Verificar si hay overlay abierto
+        public bool IsOverlayOpen() => IsOverlayVisible;
 
     }
 }

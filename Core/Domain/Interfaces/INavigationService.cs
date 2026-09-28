@@ -9,15 +9,16 @@ namespace MiComanderaApp.Interfaces
     public interface INavigationService
     {
         ViewModelBase? CurrentView { get; }
-        
         ViewModelBase? OverlayView { get; }
-        bool IsOverlayVisible { get; }  
+        bool IsOverlayVisible { get; }
 
-        void NavigateTo<TViewModel>() where TViewModel : ViewModelBase;
-        void NavigateTo(ViewModelBase viewModel);
+        // Ahora devuelven la instancia creada
+        TViewModel NavigateTo<TViewModel>() where TViewModel : ViewModelBase;
+        ViewModelBase NavigateTo(ViewModelBase viewModel);
 
-        void ShowOverlay<TViewModel>() where TViewModel : ViewModelBase;
-        void ShowOverlay(ViewModelBase viewModel);
+        TViewModel ShowOverlay<TViewModel>() where TViewModel : ViewModelBase;
+        ViewModelBase ShowOverlay(ViewModelBase viewModel);
+
         void CloseOverlay();
         bool IsOverlayOpen();
     }
