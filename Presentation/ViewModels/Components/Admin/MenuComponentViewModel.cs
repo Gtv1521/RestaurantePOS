@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MiComanderaApp.Core.Application.Request;
 using MiComanderaApp.Core.Application.UseCases.Catalogo;
@@ -32,6 +33,7 @@ public partial class MenuComponentViewModel : ViewModelBase
     public ObservableCollection<ProductoModel> Products { get; } = new();
     public ObservableCollection<CatalogoModel> Categorias { get; } = new();
 
+    [ObservableProperty] private bool _isLoading = false;
     public MenuComponentViewModel(
         IViewModelFactory factory,
         IDialogService dialogService,
@@ -66,11 +68,25 @@ public partial class MenuComponentViewModel : ViewModelBase
     [RelayCommand]
     private async Task CargeCategorias()
     {
-        var categorias = await _categorias.Execute();
-        foreach (var categoria in categorias)
+        try
         {
-            Categorias.Add(categoria);
+            IsLoading = true;
+            var categorias = await _categorias.Execute();
+            foreach (var categoria in categorias)
+            {
+                Categorias.Add(categoria);
+            }
         }
+        catch (System.Exception ex)
+        {
+            System.Console.WriteLine(ex.Message);
+            throw;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+
     }
 
     [RelayCommand]
@@ -100,5 +116,4 @@ public partial class MenuComponentViewModel : ViewModelBase
             System.Console.WriteLine(producto);
         }
     }
-
 }

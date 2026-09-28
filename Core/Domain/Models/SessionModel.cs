@@ -13,6 +13,7 @@ namespace MiComanderaApp.Models
         public string NombreCompleto { get; set; } = string.Empty;
         public string TokenRefresh { get; set; } = string.Empty;
         public string Rol { get; set; } = string.Empty;
+        public string Iniciales => string.Join("", NombreCompleto.Split(' ').Select(x => x[0])).ToUpper();
         public DateTime Expira { get; set; }
     }
 }

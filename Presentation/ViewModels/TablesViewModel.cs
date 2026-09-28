@@ -69,8 +69,6 @@ public partial class TablesViewModel : ViewModelBase
 
     private void OnTableOpened(object recipient, TableOpenedMessage message)
     {
-        Console.WriteLine($"📥 Mensaje recibido: Mesa {message.TableNumber} - {message.Ventas.Count} ventas");
-
         // Cambiar a vista de mesas abiertas
         IsShowingAllTables = false;
         ToggleButtonText = "Mesas Abiertas";

@@ -49,6 +49,11 @@ using MiComanderaApp.Core.Application.UseCases.Venta;
 using RestaurantePOS.Core.Application.UseCases.Receta;
 using RestaurantePOS.Core.Domain.Models;
 using RestaurantePOS.Core.Application.UseCases.Ingrediente;
+using MiComanderaApp.Presentation.Views.Components.Admin;
+using MiComanderaApp.Presentation.ViewModels.Components.Admin;
+using MiComanderaApp.Core.Application.UseCases.User;
+using MiComanderaApp.Request;
+using MiComanderaApp.Presentation.Views.Components.Generales;
 
 namespace MiComanderaApp;
 
@@ -104,6 +109,7 @@ sealed class Program
                 services.AddSingleton<IWindowProvider, WindowProvider>();
                 services.AddSingleton<IDialogService, DialogService>();
                 services.AddSingleton<INavigationService, NavigationService>();
+                services.AddSingleton<IFocusService, FocusService>();
 
                 // 🖥️ 2. Ventana principal
                 services.AddSingleton<MainWindowViewModel>();
@@ -119,7 +125,10 @@ sealed class Program
                 services.AddTransient<EstadisticasComponentViewModel>();
                 services.AddTransient<MenuComponentViewModel>();
                 services.AddTransient<ProductViewModel>();
-                services.AddSingleton<CantidadPaxViewModel>();
+                services.AddTransient<CantidadPaxViewModel>();
+                services.AddTransient<UsuariosViewModel>();
+                services.AddTransient<UserViewModel>();
+                services.AddTransient<TecladoComponentViewModel>();
                 services.AddTransient<InventarioComponentViewModel>();
 
                 // modal
@@ -141,6 +150,7 @@ sealed class Program
                 services.AddScoped<IMultipleCrud<ObservacionModel, ObservacionRequest>, ObservacionRepository>();
                 services.AddScoped<IOptionVenta, VentaRepository>();
                 services.AddScoped<IRecetaRepository, RecetaRepository>();
+                services.AddScoped<IMultipleCrud<UsuarioModel, UserRequest>, UserRepository>();
 
 
 
@@ -164,6 +174,7 @@ sealed class Program
                 services.AddScoped<CreateRecetaUseCase>();
                 services.AddScoped<UpdateRecetaUseCase>();
                 services.AddScoped<DeleteRecetaUseCase>();
+                services.AddScoped<AllUserUseCase>();
 
 
 

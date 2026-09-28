@@ -13,6 +13,8 @@ namespace MiComanderaApp.Models
         public string Rol { get; set; } = string.Empty;
         public bool Activo { get; set; }
         public DateTime FechaCreacion { get; set; }
-        public DateTime UltimoAcceso { get; set; }
+        public DateTime? UltimoAcceso { get; set; }
+
+        public string Iniciales => string.Join("", NombreCompleto.Split(' ').Select(x => x[0])).ToUpper();
     }
 }

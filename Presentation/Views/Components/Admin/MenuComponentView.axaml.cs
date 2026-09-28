@@ -4,9 +4,9 @@ using Avalonia.Markup.Xaml;
 
 namespace MiComanderaApp.Views.Components.Admin;
 
-public partial class MenuComponent : UserControl
+public partial class MenuComponentView : UserControl
 {
-    public MenuComponent()
+    public MenuComponentView()
     {
         InitializeComponent();
     }
