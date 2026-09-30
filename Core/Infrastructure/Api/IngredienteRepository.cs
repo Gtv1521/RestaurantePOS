@@ -22,7 +22,7 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             _url = $"{apiSettings.Value.BaseUrl}/api/Ingredient";
             _httpClient = httpClient.CreateClient("MiComanderaApi");
         }
-        public async Task<string?> CreateAsync(IngredienteRequest data)
+        public async Task<int?> CreateAsync(IngredienteRequest data)
         {
             var response = await _httpClient.PostAsJsonAsync($"{_url}", data);
             if (!response.IsSuccessStatusCode)
@@ -38,10 +38,10 @@ namespace MiComanderaApp.Core.Infrastructure.Api
                 };
             }
             var result = await response.Content.ReadFromJsonAsync<IngredienteModel>();
-            return result?.Id.ToString() ?? throw new InvalidOperationException("No se pudo crear el producto.");
+            return result?.Id ?? throw new InvalidOperationException("No se pudo crear el producto.");
         }
 
-        public async Task<bool> DeleteAsync(string id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var response = await _httpClient.DeleteAsync($"{_url}/{id}");
             if (!response.IsSuccessStatusCode)
@@ -82,12 +82,12 @@ namespace MiComanderaApp.Core.Infrastructure.Api
         
 
 
-        public Task<IngredienteModel> GetAsync(string id)
+        public Task<IngredienteModel> GetAsync(int id)
         {
             throw new System.NotImplementedException();
         }
 
-        public async Task<bool> UpdateAsync(string id, IngredienteRequest data)
+        public async Task<bool> UpdateAsync(int id, IngredienteRequest data)
         {
             var response = await _httpClient.PutAsJsonAsync($"{_url}/{id}", data);
             if (!response.IsSuccessStatusCode)

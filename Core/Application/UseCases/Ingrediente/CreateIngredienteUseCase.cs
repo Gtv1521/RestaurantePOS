@@ -17,7 +17,7 @@ namespace RestaurantePOS.Core.Application.UseCases.Ingrediente
             _repo = repo;
         }
 
-        public async Task<string?> Execute(IngredienteRequest data)
+        public async Task<int?> Execute(IngredienteRequest data)
         {
             return await _repo.CreateAsync(data);
         }

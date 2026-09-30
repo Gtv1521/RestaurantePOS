@@ -23,7 +23,7 @@ namespace MiComanderaApp.Infrastructure.Api
             _httpClient = _factory.CreateClient("MiComanderaApi");
         }
 
-        public async Task<string?> CreateAsync(UserRequest data)
+        public async Task<int?> CreateAsync(UserRequest data)
         {
             var response = await _httpClient.PostAsJsonAsync($"{_url}/CreateUser", data);
 
@@ -40,12 +40,12 @@ namespace MiComanderaApp.Infrastructure.Api
                 };
             }
 
-            var result = await response.Content.ReadFromJsonAsync<string>();
+            var result = await response.Content.ReadFromJsonAsync<int?>();
 
             return result ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
         }
 
-        public async Task<bool> DeleteAsync(string id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var response = await _httpClient.DeleteAsync($"{_url}/DeleteUser/{id}");
 
@@ -88,7 +88,7 @@ namespace MiComanderaApp.Infrastructure.Api
                    ?? Enumerable.Empty<UsuarioModel>();
         }
 
-        public async Task<UsuarioModel> GetAsync(string id)
+        public async Task<UsuarioModel> GetAsync(int id)
         {
             var response = await _httpClient.GetAsync($"{_url}/GetUserById/{id}");
 
@@ -109,7 +109,7 @@ namespace MiComanderaApp.Infrastructure.Api
                    ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
         }
 
-        public async Task<bool> UpdateAsync(string id, UserRequest data)
+        public async Task<bool> UpdateAsync(int id, UserRequest data)
         {
             var response = await _httpClient.PutAsJsonAsync($"{_url}/UpdateUser/{id}", data);
 

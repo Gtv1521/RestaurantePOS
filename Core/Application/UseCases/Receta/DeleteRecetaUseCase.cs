@@ -12,7 +12,7 @@ namespace RestaurantePOS.Core.Application.UseCases.Receta
             _recetaRepository = recetaRepository;
         }
 
-        public async Task<bool> Execute(string id)
+        public async Task<bool> Execute(int id)
         {
             return await _recetaRepository.DeleteAsync(id);
         }

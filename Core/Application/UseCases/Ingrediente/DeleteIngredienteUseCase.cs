@@ -16,7 +16,7 @@ namespace RestaurantePOS.Core.Application.UseCases.Ingrediente
         {
             _repo = repo;
         }
-        public async Task<bool> Execute(string id)
+        public async Task<bool> Execute(int id)
         {
             return await _repo.DeleteAsync(id);
         }

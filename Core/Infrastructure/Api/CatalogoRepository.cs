@@ -25,7 +25,7 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             _httpClient = httpClient;
         }
 
-        public async Task<string?> CreateAsync(CatalogoRequest data)
+        public async Task<int?> CreateAsync(CatalogoRequest data)
         {
             var response = await _httpClient.PostAsJsonAsync($"{_url}", data);
 
@@ -42,12 +42,12 @@ namespace MiComanderaApp.Core.Infrastructure.Api
                 };
             }
 
-            var result = await response.Content.ReadFromJsonAsync<string>();
+            var result = await response.Content.ReadFromJsonAsync<int?>();
 
             return result ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
         }
 
-        public async Task<bool> DeleteAsync(string id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var response = await _httpClient.DeleteAsync($"{_url}/{id}");
 
@@ -90,7 +90,7 @@ namespace MiComanderaApp.Core.Infrastructure.Api
                    ?? Enumerable.Empty<CatalogoModel>();
         }
 
-        public async Task<CatalogoModel> GetAsync(string id)
+        public async Task<CatalogoModel> GetAsync(int id)
         {
             var response = await _httpClient.GetAsync($"{_url}/{id}");
 
@@ -111,7 +111,7 @@ namespace MiComanderaApp.Core.Infrastructure.Api
                    ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
         }
 
-        public async Task<bool> UpdateAsync(string id, CatalogoRequest data)
+        public async Task<bool> UpdateAsync(int id, CatalogoRequest data)
         {
             var response = await _httpClient.PutAsJsonAsync($"{_url}", data);
 

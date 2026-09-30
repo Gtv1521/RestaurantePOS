@@ -16,6 +16,7 @@ using MiComanderaApp.Core.Application.UseCases.Product;
 using MiComanderaApp.Core.Application.UseCases.Termino;
 using MiComanderaApp.Core.Domain.Interfaces;
 using MiComanderaApp.Core.Domain.Models;
+using MiComanderaApp.Core.Infrastructure.SignalR.Events;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
 using MiComanderaApp.Presentation.Views.Dialogs.Modals;
@@ -28,12 +29,13 @@ namespace MiComanderaApp.ViewModels.Components.Admin;
 
 public partial class MenuComponentViewModel : ViewModelBase
 {
-    private readonly IViewModelFactory _factory;
     private readonly IServiceProvider _serviceProvider;
     private readonly IDialogService _dialogService;
     private readonly GetAllProductUseCase _repo;
     private readonly GetAllCatalogoUseCase _categorias;
     private readonly GetCatalogoXIdProdUseCase _prodXIdCat;
+    private readonly ProductEvents _productEvents;
+    private readonly DeleteProductUseCase _deleteProductUseCase;
     private readonly GetAllTerminosUseCase _todosTerminos;
     private readonly CreateTerminoUseCase _createTermino;
     private readonly DeleteTerminoUseCase _deleteTermino;
@@ -47,11 +49,12 @@ public partial class MenuComponentViewModel : ViewModelBase
 
     [ObservableProperty] private bool _isLoading = false;
     public MenuComponentViewModel(
-        IViewModelFactory factory,
         IServiceProvider serviceProvider,
         IDialogService dialogService,
         GetAllCatalogoUseCase categorias,
+        DeleteProductUseCase deleteProductUseCase,
         GetCatalogoXIdProdUseCase oneCategoria,
+        ProductEvents productEvents,
         GetAllProductUseCase repo,
         GetAllTerminosUseCase todosTerminos,
         CreateTerminoUseCase createTermino,
@@ -61,7 +64,6 @@ public partial class MenuComponentViewModel : ViewModelBase
         DeleteAcompanamientoUseCase deleteAcomp
         )
     {
-        _factory = factory;
         _serviceProvider = serviceProvider;
         _repo = repo;
         _prodXIdCat = oneCategoria;
@@ -73,8 +75,16 @@ public partial class MenuComponentViewModel : ViewModelBase
         _todosAcomp = todosAcomp;
         _createAcomp = createAcomp;
         _deleteAcomp = deleteAcomp;
+        _deleteProductUseCase = deleteProductUseCase;
+        _productEvents = productEvents;
         _ = LoadProducts();
         _ = CargeCategorias();
+        _productEvents.ProductCreated += OnProductCreated;
+    }
+
+    private void OnProductCreated(ProductoModel producto)
+    {
+        Products.Add(producto);
     }
 
     [RelayCommand]
@@ -196,6 +206,22 @@ public partial class MenuComponentViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private async Task DeleteProduct(ProductoModel producto)
+    {
+        try
+        {
+            System.Console.WriteLine($"Eliminando producto con ID: {producto.Id}");
+            var result = await _deleteProductUseCase.ExecuteAsync(producto.Id);
+            Products.Remove(producto);
+        }
+        catch (System.Exception e)
+        {
+            System.Console.WriteLine(e.Message);
+            throw;
+        }
+    }
+
+    [RelayCommand]
     private async Task NuevoProducto()
     {
         var producto =
@@ -206,7 +232,6 @@ public partial class MenuComponentViewModel : ViewModelBase
 
         if (producto != null)
         {
-
             System.Console.WriteLine(producto);
         }
     }
