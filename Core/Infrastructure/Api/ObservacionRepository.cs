@@ -27,7 +27,7 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             _httpClient = factory.CreateClient("MiComanderaApi");
             _url = $"{settings.Value.BaseUrl}/api/Observacion";
         }
-        public async Task<string?> CreateAsync(ObservacionRequest data)
+        public async Task<int?> CreateAsync(ObservacionRequest data)
         {
             var response = await _httpClient.PostAsJsonAsync($"{_url}", data);
             if (!response.IsSuccessStatusCode)
@@ -45,10 +45,10 @@ namespace MiComanderaApp.Core.Infrastructure.Api
                 };
             }
             var result = await response.Content.ReadFromJsonAsync<ObservacionModel>();
-            return result!.Id.ToString() ?? throw new InvalidOperationException("No se pudo crear la observación.");
+            return result?.Id ?? throw new InvalidOperationException("No se pudo crear la observación.");
         }
 
-        public async Task<bool> DeleteAsync(string id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var response = await _httpClient.DeleteAsync($"{_url}/{id}");
             if (!response.IsSuccessStatusCode)
@@ -89,7 +89,7 @@ namespace MiComanderaApp.Core.Infrastructure.Api
                ?? Enumerable.Empty<ObservacionModel>();
         }
 
-        public async Task<ObservacionModel> GetAsync(string id)
+        public async Task<ObservacionModel> GetAsync(int id)
         {
             var response = await _httpClient.GetAsync($"{_url}/{id}");
 
@@ -112,7 +112,7 @@ namespace MiComanderaApp.Core.Infrastructure.Api
 
         }
 
-        public Task<bool> UpdateAsync(string id, ObservacionRequest data)
+        public Task<bool> UpdateAsync(int id, ObservacionRequest data)
         {
             throw new NotImplementedException();
         }

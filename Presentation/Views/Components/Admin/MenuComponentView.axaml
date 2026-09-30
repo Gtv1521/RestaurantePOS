@@ -27,7 +27,6 @@
                    VerticalAlignment="Center"/>
 
         <Button Grid.Column="1"
-                Background="#E06A28"
                 Padding="16,8"
                 CornerRadius="6"
                 Command="{Binding NuevoProductoCommand}">
@@ -38,7 +37,7 @@
         </Button>
       </Grid>
 
-      <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10" Margin="0,0,0,25" Background="red">
+      <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10" Margin="0,0,0,25">
         <StackPanel.Styles>
           <Style Selector="Button">
             <Setter Property="Background" Value="#1A202C"/>

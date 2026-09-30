@@ -160,9 +160,12 @@ sealed class Program
                 services.AddScoped<GetSessionSave>();
                 services.AddScoped<GetAllCatalogoUseCase>();
                 services.AddScoped<GetCatalogoXIdProdUseCase>();
-                services.AddScoped<GetAllProductUseCase>();
                 services.AddScoped<GetAllTablesUseCase>();
+
+                services.AddScoped<GetAllProductUseCase>();
                 services.AddScoped<InsertProductUseCase>();
+                services.AddScoped<DeleteProductUseCase>();
+
                 services.AddScoped<OcuparTableUseCase>();
                 services.AddScoped<GetTablesOpenUseCase>();
                 services.AddScoped<GetAllIngredientesUseCase>();
@@ -177,14 +180,17 @@ sealed class Program
                 services.AddScoped<DeleteRecetaUseCase>();
                 services.AddScoped<AllUserUseCase>();
 
-
-
-
                 // signalR
                 services.AddSingleton<SignalRService>();
                 services.AddSingleton<SignalREventRegistry>();
-                services.AddScoped<ISignalREventHandler, OrderEvents>();
-                services.AddScoped<ISignalREventHandler, TablesEvents>();
+                services.AddSingleton<ProductEvents>();
+                services.AddSingleton<OrderEvents>();
+                services.AddSingleton<TablesEvents>();
+
+                // Mapeo de interfaz → concreto (misma instancia)
+                services.AddSingleton<ISignalREventHandler>(sp => sp.GetRequiredService<ProductEvents>());
+                services.AddSingleton<ISignalREventHandler>(sp => sp.GetRequiredService<OrderEvents>());
+                services.AddSingleton<ISignalREventHandler>(sp => sp.GetRequiredService<TablesEvents>());
 
 
                 services.AddSingleton<MainWindow>();

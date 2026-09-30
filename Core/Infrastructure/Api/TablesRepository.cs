@@ -25,12 +25,12 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             _url = $"{apiSettings.Value.BaseUrl}/api/Table";
         }
 
-        public Task<string?> CreateAsync(TableRequest data)
+        public Task<int?> CreateAsync(TableRequest data)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteAsync(string id)
+        public Task<bool> DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
@@ -55,7 +55,7 @@ namespace MiComanderaApp.Core.Infrastructure.Api
                    ?? Enumerable.Empty<TableModel>();
         }
 
-        public Task<TableModel> GetAsync(string id)
+        public Task<TableModel> GetAsync(int id)
         {
             throw new NotImplementedException();
         }
@@ -126,7 +126,7 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             return result ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
         }
 
-        public Task<bool> UpdateAsync(string id, TableRequest data)
+        public Task<bool> UpdateAsync(int id, TableRequest data)
         {
             throw new NotImplementedException();
         }

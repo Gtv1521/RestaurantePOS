@@ -43,6 +43,7 @@ public partial class CreateProductViewModel : ObservableValidator, IDialogViewMo
 
     [ObservableProperty] private bool _mostrarErrores;
     [ObservableProperty] private bool _editar;
+    [ObservableProperty] private string? _mensajeExito;
     [ObservableProperty]
     [Required(ErrorMessage = "El nombre es obligatorio.")]
     private string? _nombre;
@@ -60,9 +61,12 @@ public partial class CreateProductViewModel : ObservableValidator, IDialogViewMo
     private string? _descripcion;
     [ObservableProperty] private bool _activo = true;
     [ObservableProperty] private bool _loading = true;
+    [ObservableProperty] private string _errorInsert = string.Empty;
     [ObservableProperty] private CatalogoModel _categoriaSeleccionada = new();
+
     public ObservableCollection<CatalogoModel> Categorias { get; } = new();
     public ObservableCollection<string> Errores { get; } = new();
+
 
 
     public void Initialize(ProductoModel? model)
@@ -115,19 +119,19 @@ public partial class CreateProductViewModel : ObservableValidator, IDialogViewMo
 
             var insertar = await _insertProductUseCase.Execute(producto);
 
-            if (insertar == null)
-            {
-                Errores.Clear();
-                Errores.Add("Error al guardar el producto.");
-                return;
-            }
+            Console.WriteLine($"Producto insertado con ID: {insertar}");
+            MensajeExito = "¡Producto agregado correctamente!";
+            Loading = false; // opcional: quitar el spinner mientras se muestra el mensaje
 
-            CloseRequested?.Invoke(producto);
+            await Task.Delay(1000);
+            MensajeExito = string.Empty;
+            CloseRequested?.Invoke(null);
 
         }
         catch (System.Exception ex)
         {
-            System.Console.WriteLine(ex.Message);
+            ErrorInsert = ex.Message;
+            System.Console.WriteLine($"Error al guardar el producto: {ex.Message}");
         }
         finally
         {

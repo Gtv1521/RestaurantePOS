@@ -354,7 +354,7 @@ namespace MiComanderaApp.ViewModels.Components.Admin
                     }
                 }
 
-                await _updateRecetaUseCase.Execute(request.ProductId.ToString(), request);
+                await _updateRecetaUseCase.Execute(request.ProductId, request);
                 await LoadRecetasAsync();
             }
         }
@@ -364,7 +364,7 @@ namespace MiComanderaApp.ViewModels.Components.Admin
         {
             if (receta == null) return;
             // TODO: Add confirmation dialog
-            await _deleteRecetaUseCase.Execute(receta.ProductId.ToString());
+            await _deleteRecetaUseCase.Execute(receta.ProductId);
             await LoadRecetasAsync();
         }
     }

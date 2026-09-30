@@ -1,17 +1,18 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:i="https://github.com/projektanker/icons.avalonia"
-                    xmlns:models="using:MiComanderaApp.Models">
+                    xmlns:models="using:MiComanderaApp.Models"
+                    xmlns:vm="using:MiComanderaApp.ViewModels.Components.Admin"
+                    x:DataType="vm:MenuComponentViewModel">
 
     <DataTemplate x:Key="ShowProducts" DataType="{x:Type models:ProductoModel}">
-        <Border Background="{DynamicResource FondoTarjeta}" Width="300" MaxHeight="260" CornerRadius="12" ClipToBounds="True" Margin="5" >
+        <Border Background="{DynamicResource FondoTarjeta}" IsVisible="{Binding IsAvailable}" Width="300" MaxHeight="260" CornerRadius="12" ClipToBounds="True" Margin="5" >
             <Grid RowDefinitions="110,*">
 
                 <Grid Grid.Row="0">
                     <Image Source="{Binding ImageUrl}" Stretch="UniformToFill"/>
 
                     <Border Background="#15000000"/>
-
                     <Border Background="{DynamicResource Estadistica}"
                             CornerRadius="4"
                             HorizontalAlignment="Left"
@@ -76,15 +77,17 @@
                                     Width="35" Height="32"
                                     HorizontalContentAlignment="Center"
                                     VerticalContentAlignment="Center"
+                                    x:CompileBindings="False"
+                                    Command="{Binding $parent[UserControl].DataContext.DeleteProductCommand}"
+                                    CommandParameter="{Binding}"
                                     CornerRadius="6">
                                 <i:Icon Value="fa-solid fa-trash" Foreground="#c91815" FontSize="12"/>
                             </Button>
                         </Grid>
-                </Grid>
+                    </Grid>
                 </Border>
             </Grid>
         </Border>
     </DataTemplate>
-
 
 </ResourceDictionary>

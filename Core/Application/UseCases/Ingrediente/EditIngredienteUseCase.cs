@@ -18,7 +18,7 @@ namespace RestaurantePOS.Core.Application.UseCases.Ingrediente
 
         public async Task<string?> Execute(IngredienteRequest data)
         {
-            var response = await _repo.UpdateAsync(data.Id.ToString(), data);
+            var response = await _repo.UpdateAsync(data.Id, data);
             return response.CompareTo(true) == 0 ? "Ingrediente actualizado correctamente" : "Error al actualizar el ingrediente";
         }
     }

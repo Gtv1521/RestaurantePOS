@@ -28,7 +28,7 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             _baseUrl = $"{apiSettings.Value.BaseUrl}/api/Recipe";
         }
 
-        public async Task<string?> CreateAsync(RecetaRequest data)
+        public async Task<int?> CreateAsync(RecetaRequest data)
         {
             var response = await _httpClient.PutAsJsonAsync($"{_baseUrl}/{data.ProductId}", data.RecipeItems);
             if (!response.IsSuccessStatusCode)
@@ -44,53 +44,11 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             var content = await response.Content.ReadAsStringAsync();
             Debug.WriteLine($"RecetaRepository.CreateAsync response content: {content}");
 
-            if (string.IsNullOrWhiteSpace(content))
-                return null;
-
-            // Try parse as JSON
-            try
-            {
-                using var doc = JsonDocument.Parse(content);
-                var root = doc.RootElement;
-
-                if (root.ValueKind == JsonValueKind.String)
-                {
-                    return root.GetString();
-                }
-
-                if (root.ValueKind == JsonValueKind.Number)
-                {
-                    return root.GetRawText();
-                }
-
-                if (root.ValueKind == JsonValueKind.Object)
-                {
-                    // Common fields that might contain the id/result
-                    if (root.TryGetProperty("id", out var idProp))
-                    {
-                        if (idProp.ValueKind == JsonValueKind.String) return idProp.GetString();
-                        if (idProp.ValueKind == JsonValueKind.Number) return idProp.GetRawText();
-                    }
-                    if (root.TryGetProperty("result", out var resProp))
-                    {
-                        if (resProp.ValueKind == JsonValueKind.String) return resProp.GetString();
-                        if (resProp.ValueKind == JsonValueKind.Number) return resProp.GetRawText();
-                    }
-
-                    // Fallback: return the full object as string
-                    return content;
-                }
-            }
-            catch (JsonException)
-            {
-                // Not JSON, return raw content
-            }
-
-            // If it's not JSON, return raw trimmed content
-            return content.Trim();
+            var result = await response.Content.ReadFromJsonAsync<RecetaModel?>();
+            return result?.ProductId ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
         }
 
-        public async Task<bool> DeleteAsync(string id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var response = await _httpClient.DeleteAsync($"{_baseUrl}/{id}");
             if (!response.IsSuccessStatusCode)
@@ -167,7 +125,7 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             return result ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
         }
 
-        public Task<RecetaModel> GetAsync(string id)
+        public Task<RecetaModel> GetAsync(int id)
         {
             throw new NotImplementedException();
         }
@@ -182,7 +140,7 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             throw new NotImplementedException();
         }
 
-        public async Task<bool> UpdateAsync(string id, RecetaRequest data)
+        public async Task<bool> UpdateAsync(int id, RecetaRequest data)
         {
             // The API expects a JSON array of recipe item objects in the request body.
             var response = await _httpClient.PutAsJsonAsync($"{_baseUrl}/{id}", data.RecipeItems);

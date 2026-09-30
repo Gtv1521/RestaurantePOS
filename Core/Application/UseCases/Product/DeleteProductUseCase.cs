@@ -8,18 +8,19 @@ using MiComanderaApp.Models;
 
 namespace MiComanderaApp.Core.Application.UseCases.Product
 {
-    public class InsertProductUseCase
+    public class DeleteProductUseCase
     {
         private readonly IMultipleCrud<ProductoModel, ProductoRequest> _repo;
 
-        public InsertProductUseCase(IMultipleCrud<ProductoModel, ProductoRequest> repo)
+        public DeleteProductUseCase(IMultipleCrud<ProductoModel, ProductoRequest> repo)
         {
             _repo = repo;
         }
 
-        public async Task<int?> Execute(ProductoRequest request)
+        public async Task<bool> ExecuteAsync(int id)
         {
-            return await _repo.CreateAsync(request);
+            return await _repo.DeleteAsync(id);
         }
+
     }
 }
