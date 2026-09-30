@@ -1,6 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MiComanderaApp.Core.Domain.Models;
+using MiComanderaApp.Interfaces;
+using MiComanderaApp.Presentation.Views.Components.Generales;
 using RestaurantePOS.Core.Domain.Models;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -14,7 +16,19 @@ namespace MiComanderaApp.ViewModels.Dialogs.Modals
     public partial class RecipeEditorViewModel : ViewModelBase, MiComanderaApp.Core.Domain.Interfaces.IDialogViewModel<RecetaModel?>
     {
         private readonly GetAllIngredientesUseCase _getAllIngredientesUseCase;
-        
+        private readonly IViewModelFactory _factory;
+
+        [ObservableProperty]
+        private string _title = "Editar Receta";
+
+        [ObservableProperty]
+        private bool _teclado;
+
+        [ObservableProperty]
+        private bool _botonTeclado = true;
+
+        [ObservableProperty]
+        private object? _vistaActual;
         [ObservableProperty]
         private RecetaModel _recipe;
 
@@ -32,10 +46,12 @@ namespace MiComanderaApp.ViewModels.Dialogs.Modals
 
         public event Action<RecetaModel?>? CloseRequested;
 
-        public RecipeEditorViewModel(RecetaModel recipe, GetAllIngredientesUseCase getAllIngredientesUseCase)
+        public RecipeEditorViewModel(RecetaModel recipe, GetAllIngredientesUseCase getAllIngredientesUseCase, IViewModelFactory factory)
         {
             _recipe = recipe;
             _getAllIngredientesUseCase = getAllIngredientesUseCase;
+            _factory = factory;
+            _vistaActual = _factory.Create<TecladoComponentViewModel>();
             _recipeIngredients = new ObservableCollection<IngredientModel>(recipe.Items);
             _allIngredients = new ObservableCollection<IngredienteModel>();
             _ = LoadAllIngredients();
@@ -98,6 +114,13 @@ namespace MiComanderaApp.ViewModels.Dialogs.Modals
         private void Cancel()
         {
             CloseRequested?.Invoke(null);
+        }
+
+        [RelayCommand]
+        private void VerTeclado()
+        {
+            Teclado = !Teclado;
+            BotonTeclado = !BotonTeclado;
         }
     }
 }

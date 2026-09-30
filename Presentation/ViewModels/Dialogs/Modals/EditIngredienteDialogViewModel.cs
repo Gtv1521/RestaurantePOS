@@ -3,16 +3,29 @@ using CommunityToolkit.Mvvm.Input;
 using MiComanderaApp.Core.Application.Request;
 using MiComanderaApp.Core.Domain.Interfaces;
 using MiComanderaApp.Core.Domain.Models;
+using MiComanderaApp.Interfaces;
+using MiComanderaApp.Presentation.Views.Components.Generales;
 using System;
 
 namespace MiComanderaApp.ViewModels.Dialogs.Modals
 {
     public partial class EditIngredienteDialogViewModel : ObservableObject, IDialogViewModel<IngredienteRequest?>
     {
+        private readonly IViewModelFactory _factory;
+
         public event Action<IngredienteRequest?>? CloseRequested;
 
         [ObservableProperty]
         private string _title = "Editar Ingrediente";
+
+        [ObservableProperty]
+        private bool _teclado;
+
+        [ObservableProperty]
+        private bool _botonTeclado = true;
+
+        [ObservableProperty]
+        private object? _vistaActual;
 
         [ObservableProperty]
         private string _name;
@@ -37,8 +50,10 @@ namespace MiComanderaApp.ViewModels.Dialogs.Modals
         
         private readonly int _ingredienteId;
 
-        public EditIngredienteDialogViewModel(IngredienteModel ingrediente)
+        public EditIngredienteDialogViewModel(IngredienteModel ingrediente, IViewModelFactory factory)
         {
+            _factory = factory;
+            _vistaActual = _factory.Create<TecladoComponentViewModel>();
             _ingredienteId = ingrediente.Id;
             _name = ingrediente.Name;
             _currentQuantity = ingrediente.AvailableQuantity;
@@ -68,6 +83,13 @@ namespace MiComanderaApp.ViewModels.Dialogs.Modals
         private void Cancelar()
         {
             CloseRequested?.Invoke(null);
+        }
+
+        [RelayCommand]
+        private void VerTeclado()
+        {
+            Teclado = !Teclado;
+            BotonTeclado = !BotonTeclado;
         }
     }
 }

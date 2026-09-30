@@ -21,17 +21,20 @@ public partial class CreateProductViewModel : ObservableValidator, IDialogViewMo
 {
     private readonly GetAllCatalogoUseCase _allCatalogoCase;
     private readonly InsertProductUseCase _insertProductUseCase;
+    private readonly UpdateProductUseCase _updateProductUseCase;
     private readonly IViewModelFactory _factory;
 
 
     public CreateProductViewModel(
         GetAllCatalogoUseCase allCatalogoCase,
         InsertProductUseCase insertProductUseCase,
+        UpdateProductUseCase updateProductUseCase,
         IViewModelFactory factory
         )
     {
         _allCatalogoCase = allCatalogoCase;
         _insertProductUseCase = insertProductUseCase;
+        _updateProductUseCase = updateProductUseCase;
         _factory = factory;
         _ = LoadCategories();
         _vistaActual = _factory.Create<TecladoComponentViewModel>();
@@ -43,6 +46,7 @@ public partial class CreateProductViewModel : ObservableValidator, IDialogViewMo
 
     [ObservableProperty] private bool _mostrarErrores;
     [ObservableProperty] private bool _editar;
+    [ObservableProperty] private string _titulo = "Crear Producto";
     [ObservableProperty]
     [Required(ErrorMessage = "El nombre es obligatorio.")]
     private string? _nombre;
@@ -59,6 +63,10 @@ public partial class CreateProductViewModel : ObservableValidator, IDialogViewMo
     [Required(ErrorMessage = "La descripción es obligatoria.")]
     private string? _descripcion;
     [ObservableProperty] private bool _activo = true;
+    [ObservableProperty] private bool _conTermino;
+    [ObservableProperty] private bool _llevaAcompanamientos;
+    [ObservableProperty] private int _maxAcompanamientos = 2;
+    [ObservableProperty] private int _productoId;
     [ObservableProperty] private bool _loading = true;
     [ObservableProperty] private CatalogoModel _categoriaSeleccionada = new();
     public ObservableCollection<CatalogoModel> Categorias { get; } = new();
@@ -68,14 +76,21 @@ public partial class CreateProductViewModel : ObservableValidator, IDialogViewMo
     public void Initialize(ProductoModel? model)
     {
         Editar = true;
+        Titulo = "Editar Producto";
         if (model != null)
         {
+            ProductoId = model.Id;
             Nombre = model.Name;
             Codigo = model.Name;
             Precio = (decimal)model.Price;
             Descripcion = model.Description;
             Activo = model.IsAvailable;
-            CategoriaSeleccionada = Categorias.FirstOrDefault(c => c.Id == model.Id) ?? new CatalogoModel();
+            ConTermino = model.TieneTerminos;
+            LlevaAcompanamientos = model.TieneAcompanamientos;
+            MaxAcompanamientos = model.MaxAccompaniments > 0 ? model.MaxAccompaniments : 2;
+            CategoriaSeleccionada = Categorias.FirstOrDefault(c =>
+                string.Equals(c.Name, model.CategoryName, StringComparison.OrdinalIgnoreCase))
+                ?? new CatalogoModel();
         }
     }
 
@@ -105,13 +120,32 @@ public partial class CreateProductViewModel : ObservableValidator, IDialogViewMo
 
             var producto = new ProductoRequest
             {
+                Id = ProductoId,
                 Name = Nombre!,
                 CategoryId = CategoriaSeleccionada.Id,
                 Price = (double)Precio!,
                 Description = Descripcion!,
                 IsAvailable = Activo,
-                ImageUrl = ""
+                ImageUrl = "",
+                ConTermino = ConTermino,
+                HasAccompaniments = LlevaAcompanamientos,
+                MaxAccompaniments = MaxAcompanamientos
             };
+
+            if (Editar)
+            {
+                var actualizado = await _updateProductUseCase.Execute(ProductoId.ToString(), producto);
+
+                if (!actualizado)
+                {
+                    Errores.Clear();
+                    Errores.Add("Error al actualizar el producto.");
+                    return;
+                }
+
+                CloseRequested?.Invoke(producto);
+                return;
+            }
 
             var insertar = await _insertProductUseCase.Execute(producto);
 

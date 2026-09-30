@@ -16,6 +16,9 @@ namespace MiComanderaApp.Core.Application.Request
         public string ImageUrl { get; set; } = "";
         public string CategoryName { get; set; } = "";
         public int CategoryId { get; set; }
+        public bool ConTermino { get; set; }
+        public bool HasAccompaniments { get; set; }
+        public int MaxAccompaniments { get; set; } = 2;
     
 
     }

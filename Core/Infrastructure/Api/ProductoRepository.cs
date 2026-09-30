@@ -127,9 +127,36 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             return result ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
         }
 
-        public Task<bool> UpdateAsync(string id, ProductoRequest data)
+        public async Task<bool> UpdateAsync(string id, ProductoRequest data)
         {
-            throw new NotImplementedException();
+            var payload = new
+            {
+                id = int.TryParse(id, out var parsedId) ? parsedId : data.Id,
+                name = data.Name,
+                description = data.Description,
+                price = data.Price,
+                categoryId = data.CategoryId,
+                isAvailable = data.IsAvailable,
+                imageUrl = data.ImageUrl,
+                conTermino = data.ConTermino,
+                hasAccompaniments = data.HasAccompaniments,
+                maxAccompaniments = data.MaxAccompaniments
+            };
+            var response = await _httpClient.PutAsJsonAsync(_url, payload);
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+
+                throw response.StatusCode switch
+                {
+                    HttpStatusCode.BadRequest => new BadRequestException(error),
+                    HttpStatusCode.NotFound => new NotFoundException(error),
+                    _ => new HttpRequestException(
+                        $"Error {(int)response.StatusCode}: {error}")
+                };
+            }
+
+            return true;
         }
     }
 }

@@ -1,0 +1,125 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:b="using:MiComanderaApp.Presentation.Services"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="https://github.com/projektanker/icons.avalonia"
+        xmlns:vm="using:MiComanderaApp.ViewModels.Dialogs.Modals"
+        xmlns:models="using:MiComanderaApp.Core.Domain.Models"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:in="using:Avalonia.Xaml.Interactivity"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="MiComanderaApp.Views.Dialogs.Modals.AcompanamientosCatalogoView"
+        Title="Catálogo de acompañamientos"
+        ShowInTaskbar="False"
+        SystemDecorations="None"
+        WindowStartupLocation="Manual"
+        Background="{DynamicResource FondoModal}"
+        x:DataType="vm:AcompanamientosCatalogoViewModel"
+        WindowState="Maximized"
+        x:Name="Root"
+        >
+
+
+        <Grid RowDefinitions="*, *">
+                <Border Grid.Row="0" Padding="25"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        >
+
+                        <StackPanel Spacing="15"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Stretch" >
+
+                                <Border CornerRadius="15"
+                                        Width="900"
+                                        Padding="20"
+                                        Background="{DynamicResource FondoPrincipal}"
+                                        >
+                                        <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto"
+                                              RowSpacing="10">
+
+                                                <TextBlock Grid.Row="0" Text="Catálogo de acompañamientos"
+                                                           FontSize="24"
+                                                           FontWeight="Bold"
+                                                           HorizontalAlignment="Center"
+                                                           Foreground="{DynamicResource TextoBrush}"
+                                                           />
+
+                                                <TextBlock Grid.Row="1" Text="Aquí se crean los acompañamientos (van incluidos, sin cobro). Para anclarlos a un plato usa el botón Acompañ. de su tarjeta."
+                                                           Foreground="{DynamicResource TextoColor}" Opacity="0.7" TextWrapping="Wrap"/>
+
+                                                <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" MaxHeight="300">
+                                                        <ItemsControl ItemsSource="{Binding Acompanamientos}">
+                                                                <ItemsControl.ItemTemplate>
+                                                                        <DataTemplate DataType="{x:Type models:AcompanamientoModel}">
+                                                                                <Border Background="{DynamicResource FondoModal}" CornerRadius="6" Padding="10" Margin="0,0,0,5">
+                                                                                        <Grid ColumnDefinitions="*, Auto">
+                                                                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                                                                        <TextBlock Text="{Binding Name}" Foreground="{DynamicResource TextoColor}" FontWeight="SemiBold"/>
+                                                                                                        <TextBlock Text="{Binding Description}" Foreground="{DynamicResource TextoColor}" Opacity="0.7" FontSize="12"/>
+                                                                                                </StackPanel>
+                                                                                                <Button Grid.Column="1" Command="{Binding #Root.DataContext.QuitarCommand}" CommandParameter="{Binding}"
+                                                                                                          Background="Transparent" BorderThickness="0" Padding="6" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                                                                        <i:Icon Value="fa-solid fa-trash" Foreground="#E06A28" FontSize="14"/>
+                                                                                                </Button>
+                                                                                        </Grid>
+                                                                                </Border>
+                                                                        </DataTemplate>
+                                                                </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                </ScrollViewer>
+
+                                                <Grid Grid.Row="3" ColumnDefinitions="*, *, Auto" ColumnSpacing="10" Margin="0,10,0,0">
+                                                        <TextBox Grid.Column="0" Text="{Binding NuevoNombre, Mode=TwoWay}" Watermark="Ej: Papas francesas"
+                                                                 BorderBrush="{DynamicResource Border}" Foreground="{DynamicResource TextoColor}"
+                                                                 VerticalContentAlignment="Center">
+                                                                <in:Interaction.Behaviors>
+                                                                        <b:KeyboardFocusBehavior />
+                                                                </in:Interaction.Behaviors>
+                                                        </TextBox>
+                                                        <TextBox Grid.Column="1" Text="{Binding NuevaDescripcion, Mode=TwoWay}" Watermark="Descripción (opcional)"
+                                                                 BorderBrush="{DynamicResource Border}" Foreground="{DynamicResource TextoColor}"
+                                                                 VerticalContentAlignment="Center">
+                                                                <in:Interaction.Behaviors>
+                                                                        <b:KeyboardFocusBehavior />
+                                                                </in:Interaction.Behaviors>
+                                                        </TextBox>
+
+                                                        <Button Grid.Column="2" Command="{Binding AgregarCommand}" Classes="btn-naranja" Padding="15, 8">
+                                                                <TextBlock Text="Crear" FontWeight="SemiBold"/>
+                                                        </Button>
+                                                </Grid>
+
+                                                <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" Margin="0,20,0,0">
+                                                        <Button Content="Cerrar"
+                                                                Width="200"
+                                                                Height="40"
+                                                                Classes="btn-verde"
+                                                                Command="{Binding CerrarCommand}"/>
+                                                </StackPanel>
+
+                                        </Grid>
+                                </Border>
+
+                        </StackPanel>
+
+                </Border>
+
+                <Grid RowDefinitions="*" Grid.Row="1" VerticalAlignment="Bottom" >
+
+                        <Border Padding="10"
+                                Margin="20"
+                                Height="35"
+                                Width="100"
+                                HorizontalAlignment="Left"
+                                IsVisible="{Binding BotonTeclado}"
+                                >
+                                <StackPanel>
+                                        <Button i:Attached.Icon="fa-solid fa-chevron-up" Background="{DynamicResource FondoPrincipal}"  Classes="KeypadBtn" Command="{Binding VerTecladoCommand}" />
+                                </StackPanel>
+                        </Border>
+
+                        <ContentControl Padding="10" Height="500" IsVisible="{Binding Teclado}" Grid.Row="1" Content="{Binding VistaActual}" />
+                </Grid>
+        </Grid>
+</Window>

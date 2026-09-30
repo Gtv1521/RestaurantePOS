@@ -17,5 +17,18 @@ namespace MiComanderaApp.Models
         public string Description { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;
         public string[] Accompaniments { get; set; } = [];
+        public bool TieneAcompanamientos { get; set; }
+        public bool TieneTerminos { get; set; }
+        public bool TieneObservaciones { get; set; }
+        public int MaxAccompaniments { get; set; } = 2;
+        public List<AcompanamientoPermitidoModel> Acompanamientos { get; set; } = new();
+    }
+
+    public class AcompanamientoPermitidoModel
+    {
+        public int AcompanamientoId { get; set; }
+        public string Nombre { get; set; } = string.Empty;
+        public bool Required { get; set; }
+        public int? MaximoSeleccion { get; set; }
     }
 }

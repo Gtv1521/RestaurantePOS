@@ -4,7 +4,7 @@ using System;
 
 namespace MiComanderaApp.Views.Dialogs.Modals
 {
-    public partial class RecipeEditorView : UserControl
+    public partial class RecipeEditorView : Window
     {
         public RecipeEditorView()
         {

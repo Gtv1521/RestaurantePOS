@@ -1,6 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
+using MiComanderaApp.Presentation.Views.Components.Generales;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,6 +12,19 @@ namespace MiComanderaApp.ViewModels.Dialogs.Modals
 {
     public partial class SelectProductForRecipeViewModel : ViewModelBase, MiComanderaApp.Core.Domain.Interfaces.IDialogViewModel<MiComanderaApp.Models.ProductoModel?>
     {
+        private readonly IViewModelFactory _factory;
+
+        [ObservableProperty]
+        private string _title = "Seleccionar Producto";
+
+        [ObservableProperty]
+        private bool _teclado;
+
+        [ObservableProperty]
+        private bool _botonTeclado = true;
+
+        [ObservableProperty]
+        private object? _vistaActual;
         [ObservableProperty]
         private ObservableCollection<ProductoModel> _products;
 
@@ -23,8 +38,10 @@ namespace MiComanderaApp.ViewModels.Dialogs.Modals
 
         public event Action<ProductoModel?>? CloseRequested;
 
-        public SelectProductForRecipeViewModel(IEnumerable<ProductoModel> products)
+        public SelectProductForRecipeViewModel(IEnumerable<ProductoModel> products, IViewModelFactory factory)
         {
+            _factory = factory;
+            _vistaActual = _factory.Create<TecladoComponentViewModel>();
             _allProducts.AddRange(products);
             _products = new ObservableCollection<ProductoModel>(_allProducts);
         }
@@ -56,6 +73,13 @@ namespace MiComanderaApp.ViewModels.Dialogs.Modals
         private void Cancel()
         {
             CloseRequested?.Invoke(null);
+        }
+
+        [RelayCommand]
+        private void VerTeclado()
+        {
+            Teclado = !Teclado;
+            BotonTeclado = !BotonTeclado;
         }
     }
 }

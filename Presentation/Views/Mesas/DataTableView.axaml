@@ -114,6 +114,28 @@
               </Grid>
 
 
+              <!-- Término y acompañamientos -->
+              <TextBlock Margin="15,0,0,0"
+                         FontSize="13"
+                         Foreground="{DynamicResource Estadistica}"
+                         IsVisible="{Binding TieneDetalle}">
+                <Run Text="• "/>
+                <Run Text="{Binding TerminoNombre}"/>
+              </TextBlock>
+
+              <ItemsControl ItemsSource="{Binding AcompanamientoNombres}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <TextBlock Margin="15,0,0,0"
+                               FontSize="13"
+                               Foreground="{DynamicResource Estadistica}">
+                      <Run Text="+ "/>
+                      <Run Text="{Binding}"/>
+                    </TextBlock>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+
               <!-- Observaciones -->
               <ItemsControl ItemsSource="{Binding Observaciones}">
 
@@ -367,6 +389,7 @@
                     VerticalAlignment="Stretch"
                     HorizontalAlignment="Stretch"
                     Content="Enviar"
+                    Command="{Binding EnviarOrdenCommand}"
                     Classes="btn-naranja"/>
 
             <Button Grid.Row="1"
