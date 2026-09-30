@@ -2,8 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:i="https://github.com/projektanker/icons.avalonia"
                     xmlns:models="using:MiComanderaApp.Models"
-                    xmlns:vm="using:MiComanderaApp.ViewModels.Components.Admin"
-                    x:DataType="vm:MenuComponentViewModel">
+                    >
 
     <DataTemplate x:Key="ShowProducts" DataType="{x:Type models:ProductoModel}">
         <Border Background="{DynamicResource FondoTarjeta}" IsVisible="{Binding IsAvailable}" Width="300" MaxHeight="260" CornerRadius="12" ClipToBounds="True" Margin="5" >
@@ -65,7 +64,10 @@
                                     HorizontalAlignment="Stretch"
                                     HorizontalContentAlignment="Center"
                                     VerticalContentAlignment="Center"
-                                    CornerRadius="6">
+                                    CornerRadius="6"
+                                    x:CompileBindings="False"
+                                    Command="{Binding $parent[UserControl].DataContext.EditProductCommand}"
+                                    CommandParameter="{Binding}">
                                 <StackPanel Orientation="Horizontal" Spacing="6">
                                     <i:Icon Value="fa-solid fa-pen" Foreground="{DynamicResource BotonText}" FontSize="12"/>
                                     <TextBlock Text="Editar" Foreground="{DynamicResource BotonText}" FontSize="13" FontWeight="SemiBold"/>

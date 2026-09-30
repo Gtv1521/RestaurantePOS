@@ -14,7 +14,7 @@ namespace MiComanderaApp.Core.Application.UseCases.Product
             _repo = repo;
         }
 
-        public async Task<bool> Execute(string id, ProductoRequest request)
+        public async Task<bool> Execute(int id, ProductoRequest request)
         {
             return await _repo.UpdateAsync(id, request);
         }

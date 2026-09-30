@@ -42,6 +42,7 @@ public partial class MenuComponentViewModel : ViewModelBase
     private readonly GetAllAcompanamientosUseCase _todosAcomp;
     private readonly CreateAcompanamientoUseCase _createAcomp;
     private readonly DeleteAcompanamientoUseCase _deleteAcomp;
+    private readonly IViewModelFactory _factory;
 
 
     public ObservableCollection<ProductoModel> Products { get; } = new();
@@ -61,7 +62,8 @@ public partial class MenuComponentViewModel : ViewModelBase
         DeleteTerminoUseCase deleteTermino,
         GetAllAcompanamientosUseCase todosAcomp,
         CreateAcompanamientoUseCase createAcomp,
-        DeleteAcompanamientoUseCase deleteAcomp
+        DeleteAcompanamientoUseCase deleteAcomp,
+        IViewModelFactory factory
         )
     {
         _serviceProvider = serviceProvider;
@@ -80,6 +82,7 @@ public partial class MenuComponentViewModel : ViewModelBase
         _ = LoadProducts();
         _ = CargeCategorias();
         _productEvents.ProductCreated += OnProductCreated;
+        _factory = factory;
     }
 
     private void OnProductCreated(ProductoModel producto)
@@ -157,7 +160,7 @@ public partial class MenuComponentViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private async Task EditarProducto(ProductoModel? producto)
+    private async Task EditProduct(ProductoModel? producto)
     {
         if (producto == null) return;
 

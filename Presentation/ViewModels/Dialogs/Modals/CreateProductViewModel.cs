@@ -138,7 +138,7 @@ public partial class CreateProductViewModel : ObservableValidator, IDialogViewMo
 
             if (Editar)
             {
-                var actualizado = await _updateProductUseCase.Execute(ProductoId.ToString(), producto);
+                var actualizado = await _updateProductUseCase.Execute(ProductoId, producto);
 
                 if (!actualizado)
                 {

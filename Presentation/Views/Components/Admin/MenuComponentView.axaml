@@ -11,92 +11,6 @@
              x:DataType="vm:MenuComponentViewModel"
              x:Name="Root">
 
-  <UserControl.Resources>
-    <DataTemplate x:Key="ShowProducts" DataType="{x:Type models:ProductoModel}">
-        <Border Background="{DynamicResource FondoTarjeta}" Width="300" MaxHeight="260" CornerRadius="12" ClipToBounds="True" Margin="5" >
-            <Grid RowDefinitions="110,*">
-
-                <Grid Grid.Row="0">
-                    <Image Source="{Binding ImageUrl}" Stretch="UniformToFill"/>
-
-                    <Border Background="#15000000"/>
-
-                    <Border Background="{DynamicResource Estadistica}"
-                            CornerRadius="4"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Top"
-                            Margin="12"
-                            Padding="8,4">
-                        <TextBlock Text="{Binding CategoryName}" Foreground="{DynamicResource TextoColor}" FontSize="13" FontWeight="Bold"/>
-                    </Border>
-
-                    <Border Background="{DynamicResource NumBotton}"
-                            CornerRadius="4"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Top"
-                            Margin="12"
-                            Padding="6,4">
-                        <TextBlock Text="{Binding IsAvailable}" Foreground="{DynamicResource TextoColor}" FontSize="11" FontWeight="Bold"/>
-                    </Border>
-                </Grid>
-
-                <Border Grid.Row="1" Padding="15,12" Grid.RowSpan="2">
-                    <Grid RowDefinitions="Auto,Auto,Auto">
-
-                        <TextBlock Grid.Row="0"
-                                   Text="{Binding Name}"
-                                   Foreground="{DynamicResource TextoColor}"
-                                   FontSize="15"
-                                   FontWeight="SemiBold"
-                                   />
-
-                        <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Margin="0,1,0,10">
-                            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="4">
-                                <TextBlock Text="S/" Foreground="{DynamicResource Estadistica}" FontSize="15" FontWeight="Bold" VerticalAlignment="Center"/>
-                                <TextBlock Text="{Binding Price, StringFormat='{}{0:N2}'}" Foreground="{DynamicResource Estadistica}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding TaxPercentage, StringFormat='{}IVA {0}%'}" Foreground="#4F5E67" FontSize="11"/>
-                                <StackPanel Orientation="Horizontal" Spacing="4">
-                                    <i:Icon Value="fa-solid fa-print" Foreground="{DynamicResource TextoColor}" FontSize="11"/>
-                                    <TextBlock Text="{Binding Description}" Foreground="#4F5E67" FontSize="11"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </Grid>
-
-                        <Grid Grid.Row="2" ColumnDefinitions="*,Auto" ColumnSpacing="10">
-                            <Button Grid.Column="0"
-                                    Background="{DynamicResource BorderEditar}"
-                                    Height="32"
-                                    HorizontalAlignment="Stretch"
-                                    HorizontalContentAlignment="Center"
-                                    VerticalContentAlignment="Center"
-                                    CornerRadius="6"
-                                    Command="{Binding #Root.DataContext.EditarProductoCommand}"
-                                    CommandParameter="{Binding}">
-                                <StackPanel Orientation="Horizontal" Spacing="6">
-                                    <i:Icon Value="fa-solid fa-pen" Foreground="{DynamicResource BotonText}" FontSize="12"/>
-                                    <TextBlock Text="Editar" Foreground="{DynamicResource BotonText}" FontSize="13" FontWeight="SemiBold"/>
-                                </StackPanel>
-                            </Button>
-
-                            <Button Grid.Column="1"
-                                    Background="{DynamicResource BotonDelete}"
-                                    Width="35" Height="32"
-                                    HorizontalContentAlignment="Center"
-                                    VerticalContentAlignment="Center"
-                                    CornerRadius="6">
-                                <i:Icon Value="fa-solid fa-trash" Foreground="#c91815" FontSize="12"/>
-                            </Button>
-                        </Grid>
-                </Grid>
-                </Border>
-            </Grid>
-        </Border>
-    </DataTemplate>
-  </UserControl.Resources>
-
   <Grid>
     <componentes:LoadingView
       HorizontalAlignment="Stretch"
@@ -104,8 +18,8 @@
       IsVisible="{Binding IsLoading}"
       />
 
-    <Grid RowDefinitions="Auto,Auto,*" IsVisible="{Binding IsLoading, Converter={StaticResource InvertBoolConverter}}" Margin="24">
-      <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,20">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" IsVisible="{Binding IsLoading, Converter={StaticResource InvertBoolConverter}}" Margin="24">
+      <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,20" IsVisible="{Binding IsLoading, Converter={StaticResource InvertBoolConverter}}">
         <TextBlock Grid.Column="0"
                    Text="Configurador de Menú"
                    Foreground="{DynamicResource TextoColor}"
@@ -113,15 +27,43 @@
                    FontWeight="SemiBold"
                    VerticalAlignment="Center"/>
 
-        <Button Grid.Column="1"
-                Padding="16,8"
-                CornerRadius="6"
-                Command="{Binding NuevoProductoCommand}">
-          <StackPanel Orientation="Horizontal" Spacing="8">
-            <i:Icon Value="fa-solid fa-plus" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
-            <TextBlock Text="Nuevo ítem" Foreground="White" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
-          </StackPanel>
-        </Button>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+          <Button Padding="16,8"
+                  CornerRadius="6"
+                  Command="{Binding NuevoProductoCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <i:Icon Value="fa-solid fa-plus" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
+              <TextBlock Text="Nuevo ítem" Foreground="White" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+            </StackPanel>
+          </Button>
+
+          <Button Padding="16,8"
+                  CornerRadius="6"
+                  Command="{Binding GestionarCatalogoTerminosCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <i:Icon Value="fa-solid fa-fire" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
+              <TextBlock Text="Términos" Foreground="White" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+            </StackPanel>
+          </Button>
+
+          <Button Padding="16,8"
+                  CornerRadius="6"
+                  Command="{Binding GestionarCatalogoAcompanamientosCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <i:Icon Value="fa-solid fa-utensils" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
+              <TextBlock Text="Acompañamientos" Foreground="White" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+            </StackPanel>
+          </Button>
+
+          <Button Padding="16,8"
+                  CornerRadius="6"
+                  Command="{Binding GestionarCatalogoAcompanamientosCommand}"> <!--falta agregar las observaciones-->
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <i:Icon Value="fa-solid fa-eye" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
+                    <TextBlock Text="Observaciones" Foreground="White" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                  </StackPanel>
+          </Button>
+        </StackPanel>
       </Grid>
 
       <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10" Margin="0,0,0,25">

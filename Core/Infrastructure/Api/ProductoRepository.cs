@@ -139,11 +139,11 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             return result ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
         }
 
-        public Task<bool> UpdateAsync(int id, ProductoRequest data)
+        public async Task<bool> UpdateAsync(int id, ProductoRequest data)
         {
             var payload = new
             {
-                id = int.TryParse(id, out var parsedId) ? parsedId : data.Id,
+                id = data.Id,
                 name = data.Name,
                 description = data.Description,
                 price = data.Price,
