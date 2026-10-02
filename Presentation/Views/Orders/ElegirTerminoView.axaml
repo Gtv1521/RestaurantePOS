@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:MiComanderaApp.ViewModels.Orders"
+             xmlns:models="using:MiComanderaApp.Core.Domain.Models"
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="450"
+             x:Class="MiComanderaApp.Views.Orders.ElegirTerminoView"
+             x:DataType="vm:ElegirTerminoViewModel">
+
+    <Border Background="{DynamicResource FondoPrincipal}"
+            CornerRadius="15"
+            Padding="20"
+            Width="500">
+        <Grid RowDefinitions="Auto, Auto, *, Auto" RowSpacing="10">
+
+            <TextBlock Grid.Row="0" Text="Elige el término" FontSize="20" FontWeight="Bold"
+                       HorizontalAlignment="Center" Foreground="{DynamicResource TextoBrush}"/>
+            <TextBlock Grid.Row="1" Text="{Binding NombreProducto}" FontSize="14"
+                       HorizontalAlignment="Center" Foreground="{DynamicResource TextoColor}" Opacity="0.7"/>
+
+            <ListBox Grid.Row="2" ItemsSource="{Binding Terminos}" SelectedItem="{Binding TerminoSeleccionado, Mode=TwoWay}"
+                     Background="Transparent" MaxHeight="300">
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type models:TerminoModel}">
+                        <Border Padding="12" Margin="0,0,0,6" Background="{DynamicResource FondoModal}" CornerRadius="8">
+                            <TextBlock Text="{Binding Termino}" Foreground="{DynamicResource TextoColor}"
+                                       FontSize="16" FontWeight="SemiBold"/>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" Margin="0,10,0,0">
+                <Button Content="Cancelar" Width="140" Height="40" Classes="btn-rojo" Command="{Binding CancelarCommand}"/>
+                <Button Content="Continuar" Width="140" Height="40" Classes="btn-verde" Command="{Binding ConfirmarCommand}"/>
+            </StackPanel>
+
+        </Grid>
+    </Border>
+</UserControl>

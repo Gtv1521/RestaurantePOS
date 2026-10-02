@@ -9,11 +9,18 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DynamicData;
+using MiComanderaApp.Core.Application.Request;
+using MiComanderaApp.Core.Application.UseCases.Acompanamiento;
 using MiComanderaApp.Core.Application.UseCases.Catalogo;
 using MiComanderaApp.Core.Application.UseCases.Observacion;
 using MiComanderaApp.Core.Application.UseCases.Session;
+using MiComanderaApp.Core.Application.UseCases.Termino;
+using MiComanderaApp.Core.Application.UseCases.Venta;
+using MiComanderaApp.Core.Domain.Interfaces;
+using MiComanderaApp.Core.Domain.Models;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
+using MiComanderaApp.ViewModels.Orders;
 
 namespace MiComanderaApp.ViewModels.Mesas;
 
@@ -23,6 +30,9 @@ public class ProductoItem
     public string Id { get; set; } = string.Empty;
     public string Nombre { get; set; } = string.Empty;
     public decimal Precio { get; set; }
+    public bool TieneTerminos { get; set; }
+    public bool TieneAcompanamientos { get; set; }
+    public int MaxAccompaniments { get; set; } = 2;
 }
 
 public class CategoriaItem
@@ -50,6 +60,11 @@ public partial class ProductoPedidoItem : ObservableObject
     public string Id { get; set; } = string.Empty;
     public string Nombre { get; set; } = string.Empty;
     public decimal PrecioUnitario { get; set; }
+    public int? TerminoId { get; set; }
+    public string? TerminoNombre { get; set; }
+    public List<int> AcompanamientoIds { get; set; } = new();
+    public List<string> AcompanamientoNombres { get; set; } = new();
+    public bool TieneDetalle => !string.IsNullOrEmpty(TerminoNombre) || AcompanamientoNombres.Count > 0;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TotalProducto))]
@@ -66,6 +81,11 @@ public partial class DataTableViewModel : ViewModelBase
     private readonly GetCatalogoXIdProdUseCase _getCatalogoXIdProdUseCase;
     private readonly INavigationService _navigate;
     private readonly GetAllObservacionUseCase _getAllObsUseCase;
+    private readonly IDialogService _dialogService;
+    private readonly IViewModelFactory _factory;
+    private readonly GetAllTerminosUseCase _getTerminos;
+    private readonly GetAllAcompanamientosUseCase _getAcompanamientos;
+    private readonly CrearComandaUseCase _crearComanda;
 
 
     // 2. Propiedades Reactivas del Lado Izquierdo (La Cuenta)
@@ -87,6 +107,11 @@ public partial class DataTableViewModel : ViewModelBase
     [ObservableProperty] private bool _mostrandoObservaciones;
     [ObservableProperty] private string? _namePanel;
     [ObservableProperty] private string? _instancia;
+    [ObservableProperty] private bool _enviandoOrden;
+    private int _ventaId;
+
+    private List<TerminoModel>? _cacheTerminos;
+    private List<AcompanamientoModel>? _cacheAcompanamientos;
 
     // Lista dinámica para los productos que el mesero va agregando a la comanda
     public ObservableCollection<ProductoPedidoItem> ProductosPedidos { get; } = new();
@@ -102,7 +127,12 @@ public partial class DataTableViewModel : ViewModelBase
         GetSessionSave getUserUseCase,
         INavigationService navigation,
         GetAllObservacionUseCase getAllObsUseCase,
-        GetCatalogoXIdProdUseCase getCatalogoXIdProdUseCase
+        GetCatalogoXIdProdUseCase getCatalogoXIdProdUseCase,
+        IDialogService dialogService,
+        IViewModelFactory factory,
+        GetAllTerminosUseCase getTerminos,
+        GetAllAcompanamientosUseCase getAcompanamientos,
+        CrearComandaUseCase crearComanda
         )
     {
         _getCatalogoUseCase = getCatalogoUseCase;
@@ -110,6 +140,11 @@ public partial class DataTableViewModel : ViewModelBase
         _getAllObsUseCase = getAllObsUseCase;
         _getCatalogoXIdProdUseCase = getCatalogoXIdProdUseCase;
         _navigate = navigation;
+        _dialogService = dialogService;
+        _factory = factory;
+        _getTerminos = getTerminos;
+        _getAcompanamientos = getAcompanamientos;
+        _crearComanda = crearComanda;
 
         // Inicializar datos básicos de la cuenta
         HoraApertura = DateTime.Now;
@@ -118,6 +153,7 @@ public partial class DataTableViewModel : ViewModelBase
 
     public void Initialize(VentaModel venta, int cantidad)
     {
+        _ventaId = venta.VentaId;
         NumeroMesa = venta.NumeroMesa.ToString();
         CantidadPax = cantidad;
         Instancia = venta.Instancia.ToString();
@@ -149,7 +185,15 @@ public partial class DataTableViewModel : ViewModelBase
         var ListProducts = await _getCatalogoXIdProdUseCase.Execute(id);
         foreach (var item in ListProducts)
         {
-            ProductosCatalogo.Add(new ProductoItem { Id = item.Id.ToString(), Nombre = item.Name, Precio = (decimal)item.Price });
+            ProductosCatalogo.Add(new ProductoItem
+            {
+                Id = item.Id.ToString(),
+                Nombre = item.Name,
+                Precio = (decimal)item.Price,
+                TieneTerminos = item.TieneTerminos,
+                TieneAcompanamientos = item.TieneAcompanamientos,
+                MaxAccompaniments = item.MaxAccompaniments
+            });
         }
     }
 
@@ -178,18 +222,48 @@ public partial class DataTableViewModel : ViewModelBase
 
 
     [RelayCommand]
-    private void AgregarProducto(ProductoItem productoSeleccionado)
+    private async Task AgregarProducto(ProductoItem productoSeleccionado)
     {
         if (productoSeleccionado == null) return;
 
         if (CantidadProd == null || CantidadProd <= 0) CantidadProd = 1;
+
+        // 1. Término (solo si el plato lo admite)
+        TerminoModel? termino = null;
+        if (productoSeleccionado.TieneTerminos)
+        {
+            _cacheTerminos ??= (await _getTerminos.Execute()).ToList();
+            var vmTermino = new ElegirTerminoViewModel(productoSeleccionado.Nombre, _cacheTerminos);
+            termino = await _dialogService.ShowDialogAsync<ElegirTerminoViewModel, TerminoModel?>(vmTermino);
+            if (termino == null) return; // cancelado: no se agrega
+        }
+
+        // 2. Acompañamientos (solo si el plato los admite)
+        List<AcompanamientoModel> lados = new();
+        if (productoSeleccionado.TieneAcompanamientos)
+        {
+            _cacheAcompanamientos ??= (await _getAcompanamientos.Execute()).Where(a => a.Active).ToList();
+            var vmLados = new ElegirAcompanamientosViewModel(
+                productoSeleccionado.Nombre,
+                _cacheAcompanamientos,
+                productoSeleccionado.MaxAccompaniments);
+            var elegidos = await _dialogService.ShowDialogAsync<ElegirAcompanamientosViewModel, List<AcompanamientoModel>?>(vmLados);
+            if (elegidos == null) return; // cancelado: no se agrega
+            lados = elegidos;
+        }
+
+        // 3. Al carrito (lado izquierdo)
         var producto = new ProductoPedidoItem
         {
             Indice = ProductosPedidos.Count + 1,
             Id = productoSeleccionado.Id,
             Nombre = productoSeleccionado.Nombre,
             PrecioUnitario = productoSeleccionado.Precio,
-            Cantidad = CantidadProd ?? 1
+            Cantidad = CantidadProd ?? 1,
+            TerminoId = termino?.Id,
+            TerminoNombre = termino?.Termino,
+            AcompanamientoIds = lados.Select(l => l.Id).ToList(),
+            AcompanamientoNombres = lados.Select(l => l.Name).ToList()
         };
 
         ProductosPedidos.Add(producto);
@@ -318,9 +392,33 @@ public partial class DataTableViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void EnviarOrden()
+    private async Task EnviarOrden()
     {
-        System.Console.WriteLine("Orden enviada");
+        if (EnviandoOrden || ProductosPedidos.Count == 0 || _ventaId == 0) return;
+
+        try
+        {
+            EnviandoOrden = true;
+            var meseroId = _getUserUseCase.Execute().UserId;
+
+            var items = ProductosPedidos.Select(p => new ComandaItemRequest
+            {
+                ProductoId = int.Parse(p.Id),
+                Cantidad = p.Cantidad,
+                TerminoId = p.TerminoId,
+                AcompanamientoIds = p.AcompanamientoIds.ToList()
+            }).ToList();
+
+            await _crearComanda.Execute(_ventaId, meseroId, items);
+
+            ProductosPedidos.Clear();
+            _historialAgregados.Clear();
+            ActualizarTotalCuenta();
+        }
+        finally
+        {
+            EnviandoOrden = false;
+        }
     }
 
     [RelayCommand]

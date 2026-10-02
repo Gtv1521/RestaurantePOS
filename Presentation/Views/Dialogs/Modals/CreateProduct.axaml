@@ -20,10 +20,7 @@
 
 
         <Grid RowDefinitions="*, *">
-                <Border Grid.Row="0" Padding="25"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        >
+                <Border Grid.Row="0" Padding="25" HorizontalAlignment="Center" VerticalAlignment="Center">
 
                         <StackPanel Spacing="15"
                                     HorizontalAlignment="Center"
@@ -35,12 +32,12 @@
                                         Background="{DynamicResource FondoPrincipal}"
                                         >
                                         <Grid ColumnDefinitions="*, *"
-                                              RowDefinitions="*,*,*"
+                                              RowDefinitions="*,*,*,*"
                                               RowSpacing="10"
                                               ColumnSpacing="10"
                                               >
 
-                                                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Crear Producto"
+                                                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding Titulo}"
                                                            FontSize="24"
                                                            FontWeight="Bold"
                                                            HorizontalAlignment="Center"
@@ -129,9 +126,37 @@
                                                         <CheckBox Content="Producto activo"
                                                                   IsChecked="{Binding Activo}"/>
 
+                                                        <CheckBox Content="Lleva término (carnes)"
+                                                                  IsChecked="{Binding ConTermino}"/>
+
+                                                        <CheckBox Content="Lleva acompañamientos"
+                                                                  IsChecked="{Binding LlevaAcompanamientos}"/>
+
+                                                        <TextBlock Text="Máx. acompañamientos"
+                                                                   Foreground="{DynamicResource TextoColor}"
+                                                                   IsVisible="{Binding LlevaAcompanamientos}"/>
+
+                                                        <TextBox Text="{Binding MaxAcompanamientos, Mode=TwoWay}"
+                                                                 x:Name="TxtMaxAcomp"
+                                                                 Foreground="{DynamicResource TextoColor}"
+                                                                 BorderBrush="{DynamicResource Border}"
+                                                                 Watermark="2"
+                                                                 IsVisible="{Binding LlevaAcompanamientos}">
+                                                                        <in:Interaction.Behaviors>
+                                                                                <b:KeyboardFocusBehavior />
+                                                                        </in:Interaction.Behaviors>
+                                                        </TextBox>
+
                                                 </StackPanel>
 
-                                                <StackPanel Grid.Row="2" Grid.ColumnSpan="2"
+                                                <TextBlock Grid.Row="2" Grid.ColumnSpan="2"
+                                                           Text="{Binding MensajeExito}"
+                                                           Foreground="Red"
+                                                           FontWeight="Bold"
+                                                           HorizontalAlignment="Center"
+                                                           />
+
+                                                <StackPanel Grid.Row="3" Grid.ColumnSpan="2"
                                                             Orientation="Horizontal"
                                                             HorizontalAlignment="Right"
                                                             Spacing="10"

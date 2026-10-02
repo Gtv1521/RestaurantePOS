@@ -46,6 +46,8 @@ using MiComanderaApp.ViewModels.Dialogs.Modals;
 using MiComanderaApp.Views.Dialogs.Modals;
 using MiComanderaApp.Presentation.Services;
 using MiComanderaApp.Core.Application.UseCases.Venta;
+using MiComanderaApp.Core.Application.UseCases.Termino;
+using MiComanderaApp.Core.Application.UseCases.Acompanamiento;
 using RestaurantePOS.Core.Application.UseCases.Receta;
 using RestaurantePOS.Core.Domain.Models;
 using RestaurantePOS.Core.Application.UseCases.Ingrediente;
@@ -143,8 +145,9 @@ sealed class Program
                 services.AddScoped<ISession<SessionModel>, SessionService>();
                 services.AddScoped<IMultipleCrud<CatalogoModel, CatalogoRequest>, CatalogoRepository>();
                 services.AddScoped<IMultipleCrud<ProductoModel, ProductoRequest>, ProductoRepository>();
-                services.AddScoped<IMultipleCrud<IngredienteModel, IngredienteRequest>, IngredienteRepository>();
-                services.AddScoped<IGetList<ProductoModel>, ProductoRepository>();
+                services.AddScoped<TerminoRepository>();
+                services.AddScoped<AcompanamientoRepository>();
+                services.AddScoped<IMultipleCrud<IngredienteModel, IngredienteRequest>, IngredienteRepository>();                services.AddScoped<IGetList<ProductoModel>, ProductoRepository>();
                 services.AddScoped<IMultipleCrud<TableModel, TableRequest>, TablesRepository>();
                 services.AddScoped<IOptionsMesas<VentaModel>, TablesRepository>();
                 services.AddScoped<IGetOpens<VentaModel>, TablesRepository>();
@@ -160,14 +163,26 @@ sealed class Program
                 services.AddScoped<GetSessionSave>();
                 services.AddScoped<GetAllCatalogoUseCase>();
                 services.AddScoped<GetCatalogoXIdProdUseCase>();
-                services.AddScoped<GetAllProductUseCase>();
                 services.AddScoped<GetAllTablesUseCase>();
+
+                services.AddScoped<GetAllProductUseCase>();
+                services.AddScoped<UpdateProductUseCase>();
+                services.AddScoped<GetAllAcompanamientosUseCase>();
+                services.AddScoped<CreateAcompanamientoUseCase>();
+                services.AddScoped<DeleteAcompanamientoUseCase>();
+                services.AddScoped<GetAllTerminosUseCase>();
+                services.AddScoped<CreateTerminoUseCase>();
+                services.AddScoped<DeleteTerminoUseCase>();
                 services.AddScoped<InsertProductUseCase>();
+                services.AddScoped<DeleteProductUseCase>();
+
                 services.AddScoped<OcuparTableUseCase>();
                 services.AddScoped<GetTablesOpenUseCase>();
                 services.AddScoped<GetAllIngredientesUseCase>();
                 services.AddScoped<GetAllObservacionUseCase>();
                 services.AddScoped<UpdatePaxUseCase>();
+                services.AddScoped<CrearComandaUseCase>();
+                services.AddScoped<ComandaRepository>();
                 services.AddScoped<GetAllRecetasUseCase>();
                 services.AddScoped<CreateIngredienteUseCase>();
                 services.AddScoped<EditIngredienteUseCase>();
@@ -177,14 +192,17 @@ sealed class Program
                 services.AddScoped<DeleteRecetaUseCase>();
                 services.AddScoped<AllUserUseCase>();
 
-
-
-
                 // signalR
                 services.AddSingleton<SignalRService>();
                 services.AddSingleton<SignalREventRegistry>();
-                services.AddScoped<ISignalREventHandler, OrderEvents>();
-                services.AddScoped<ISignalREventHandler, TablesEvents>();
+                services.AddSingleton<ProductEvents>();
+                services.AddSingleton<OrderEvents>();
+                services.AddSingleton<TablesEvents>();
+
+                // Mapeo de interfaz → concreto (misma instancia)
+                services.AddSingleton<ISignalREventHandler>(sp => sp.GetRequiredService<ProductEvents>());
+                services.AddSingleton<ISignalREventHandler>(sp => sp.GetRequiredService<OrderEvents>());
+                services.AddSingleton<ISignalREventHandler>(sp => sp.GetRequiredService<TablesEvents>());
 
 
                 services.AddSingleton<MainWindow>();
@@ -192,6 +210,11 @@ sealed class Program
                 services.AddTransient<CreateProduct>();
                 services.AddTransient<CreateIngredienteDialogViewModel>();
                 services.AddTransient<CreateIngrediente>();
+                services.AddTransient<EditIngrediente>();
+                services.AddTransient<RecipeEditorView>();
+                services.AddTransient<SelectProductForRecipeView>();
+                services.AddTransient<TerminosCatalogoView>();
+                services.AddTransient<AcompanamientosCatalogoView>();
                 services.AddSingleton<IDialogService, DialogService>();
 
 

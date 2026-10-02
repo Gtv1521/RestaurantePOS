@@ -11,6 +11,7 @@ using System.Linq;
 using System;
 using MiComanderaApp.ViewModels.Dialogs.Modals;
 using MiComanderaApp.Core.Domain.Interfaces;
+using MiComanderaApp.Interfaces;
 using MiComanderaApp.Views.Dialogs.Modals;
 using Avalonia;
 using RestaurantePOS.Core.Application.UseCases.Ingrediente;
@@ -54,6 +55,7 @@ namespace MiComanderaApp.ViewModels.Components.Admin
         private readonly CreateRecetaUseCase _createRecetaUseCase;
         private readonly UpdateRecetaUseCase _updateRecetaUseCase;
         private readonly DeleteRecetaUseCase _deleteRecetaUseCase;
+        private readonly IViewModelFactory _factory;
 
         public InventarioComponentViewModel(
             GetAllIngredientesUseCase getAllIngredientesUseCase,
@@ -64,7 +66,8 @@ namespace MiComanderaApp.ViewModels.Components.Admin
             GetAllProductUseCase getAllProductUseCase,
             CreateRecetaUseCase createRecetaUseCase,
             UpdateRecetaUseCase updateRecetaUseCase,
-            DeleteRecetaUseCase deleteRecetaUseCase
+            DeleteRecetaUseCase deleteRecetaUseCase,
+            IViewModelFactory factory
         )
         {
             _getAllIngredientesUseCase = getAllIngredientesUseCase;
@@ -76,6 +79,7 @@ namespace MiComanderaApp.ViewModels.Components.Admin
             _createRecetaUseCase = createRecetaUseCase;
             _updateRecetaUseCase = updateRecetaUseCase;
             _deleteRecetaUseCase = deleteRecetaUseCase;
+            _factory = factory;
             LoadIngredientesCommand.Execute(null);
         }
 
@@ -201,9 +205,9 @@ namespace MiComanderaApp.ViewModels.Components.Admin
             var productsWithoutRecipe = allProducts.Where(p => !allRecipes.Any(r => r.ProductId == p.Id)).ToList();
             var selectList = allProducts.ToList();
 
-            var selectProductViewModel = new SelectProductForRecipeViewModel(selectList);
+            var selectProductViewModel = new SelectProductForRecipeViewModel(selectList, _factory);
             Debug.WriteLine($"Opening SelectProduct dialog with {productsWithoutRecipe.Count} candidates");
-            var selectedProduct = await _dialogService.ShowDialogAsync<SelectProductForRecipeViewModel, ProductoModel?>(selectProductViewModel);
+            var selectedProduct = await _dialogService.ShowDialogAsync<SelectProductForRecipeView, SelectProductForRecipeViewModel, ProductoModel?>(selectProductViewModel);
             Debug.WriteLine($"SelectProduct dialog closed. Selected: {selectedProduct?.Name ?? "<null>"}");
 
             if (selectedProduct != null)
@@ -215,8 +219,8 @@ namespace MiComanderaApp.ViewModels.Components.Admin
                     Items = new List<RestaurantePOS.Core.Domain.Models.IngredientModel>()
                 };
 
-                var recipeEditorViewModel = new RecipeEditorViewModel(newReceta, _getAllIngredientesUseCase);
-                var recipeResult = await _dialogService.ShowDialogAsync<RecipeEditorViewModel, RecetaModel?>(recipeEditorViewModel);
+                var recipeEditorViewModel = new RecipeEditorViewModel(newReceta, _getAllIngredientesUseCase, _factory);
+                var recipeResult = await _dialogService.ShowDialogAsync<RecipeEditorView, RecipeEditorViewModel, RecetaModel?>(recipeEditorViewModel);
 
                 if (recipeResult != null)
                 {
@@ -249,8 +253,8 @@ namespace MiComanderaApp.ViewModels.Components.Admin
                     Items = new List<RestaurantePOS.Core.Domain.Models.IngredientModel>()
                 };
 
-                var recipeEditorViewModel = new RecipeEditorViewModel(newReceta, _getAllIngredientesUseCase);
-                var recipeResult = await _dialogService.ShowDialogAsync<RecipeEditorViewModel, RecetaModel?>(recipeEditorViewModel);
+                var recipeEditorViewModel = new RecipeEditorViewModel(newReceta, _getAllIngredientesUseCase, _factory);
+                var recipeResult = await _dialogService.ShowDialogAsync<RecipeEditorView, RecipeEditorViewModel, RecetaModel?>(recipeEditorViewModel);
 
                 if (recipeResult != null)
                 {
@@ -276,7 +280,7 @@ namespace MiComanderaApp.ViewModels.Components.Admin
             if (ingrediente == null) return;
 
             // 1. Creamos el ViewModel para el diálogo, pasándole el ingrediente a editar.
-            var viewModel = new EditIngredienteDialogViewModel(ingrediente);
+            var viewModel = new EditIngredienteDialogViewModel(ingrediente, _factory);
 
             // 2. Mostramos el diálogo y le pasamos el ViewModel ya inicializado.
             var result = await _dialogService.ShowDialogAsync<EditIngrediente, EditIngredienteDialogViewModel, IngredienteRequest?>(viewModel, new PixelPoint(250, 30));
@@ -303,8 +307,8 @@ namespace MiComanderaApp.ViewModels.Components.Admin
         {
             if (receta == null) return;
 
-            var viewModel = new RecipeEditorViewModel(receta, _getAllIngredientesUseCase);
-            var result = await _dialogService.ShowDialogAsync<RecipeEditorViewModel, RecetaModel?>(viewModel, new PixelPoint(250, 30));
+            var viewModel = new RecipeEditorViewModel(receta, _getAllIngredientesUseCase, _factory);
+            var result = await _dialogService.ShowDialogAsync<RecipeEditorView, RecipeEditorViewModel, RecetaModel?>(viewModel, new PixelPoint(250, 30));
 
             if (result is RecetaModel updatedReceta)
             {
@@ -354,7 +358,7 @@ namespace MiComanderaApp.ViewModels.Components.Admin
                     }
                 }
 
-                await _updateRecetaUseCase.Execute(request.ProductId.ToString(), request);
+                await _updateRecetaUseCase.Execute(request.ProductId, request);
                 await LoadRecetasAsync();
             }
         }
@@ -364,7 +368,7 @@ namespace MiComanderaApp.ViewModels.Components.Admin
         {
             if (receta == null) return;
             // TODO: Add confirmation dialog
-            await _deleteRecetaUseCase.Execute(receta.ProductId.ToString());
+            await _deleteRecetaUseCase.Execute(receta.ProductId);
             await LoadRecetasAsync();
         }
     }

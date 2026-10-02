@@ -10,24 +10,39 @@ using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MiComanderaApp.Core.Application.Request;
+using MiComanderaApp.Core.Application.UseCases.Acompanamiento;
 using MiComanderaApp.Core.Application.UseCases.Catalogo;
 using MiComanderaApp.Core.Application.UseCases.Product;
+using MiComanderaApp.Core.Application.UseCases.Termino;
 using MiComanderaApp.Core.Domain.Interfaces;
 using MiComanderaApp.Core.Domain.Models;
+using MiComanderaApp.Core.Infrastructure.SignalR.Events;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
 using MiComanderaApp.Presentation.Views.Dialogs.Modals;
 using MiComanderaApp.ViewModels.Components.Products;
+using MiComanderaApp.ViewModels.Dialogs.Modals;
+using MiComanderaApp.Views.Dialogs.Modals;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MiComanderaApp.ViewModels.Components.Admin;
 
 public partial class MenuComponentViewModel : ViewModelBase
 {
-    private readonly IViewModelFactory _factory;
+    private readonly IServiceProvider _serviceProvider;
     private readonly IDialogService _dialogService;
     private readonly GetAllProductUseCase _repo;
     private readonly GetAllCatalogoUseCase _categorias;
     private readonly GetCatalogoXIdProdUseCase _prodXIdCat;
+    private readonly ProductEvents _productEvents;
+    private readonly DeleteProductUseCase _deleteProductUseCase;
+    private readonly GetAllTerminosUseCase _todosTerminos;
+    private readonly CreateTerminoUseCase _createTermino;
+    private readonly DeleteTerminoUseCase _deleteTermino;
+    private readonly GetAllAcompanamientosUseCase _todosAcomp;
+    private readonly CreateAcompanamientoUseCase _createAcomp;
+    private readonly DeleteAcompanamientoUseCase _deleteAcomp;
+    private readonly IViewModelFactory _factory;
 
 
     public ObservableCollection<ProductoModel> Products { get; } = new();
@@ -35,20 +50,44 @@ public partial class MenuComponentViewModel : ViewModelBase
 
     [ObservableProperty] private bool _isLoading = false;
     public MenuComponentViewModel(
-        IViewModelFactory factory,
+        IServiceProvider serviceProvider,
         IDialogService dialogService,
         GetAllCatalogoUseCase categorias,
+        DeleteProductUseCase deleteProductUseCase,
         GetCatalogoXIdProdUseCase oneCategoria,
-        GetAllProductUseCase repo
+        ProductEvents productEvents,
+        GetAllProductUseCase repo,
+        GetAllTerminosUseCase todosTerminos,
+        CreateTerminoUseCase createTermino,
+        DeleteTerminoUseCase deleteTermino,
+        GetAllAcompanamientosUseCase todosAcomp,
+        CreateAcompanamientoUseCase createAcomp,
+        DeleteAcompanamientoUseCase deleteAcomp,
+        IViewModelFactory factory
         )
     {
-        _factory = factory;
+        _serviceProvider = serviceProvider;
         _repo = repo;
         _prodXIdCat = oneCategoria;
         _dialogService = dialogService;
         _categorias = categorias;
+        _todosTerminos = todosTerminos;
+        _createTermino = createTermino;
+        _deleteTermino = deleteTermino;
+        _todosAcomp = todosAcomp;
+        _createAcomp = createAcomp;
+        _deleteAcomp = deleteAcomp;
+        _deleteProductUseCase = deleteProductUseCase;
+        _productEvents = productEvents;
         _ = LoadProducts();
         _ = CargeCategorias();
+        _productEvents.ProductCreated += OnProductCreated;
+        _factory = factory;
+    }
+
+    private void OnProductCreated(ProductoModel producto)
+    {
+        Products.Add(producto);
     }
 
     [RelayCommand]
@@ -121,6 +160,71 @@ public partial class MenuComponentViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private async Task EditProduct(ProductoModel? producto)
+    {
+        if (producto == null) return;
+
+        var viewModel = _serviceProvider.GetRequiredService<CreateProductViewModel>();
+        viewModel.Initialize(producto);
+
+        var result = await _dialogService
+            .ShowDialogAsync<CreateProduct, CreateProductViewModel, ProductoRequest>(
+                viewModel,
+                new PixelPoint(250, 30));
+
+        if (result != null)
+        {
+            await LoadProducts();
+        }
+    }
+
+    [RelayCommand]
+    private async Task GestionarCatalogoTerminos()
+    {
+        var viewModel = new TerminosCatalogoViewModel(
+            _todosTerminos,
+            _createTermino,
+            _deleteTermino,
+            _factory);
+
+        await _dialogService
+            .ShowDialogAsync<TerminosCatalogoView, TerminosCatalogoViewModel, bool?>(
+                viewModel,
+                new PixelPoint(250, 30));
+    }
+
+    [RelayCommand]
+    private async Task GestionarCatalogoAcompanamientos()
+    {
+        var viewModel = new AcompanamientosCatalogoViewModel(
+            _todosAcomp,
+            _createAcomp,
+            _deleteAcomp,
+            _factory);
+
+        await _dialogService
+            .ShowDialogAsync<AcompanamientosCatalogoView, AcompanamientosCatalogoViewModel, bool?>(
+                viewModel,
+                new PixelPoint(250, 30));
+    }
+
+    [RelayCommand]
+    private async Task DeleteProduct(ProductoModel producto)
+    {
+        try
+        {
+            System.Console.WriteLine($"Eliminando producto con ID: {producto.Id}");
+            var result = await _deleteProductUseCase.ExecuteAsync(producto.Id);
+            Products.Remove(producto);
+        }
+        catch (System.Exception e)
+        {
+            System.Console.WriteLine(e.Message);
+            throw;
+        }
+    }
+
+    [RelayCommand]
     private async Task NuevoProducto()
     {
         var producto =
@@ -131,7 +235,6 @@ public partial class MenuComponentViewModel : ViewModelBase
 
         if (producto != null)
         {
-
             System.Console.WriteLine(producto);
         }
     }

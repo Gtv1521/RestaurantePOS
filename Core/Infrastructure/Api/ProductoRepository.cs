@@ -23,28 +23,33 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             _url = $"{apiSettings.Value.BaseUrl}/api/Product";
         }
 
-        public async Task<string?> CreateAsync(ProductoRequest data)
+        public async Task<int?> CreateAsync(ProductoRequest data)
         {
             var response = await _httpClient.PostAsJsonAsync($"{_url}", data);
+
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();
-
-                System.Console.WriteLine(error);
                 throw response.StatusCode switch
                 {
                     HttpStatusCode.BadRequest => new BadRequestException(error),
                     HttpStatusCode.NotFound => new NotFoundException(error),
                     HttpStatusCode.Unauthorized => new UnauthorizedAccessException(error),
-                    _ => new HttpRequestException(
-                        $"Error {(int)response.StatusCode}: {error}")
+                    _ => new HttpRequestException($"Error {(int)response.StatusCode}: {error}")
                 };
             }
-            var result = await response.Content.ReadFromJsonAsync<string>();
-            return result ?? throw new InvalidOperationException("No se pudo crear el producto.");
+
+            if (response.StatusCode == HttpStatusCode.NoContent ||
+                response.Content.Headers.ContentLength is null or 0)
+            {
+                return null; // o "" si prefieres
+            }
+
+            var result = await response.Content.ReadFromJsonAsync<ProductoModel?>();
+            return result?.Id ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
         }
 
-        public async Task<bool> DeleteAsync(string id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var response = await _httpClient.DeleteAsync($"{_url}/{id}");
             if (!response.IsSuccessStatusCode)
@@ -55,9 +60,16 @@ namespace MiComanderaApp.Core.Infrastructure.Api
                 {
                     HttpStatusCode.BadRequest => new BadRequestException(error),
                     HttpStatusCode.NotFound => new NotFoundException(error),
+                    HttpStatusCode.Unauthorized => new UnauthorizedAccessException(error),
                     _ => new HttpRequestException(
                         $"Error {(int)response.StatusCode}: {error}")
                 };
+            }
+
+            if (response.StatusCode == HttpStatusCode.NoContent ||
+                response.Content.Headers.ContentLength is null or 0)
+            {
+                return true; // o "" si prefieres
             }
 
             var result = await response.Content.ReadFromJsonAsync<bool?>();
@@ -105,7 +117,7 @@ namespace MiComanderaApp.Core.Infrastructure.Api
                    ?? Enumerable.Empty<ProductoModel>();
         }
 
-        public async Task<ProductoModel> GetAsync(string id)
+        public async Task<ProductoModel> GetAsync(int id)
         {
             var response = await _httpClient.GetAsync($"{_url}/category/{id}");
 
@@ -127,9 +139,36 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             return result ?? throw new InvalidOperationException("La respuesta del servidor fue nula.");
         }
 
-        public Task<bool> UpdateAsync(string id, ProductoRequest data)
+        public async Task<bool> UpdateAsync(int id, ProductoRequest data)
         {
-            throw new NotImplementedException();
+            var payload = new
+            {
+                id = data.Id,
+                name = data.Name,
+                description = data.Description,
+                price = data.Price,
+                categoryId = data.CategoryId,
+                isAvailable = data.IsAvailable,
+                imageUrl = data.ImageUrl,
+                conTermino = data.ConTermino,
+                hasAccompaniments = data.HasAccompaniments,
+                maxAccompaniments = data.MaxAccompaniments
+            };
+            var response = await _httpClient.PutAsJsonAsync(_url, payload);
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+
+                throw response.StatusCode switch
+                {
+                    HttpStatusCode.BadRequest => new BadRequestException(error),
+                    HttpStatusCode.NotFound => new NotFoundException(error),
+                    _ => new HttpRequestException(
+                        $"Error {(int)response.StatusCode}: {error}")
+                };
+            }
+
+            return true;
         }
     }
 }

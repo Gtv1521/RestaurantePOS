@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:MiComanderaApp.ViewModels.Components.Admin"
              xmlns:i="using:Projektanker.Icons.Avalonia"
+             xmlns:models="using:MiComanderaApp.Models"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MiComanderaApp.Views.Components.Admin.MenuComponentView"
              x:DataType="vm:MenuComponentViewModel"
@@ -17,8 +18,8 @@
       IsVisible="{Binding IsLoading}"
       />
 
-    <Grid RowDefinitions="Auto,Auto,*" IsVisible="{Binding IsLoading, Converter={StaticResource InvertBoolConverter}}" Margin="24">
-      <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,20">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" IsVisible="{Binding IsLoading, Converter={StaticResource InvertBoolConverter}}" Margin="24">
+      <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,20" IsVisible="{Binding IsLoading, Converter={StaticResource InvertBoolConverter}}">
         <TextBlock Grid.Column="0"
                    Text="Configurador de Menú"
                    Foreground="{DynamicResource TextoColor}"
@@ -26,19 +27,46 @@
                    FontWeight="SemiBold"
                    VerticalAlignment="Center"/>
 
-        <Button Grid.Column="1"
-                Background="#E06A28"
-                Padding="16,8"
-                CornerRadius="6"
-                Command="{Binding NuevoProductoCommand}">
-          <StackPanel Orientation="Horizontal" Spacing="8">
-            <i:Icon Value="fa-solid fa-plus" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
-            <TextBlock Text="Nuevo ítem" Foreground="White" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
-          </StackPanel>
-        </Button>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+          <Button Padding="16,8"
+                  CornerRadius="6"
+                  Command="{Binding NuevoProductoCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <i:Icon Value="fa-solid fa-plus" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
+              <TextBlock Text="Nuevo ítem" Foreground="White" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+            </StackPanel>
+          </Button>
+
+          <Button Padding="16,8"
+                  CornerRadius="6"
+                  Command="{Binding GestionarCatalogoTerminosCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <i:Icon Value="fa-solid fa-fire" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
+              <TextBlock Text="Términos" Foreground="White" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+            </StackPanel>
+          </Button>
+
+          <Button Padding="16,8"
+                  CornerRadius="6"
+                  Command="{Binding GestionarCatalogoAcompanamientosCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <i:Icon Value="fa-solid fa-utensils" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
+              <TextBlock Text="Acompañamientos" Foreground="White" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+            </StackPanel>
+          </Button>
+
+          <Button Padding="16,8"
+                  CornerRadius="6"
+                  Command="{Binding GestionarCatalogoAcompanamientosCommand}"> <!--falta agregar las observaciones-->
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <i:Icon Value="fa-solid fa-eye" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
+                    <TextBlock Text="Observaciones" Foreground="White" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                  </StackPanel>
+          </Button>
+        </StackPanel>
       </Grid>
 
-      <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10" Margin="0,0,0,25" Background="red">
+      <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10" Margin="0,0,0,25">
         <StackPanel.Styles>
           <Style Selector="Button">
             <Setter Property="Background" Value="#1A202C"/>

@@ -25,8 +25,8 @@ public partial class MainWindowViewModel : ViewModelBase
     private async void Initialize()
     {
 
+        await _signalR.ConnectAsync();
         _registrar.RegisterAll(_signalR);
 
-        await _signalR.ConnectAsync();
     }
 }
