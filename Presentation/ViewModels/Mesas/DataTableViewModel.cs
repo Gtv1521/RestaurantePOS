@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Threading;
@@ -10,9 +12,11 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DynamicData;
 using MiComanderaApp.Core.Application.Request;
+using MiComanderaApp.Core.Application.Services;
 using MiComanderaApp.Core.Application.UseCases.Acompanamiento;
 using MiComanderaApp.Core.Application.UseCases.Catalogo;
 using MiComanderaApp.Core.Application.UseCases.Observacion;
+using MiComanderaApp.Core.Application.UseCases.Print;
 using MiComanderaApp.Core.Application.UseCases.Session;
 using MiComanderaApp.Core.Application.UseCases.Termino;
 using MiComanderaApp.Core.Application.UseCases.Venta;
@@ -20,7 +24,9 @@ using MiComanderaApp.Core.Domain.Interfaces;
 using MiComanderaApp.Core.Domain.Models;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
+using MiComanderaApp.ViewModels.Dialogs.Modals;
 using MiComanderaApp.ViewModels.Orders;
+using MiComanderaApp.Views.Dialogs.Modals;
 
 namespace MiComanderaApp.ViewModels.Mesas;
 
@@ -86,6 +92,11 @@ public partial class DataTableViewModel : ViewModelBase
     private readonly GetAllTerminosUseCase _getTerminos;
     private readonly GetAllAcompanamientosUseCase _getAcompanamientos;
     private readonly CrearComandaUseCase _crearComanda;
+    private readonly GetVentaDetalleUseCase _getVentaDetalle;
+    private readonly ActualizarClienteUseCase _actualizarCliente;
+    private readonly CerrarVentaUseCase _cerrarVenta;
+    private readonly GetImpresorasUseCase _getImpresoras;
+    private readonly ImprimirDocumentoUseCase _imprimirDocumento;
 
 
     // 2. Propiedades Reactivas del Lado Izquierdo (La Cuenta)
@@ -108,7 +119,47 @@ public partial class DataTableViewModel : ViewModelBase
     [ObservableProperty] private string? _namePanel;
     [ObservableProperty] private string? _instancia;
     [ObservableProperty] private bool _enviandoOrden;
+    [ObservableProperty] private bool _esCaja;
+    [ObservableProperty] private bool _ventaCerrada;
     private int _ventaId;
+    private decimal _totalServidor;
+
+    // ============================================================
+    // ESTADO DE COBRO EN LÍNEA (sin ventana modal)
+    // ============================================================
+    [ObservableProperty] private bool _modoPago;
+    [ObservableProperty] private decimal _pagoTotal;
+    [ObservableProperty] private string _propinaTexto = "0";
+    [ObservableProperty] private bool _editandoPropina;
+    [ObservableProperty] private string _pagoMontoTexto = "0";
+    [ObservableProperty] private string _pagoClienteNombre = string.Empty;
+    [ObservableProperty] private string _pagoClienteDocumento = string.Empty;
+    [ObservableProperty] private string _pagoClienteDireccion = string.Empty;
+    [ObservableProperty] private string _pagoClienteTelefono = string.Empty;
+    [ObservableProperty] private MetodoPagoOption? _pagoMetodoSeleccionado;
+    [ObservableProperty] private string? _pagoError;
+    [ObservableProperty] private bool _pagoProcesando;
+
+    // ============================================================
+    // BÚSQUEDA / CARGA DE CLIENTE (MAQUETA - sin backend todavía)
+    // ============================================================
+    [ObservableProperty] private string _clienteBusqueda = string.Empty;
+    [ObservableProperty] private string? _clienteMensaje;
+    [ObservableProperty] private bool _clienteNoEncontrado;
+    [ObservableProperty] private bool _agregandoCliente;
+
+    public bool ClienteMensajeVisible => !string.IsNullOrWhiteSpace(ClienteMensaje);
+    partial void OnClienteMensajeChanged(string? value) => OnPropertyChanged(nameof(ClienteMensajeVisible));
+
+    // MOCK temporal para la maqueta: clientes de ejemplo.
+    // TODO: reemplazar por la búsqueda real cuando exista el endpoint de clientes.
+    private static readonly Dictionary<string, (string Nombre, string Documento, string Direccion, string Telefono)> ClientesMock =
+        new(StringComparer.OrdinalIgnoreCase)
+        {
+            ["12345678"] = ("Juan Pérez", "12345678", "Av. Los Álamos 123", "999111222"),
+            ["87654321"] = ("María Gómez", "87654321", "Calle Las Flores 456", "988333444"),
+            ["20123456789"] = ("Restaurante Demo S.A.C.", "20123456789", "Av. Industrial 500", "014567890"),
+        };
 
     private List<TerminoModel>? _cacheTerminos;
     private List<AcompanamientoModel>? _cacheAcompanamientos;
@@ -121,6 +172,88 @@ public partial class DataTableViewModel : ViewModelBase
     public ObservableCollection<ObservacionItem> Observations { get; } = new();
     private readonly Stack<object> _historialAgregados = new();
 
+    // Métodos de pago y pagos agregados para el cobro en línea
+    public ObservableCollection<MetodoPagoOption> MetodosPago { get; } = new()
+    {
+        new() { Nombre = "Efectivo", Etiqueta = "Efectivo", Codigo = 0, MarcaTarjeta = null, Letra = "💵" },
+        new() { Nombre = "Visa", Etiqueta = "Visa", Codigo = 1, MarcaTarjeta = "Visa", Letra = "V" },
+        new() { Nombre = "Mastercard", Etiqueta = "Mastercard", Codigo = 1, MarcaTarjeta = "Mastercard", Letra = "M" },
+        new() { Nombre = "American Express", Etiqueta = "Amex", Codigo = 1, MarcaTarjeta = "American Express", Letra = "AM" },
+        new() { Nombre = "Diners Club", Etiqueta = "Diners", Codigo = 1, MarcaTarjeta = "Diners Club", Letra = "D" },
+        new() { Nombre = "Otra tarjeta", Etiqueta = "Otra", Codigo = 2, MarcaTarjeta = "Otra tarjeta", Letra = "T" },
+        new() { Nombre = "Transferencia", Etiqueta = "Transf.", Codigo = 3, MarcaTarjeta = null, Letra = "↗" },
+        new() { Nombre = "Yape", Etiqueta = "Yape", Codigo = 3, MarcaTarjeta = null, Letra = "Y" },
+        new() { Nombre = "Plin", Etiqueta = "Plin", Codigo = 3, MarcaTarjeta = null, Letra = "P" },
+    };
+
+    public ObservableCollection<PagoItemModel> PagosAgregados { get; } = new();
+
+    // Propiedades calculadas del cobro
+    public decimal PagoMonto => decimal.TryParse((PagoMontoTexto ?? "0").Replace(',', '.'),
+        NumberStyles.Any, CultureInfo.InvariantCulture, out var valor) ? valor : 0;
+
+    // La propina se precarga con el 10% de servicio y queda editable en el panel de pagos
+    public decimal PagoPropina => decimal.TryParse((PropinaTexto ?? "0").Replace(',', '.'),
+        NumberStyles.Any, CultureInfo.InvariantCulture, out var propina) ? propina : 0;
+    public decimal PagoValorTeclado => EditandoPropina ? PagoPropina : PagoMonto;
+    public string PagoTecladoTitulo => EditandoPropina ? "PROPINA" : "VALOR A PAGAR";
+    public string PagoTecladoAyuda => EditandoPropina
+        ? "Digitando PROPINA · usa el teclado"
+        : "Digita el valor y elige el método de pago";
+
+    public decimal PagoTotalPagado => PagosAgregados.Sum(p => p.Monto);
+    public bool PagoPuedeConfirmar => PagosAgregados.Count > 0 && PagoTotalPagado >= PagoTotal + PagoPropina && !PagoProcesando;
+    public string PagoTotalTexto => $"${PagoTotal + PagoPropina:N2}";
+    public string PagoPagadoTexto => $"${PagoTotalPagado:N2}";
+    public string PagoPendienteTexto => $"${Math.Max(0, PagoTotal + PagoPropina - PagoTotalPagado):N2}";
+
+    // Restante o cambio (si pagan de más)
+    public decimal PagoRestanteValor => PagoTotal + PagoPropina - PagoTotalPagado;
+    public bool PagoEsCambio => PagoRestanteValor < 0;
+    public string PagoRestanteTexto => $"${Math.Abs(PagoRestanteValor):N2}";
+
+    partial void OnPagoMontoTextoChanged(string value)
+    {
+        OnPropertyChanged(nameof(PagoMonto));
+        OnPropertyChanged(nameof(PagoValorTeclado));
+    }
+    partial void OnPropinaTextoChanged(string value)
+    {
+        OnPropertyChanged(nameof(PagoPropina));
+        OnPropertyChanged(nameof(PagoValorTeclado));
+
+        if (ModoPago)
+        {
+            // Reflejar la propina en la cuenta: SERVICIO (PROPINA) y TOTAL A PAGAR
+            ActualizarTotalCuenta();
+
+            // No mantener el monto anterior; el valor entrante siempre debe quedar en cero
+        // Se deja a cero tras cualquier cambio de propina.
+        }
+
+        NotificarResumenPago();
+    }
+    partial void OnEditandoPropinaChanged(bool value)
+    {
+        OnPropertyChanged(nameof(PagoValorTeclado));
+        OnPropertyChanged(nameof(PagoTecladoTitulo));
+        OnPropertyChanged(nameof(PagoTecladoAyuda));
+    }
+    partial void OnPagoTotalChanged(decimal value) => NotificarResumenPago();
+    partial void OnPagoProcesandoChanged(bool value) => OnPropertyChanged(nameof(PagoPuedeConfirmar));
+
+    private void NotificarResumenPago()
+    {
+        OnPropertyChanged(nameof(PagoTotalPagado));
+        OnPropertyChanged(nameof(PagoPagadoTexto));
+        OnPropertyChanged(nameof(PagoPendienteTexto));
+        OnPropertyChanged(nameof(PagoTotalTexto));
+        OnPropertyChanged(nameof(PagoPuedeConfirmar));
+        OnPropertyChanged(nameof(PagoRestanteValor));
+        OnPropertyChanged(nameof(PagoEsCambio));
+        OnPropertyChanged(nameof(PagoRestanteTexto));
+    }
+
     // Constructor que resuelve las dependencias automáticamente
     public DataTableViewModel(
         GetAllCatalogoUseCase getCatalogoUseCase,
@@ -132,7 +265,12 @@ public partial class DataTableViewModel : ViewModelBase
         IViewModelFactory factory,
         GetAllTerminosUseCase getTerminos,
         GetAllAcompanamientosUseCase getAcompanamientos,
-        CrearComandaUseCase crearComanda
+        CrearComandaUseCase crearComanda,
+        GetVentaDetalleUseCase getVentaDetalle,
+        ActualizarClienteUseCase actualizarCliente,
+        CerrarVentaUseCase cerrarVenta,
+        GetImpresorasUseCase getImpresoras,
+        ImprimirDocumentoUseCase imprimirDocumento
         )
     {
         _getCatalogoUseCase = getCatalogoUseCase;
@@ -145,6 +283,15 @@ public partial class DataTableViewModel : ViewModelBase
         _getTerminos = getTerminos;
         _getAcompanamientos = getAcompanamientos;
         _crearComanda = crearComanda;
+        _getVentaDetalle = getVentaDetalle;
+        _actualizarCliente = actualizarCliente;
+        _cerrarVenta = cerrarVenta;
+        _getImpresoras = getImpresoras;
+        _imprimirDocumento = imprimirDocumento;
+
+        // El cajero (y el administrador) ven las acciones de caja en la mesa
+        var rol = _getUserUseCase.Execute()?.Rol ?? string.Empty;
+        EsCaja = rol is "Cajero" or "Administrador";
 
         // Inicializar datos básicos de la cuenta
         HoraApertura = DateTime.Now;
@@ -206,17 +353,27 @@ public partial class DataTableViewModel : ViewModelBase
     public string TextoBotonAnular =>
     ModoSeleccion == SelectionMode.Multiple ? "CONFIRMAR ANULACIÓN" : "ANULAR";
 
-    private void ActualizarTotalCuenta()
+    private decimal CalcularBaseCuenta()
     {
         decimal baseProductos = ProductosPedidos.Sum(item =>
-        item.TotalProducto +
-        item.Observaciones.Sum(obs => obs.Precio ?? 0));
+            item.TotalProducto +
+            item.Observaciones.Sum(obs => obs.Precio ?? 0));
+
+        // Si no hay productos locales (p. ej. el cajero reabre una mesa),
+        // usamos el total que devuelve el servidor.
+        return baseProductos > 0 ? baseProductos : _totalServidor;
+    }
+
+    private void ActualizarTotalCuenta()
+    {
+        decimal baseProductos = CalcularBaseCuenta();
 
         TotalIpoconsumo = baseProductos - (baseProductos / 1.08m);
-
-        TotalServicio = baseProductos * 0.10m;
         TotalNeto = baseProductos;
 
+        // El servicio es la propina: durante el cobro sigue a la propina editable
+        // (botones "Modificar propina" / "Quitar propina"); fuera del cobro es el 10%.
+        TotalServicio = ModoPago ? PagoPropina : baseProductos * 0.10m;
         TotalCuenta = baseProductos + TotalServicio;
     }
 
@@ -276,13 +433,69 @@ public partial class DataTableViewModel : ViewModelBase
     [RelayCommand]
     private void Teclado(string numero)
     {
+        // En modo cobro el teclado escribe el valor a pagar (o la propina)
+        if (ModoPago)
+        {
+            if (EditandoPropina)
+            {
+                PropinaTexto = (string.IsNullOrEmpty(PropinaTexto) || PropinaTexto == "0")
+                    ? numero
+                    : PropinaTexto + numero;
+                return;
+            }
+
+            PagoMontoTexto = (string.IsNullOrEmpty(PagoMontoTexto) || PagoMontoTexto == "0")
+                ? numero
+                : PagoMontoTexto + numero;
+            return;
+        }
+
         if (CantidadProd == null) CantidadProd = int.Parse(numero);
         else CantidadProd = int.Parse(CantidadProd.ToString() + numero);
     }
 
     [RelayCommand]
+    private void PuntoDecimal()
+    {
+        if (!ModoPago) return;
+
+        if (EditandoPropina)
+        {
+            if (string.IsNullOrEmpty(PropinaTexto) || PropinaTexto == "0")
+                PropinaTexto = "0.";
+            else if (!PropinaTexto.Contains('.'))
+                PropinaTexto += ".";
+            return;
+        }
+
+        if (string.IsNullOrEmpty(PagoMontoTexto) || PagoMontoTexto == "0")
+        {
+            PagoMontoTexto = "0.";
+            return;
+        }
+
+        if (!PagoMontoTexto.Contains('.'))
+            PagoMontoTexto += ".";
+    }
+
+    [RelayCommand]
     private void BorrarNumero()
     {
+        // En modo cobro el teclado borra el valor a pagar (o la propina)
+        if (ModoPago)
+        {
+            if (EditandoPropina)
+            {
+                if (!string.IsNullOrEmpty(PropinaTexto))
+                    PropinaTexto = PropinaTexto[..^1];
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(PagoMontoTexto))
+                PagoMontoTexto = PagoMontoTexto[..^1];
+            return;
+        }
+
         CantidadProd = null;
     }
 
@@ -431,6 +644,327 @@ public partial class DataTableViewModel : ViewModelBase
     private void Volver()
     {
         _navigate.NavigateTo<TablesViewModel>();
+    }
+
+    // ============================================================
+    // ACCIONES DE CAJA (visibles solo para Cajero / Administrador)
+    // ============================================================
+
+    [RelayCommand]
+    private async Task EditarDatosCliente()
+    {
+        if (_ventaId == 0) return;
+
+        var detalle = await _getVentaDetalle.Execute(_ventaId);
+        var vm = new DatosClienteDialogViewModel();
+        vm.Initialize(detalle);
+
+        var cliente = await _dialogService.ShowDialogAsync<DatosClienteDialogView, DatosClienteDialogViewModel, VentaClienteRequest?>(
+            vm, new PixelPoint(300, 60));
+
+        if (cliente != null)
+            await _actualizarCliente.Execute(_ventaId, cliente);
+    }
+
+    [RelayCommand]
+    private async Task Prefactura() =>
+        await MostrarDocumento("PREFACTURA", DocumentosVenta.BuildPrefactura);
+
+    [RelayCommand]
+    private async Task Factura() =>
+        await MostrarDocumento("FACTURA", DocumentosVenta.BuildFactura);
+
+    [RelayCommand]
+    private async Task Cobrar()
+    {
+        if (_ventaId == 0) return;
+
+        // El cobro se resuelve dentro de la propia vista (panel de opciones),
+        // sin abrir ninguna ventana modal.
+        var detalle = await _getVentaDetalle.Execute(_ventaId);
+
+        // Si la venta ya está cobrada, solo volvemos a mostrar el comprobante
+        if (detalle.TienePagos)
+        {
+            await MostrarDocumento("COMPROBANTE DE PAGO", DocumentosVenta.BuildComprobantePago, detalle);
+            return;
+        }
+
+        _totalServidor = detalle.TotalAmount;
+        PagoTotal = detalle.TotalAmount;
+        PagoClienteNombre = detalle.ClienteNombre ?? string.Empty;
+        PagoClienteDocumento = detalle.ClienteDocumento ?? string.Empty;
+        PagoClienteDireccion = detalle.ClienteDireccion ?? string.Empty;
+        PagoClienteTelefono = detalle.ClienteTelefono ?? string.Empty;
+
+        // Precargamos la propina calculada (10% de servicio) sobre el total de la cuenta.
+        // Queda editable con los botones "Modificar propina" / "Quitar propina".
+        PropinaTexto = (CalcularBaseCuenta() * 0.10m).ToString("0.##", CultureInfo.InvariantCulture);
+        EditandoPropina = false;
+        PagosAgregados.Clear();
+        PagoError = null;
+        PagoMetodoSeleccionado = null;
+        ClienteBusqueda = string.Empty;
+        ClienteMensaje = null;
+        ClienteNoEncontrado = false;
+        AgregandoCliente = false;
+        MarcarMetodoSeleccionado(MetodosPago.FirstOrDefault());
+        ModoPago = true;
+        // Ya en modo cobro: la cuenta refleja la propina (servicio) y el total a pagar
+        PagoTotal = CalcularBaseCuenta();
+        ActualizarTotalCuenta();
+        // El valor del teclado (parte superior del panel de pagos) inicia siempre en cero
+        PagoMontoTexto = "0";
+        NotificarResumenPago();
+    }
+
+    private void MarcarMetodoSeleccionado(MetodoPagoOption? metodo)
+    {
+        EditandoPropina = false;
+
+        foreach (var m in MetodosPago)
+            m.Seleccionado = m == metodo;
+
+        PagoMetodoSeleccionado = metodo;
+    }
+
+    [RelayCommand]
+    private async Task SeleccionarMetodoPago(MetodoPagoOption? metodo)
+    {
+        if (metodo == null) return;
+
+        MarcarMetodoSeleccionado(metodo);
+
+        // Al elegir el método con un valor digitado, se agrega el pago automáticamente.
+        if (PagoMonto > 0)
+            await AgregarPago();
+    }
+
+    [RelayCommand]
+    private async Task AgregarPago()
+    {
+        PagoError = null;
+        EditandoPropina = false;
+
+        if (PagoMetodoSeleccionado == null)
+        {
+            PagoError = "Selecciona un método de pago.";
+            return;
+        }
+
+        if (PagoMonto <= 0)
+        {
+            PagoError = "El monto debe ser mayor a 0.";
+            return;
+        }
+
+        PagosAgregados.Add(new PagoItemModel
+        {
+            MetodoNombre = PagoMetodoSeleccionado.MarcaTarjeta ?? PagoMetodoSeleccionado.Nombre,
+            Monto = PagoMonto
+        });
+
+        // Siempre devolver el valor entrante (teclado superior) a cero
+        PagoMontoTexto = "0";
+        NotificarResumenPago();
+
+        // Cuando el total llega a cero, se cierra la venta y se manda a imprimir.
+        if (PagoTotal > 0 && !PagoProcesando && PagoTotalPagado >= PagoTotal + PagoPropina)
+            await ConfirmarCobro();
+    }
+
+    [RelayCommand]
+    private void QuitarPago(PagoItemModel? pago)
+    {
+        if (pago == null) return;
+
+        PagosAgregados.Remove(pago);
+        // Siempre devolver el valor entrante (teclado superior) a cero
+        PagoMontoTexto = "0";
+        NotificarResumenPago();
+    }
+
+    [RelayCommand]
+    private void ModificarPropina()
+    {
+        PagoError = null;
+        EditandoPropina = true;
+        PropinaTexto = "0";
+    }
+
+    [RelayCommand]
+    private void QuitarPropina()
+    {
+        PagoError = null;
+        EditandoPropina = false;
+        PropinaTexto = "0";
+
+        // Siempre devolver el valor entrante (teclado superior) a cero
+        PagoMontoTexto = "0";
+        NotificarResumenPago();
+    }
+
+    [RelayCommand]
+    private async Task ConfirmarCobro()
+    {
+        PagoError = null;
+
+        if (PagosAgregados.Count == 0)
+        {
+            PagoError = "Agrega al menos un pago.";
+            return;
+        }
+
+        if (PagoTotalPagado < PagoTotal + PagoPropina)
+        {
+            PagoError = "El monto pagado es insuficiente para cerrar la venta.";
+            return;
+        }
+
+        PagoProcesando = true;
+        try
+        {
+            // Guardar los datos del cliente si el cajero los ingresó
+            if (!string.IsNullOrWhiteSpace(PagoClienteNombre))
+            {
+                await _actualizarCliente.Execute(_ventaId, new VentaClienteRequest
+                {
+                    ClienteNombre = PagoClienteNombre.Trim(),
+                    ClienteDocumento = PagoClienteDocumento?.Trim(),
+                    ClienteDireccion = PagoClienteDireccion?.Trim(),
+                    ClienteTelefono = PagoClienteTelefono?.Trim()
+                });
+            }
+
+            // Reconstruye los pagos agrupados por método/marca
+            var pagos = PagosAgregados
+                .GroupBy(p => p.MetodoNombre)
+                .Select(g =>
+                {
+                    var metodo = MetodosPago.FirstOrDefault(m =>
+                                    (m.MarcaTarjeta ?? m.Nombre) == g.Key)
+                                ?? MetodosPago.First();
+                    return new PagoRequest
+                    {
+                        Metodo = metodo.Codigo,
+                        MarcaTarjeta = metodo.MarcaTarjeta,
+                        Monto = g.Sum(x => x.Monto),
+                        Referencia = metodo.MarcaTarjeta == null ? null : $"**** {DateTime.Now:HHmm}"
+                    };
+                })
+                .ToList();
+
+            var ok = await _cerrarVenta.Execute(new CerrarVentaRequest
+            {
+                VentaId = _ventaId,
+                Propina = PagoPropina,
+                Pagos = pagos
+            });
+
+            if (!ok)
+            {
+                PagoError = "No se pudo cerrar la venta.";
+                return;
+            }
+
+            ModoPago = false;
+            var cerrada = await _getVentaDetalle.Execute(_ventaId);
+            await MostrarDocumento("COMPROBANTE DE PAGO", DocumentosVenta.BuildComprobantePago, cerrada);
+            Volver();
+        }
+        catch (Exception ex)
+        {
+            PagoError = $"Error al cobrar: {ex.Message}";
+        }
+        finally
+        {
+            PagoProcesando = false;
+        }
+    }
+
+    [RelayCommand]
+    private void CancelarPago()
+    {
+        ModoPago = false;
+        PagoError = null;
+        EditandoPropina = false;
+        PropinaTexto = "0";
+        PagosAgregados.Clear();
+        ClienteBusqueda = string.Empty;
+        ClienteMensaje = null;
+        ClienteNoEncontrado = false;
+        AgregandoCliente = false;
+        ActualizarTotalCuenta();
+    }
+
+    // ============================================================
+    // CLIENTE (MAQUETA): cargar uno existente o agregar uno nuevo
+    // ============================================================
+    [RelayCommand]
+    private void CargarCliente()
+    {
+        var q = (ClienteBusqueda ?? string.Empty).Trim();
+
+        if (string.IsNullOrEmpty(q))
+        {
+            ClienteNoEncontrado = false;
+            ClienteMensaje = "Ingresa un documento o nombre para buscar.";
+            return;
+        }
+
+        // MOCK: búsqueda simulada sobre la lista local de ejemplo.
+        var encontrado = ClientesMock.FirstOrDefault(kv =>
+            kv.Key.Equals(q, StringComparison.OrdinalIgnoreCase) ||
+            kv.Value.Nombre.Contains(q, StringComparison.OrdinalIgnoreCase));
+
+        if (encontrado.Key is null)
+        {
+            ClienteNoEncontrado = true;
+            ClienteMensaje = "Cliente no encontrado. Puedes agregarlo.";
+            return;
+        }
+
+        PagoClienteNombre = encontrado.Value.Nombre;
+        PagoClienteDocumento = encontrado.Value.Documento;
+        PagoClienteDireccion = encontrado.Value.Direccion;
+        PagoClienteTelefono = encontrado.Value.Telefono;
+        ClienteNoEncontrado = false;
+        ClienteMensaje = $"Cliente cargado: {encontrado.Value.Nombre}";
+    }
+
+    [RelayCommand]
+    private void AgregarCliente()
+    {
+        // Muestra el formulario y oculta la búsqueda.
+        AgregandoCliente = true;
+        PagoClienteNombre = string.Empty;
+        PagoClienteDocumento = string.IsNullOrWhiteSpace(ClienteBusqueda) ? string.Empty : ClienteBusqueda.Trim();
+        PagoClienteDireccion = string.Empty;
+        PagoClienteTelefono = string.Empty;
+        ClienteNoEncontrado = false;
+        ClienteMensaje = "Ingresa los datos del nuevo cliente.";
+    }
+
+    [RelayCommand]
+    private void VolverBuscarCliente()
+    {
+        // Vuelve al modo búsqueda y oculta el formulario.
+        AgregandoCliente = false;
+        ClienteMensaje = null;
+    }
+
+    private async Task MostrarDocumento(string titulo, Func<VentaDetalleModel, string> constructor, VentaDetalleModel? detalle = null)
+    {
+        if (_ventaId == 0) return;
+
+        detalle ??= await _getVentaDetalle.Execute(_ventaId);
+        var texto = constructor(detalle);
+
+        var vm = new PrintPreviewDialogViewModel(_getImpresoras, _imprimirDocumento);
+        vm.Initialize(titulo, texto);
+
+        await _dialogService.ShowDialogAsync<PrintPreviewDialogView, PrintPreviewDialogViewModel, bool?>(
+            vm, new PixelPoint(300, 10));
     }
 
 }

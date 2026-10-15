@@ -1,0 +1,205 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="https://github.com/projektanker/icons.avalonia"
+             xmlns:vm="using:MiComanderaApp.ViewModels.Components.Admin"
+             xmlns:models="using:MiComanderaApp.Core.Domain.Models"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+             x:Class="MiComanderaApp.Views.Components.Admin.ReportesInventarioComponentView"
+             x:DataType="vm:ReportesInventarioViewModel"
+             x:Name="Root">
+
+  <UserControl.Styles>
+    <Style Selector="Border.Card">
+      <Setter Property="Background" Value="{DynamicResource FondoTarjeta}"/>
+      <Setter Property="CornerRadius" Value="12"/>
+      <Setter Property="Padding" Value="16"/>
+      <Setter Property="Margin" Value="0,0,0,16"/>
+    </Style>
+
+    <Style Selector="TextBlock.KpiLabel">
+      <Setter Property="FontSize" Value="12"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
+    </Style>
+
+    <Style Selector="TextBlock.KpiValue">
+      <Setter Property="FontSize" Value="22"/>
+      <Setter Property="FontWeight" Value="Bold"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextoBrush}"/>
+    </Style>
+
+    <Style Selector="TextBlock.SectionTitle">
+      <Setter Property="FontSize" Value="16"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
+      <Setter Property="Margin" Value="0,0,0,10"/>
+    </Style>
+  </UserControl.Styles>
+
+  <Grid>
+    <!-- Loading -->
+    <Border Background="{DynamicResource FondoPrincipal}" Opacity="0.8" IsVisible="{Binding IsLoading}">
+      <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="15">
+        <ProgressBar IsIndeterminate="True" Width="60" Height="60"/>
+        <TextBlock Text="Cargando reporte de inventario..." Foreground="{DynamicResource TextoColor}" FontSize="14"/>
+      </StackPanel>
+    </Border>
+
+    <ScrollViewer IsVisible="{Binding !IsLoading}">
+      <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" Margin="24">
+
+        <!-- HEADER -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,20">
+          <StackPanel>
+            <TextBlock Text="📦 Reportes de Inventario" Foreground="{DynamicResource TextoColor}" FontSize="24" FontWeight="Bold"/>
+            <TextBlock Text="Resumen de stock, costos y movimientos" Foreground="{DynamicResource TextoColor}" Opacity="0.7" FontSize="14"/>
+          </StackPanel>
+
+          <Button Grid.Column="1"
+                  Background="#E06A28"
+                  Foreground="White"
+                  Padding="16,8"
+                  CornerRadius="6"
+                  Command="{Binding CargarReporteCommand}"
+                  VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <i:Icon Value="fa-solid fa-rotate" FontSize="13" VerticalAlignment="Center"/>
+              <TextBlock Text="Actualizar" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+            </StackPanel>
+          </Button>
+        </Grid>
+
+        <!-- ERROR -->
+        <Border Grid.Row="1" Classes="Card" Background="#3A1D1D" IsVisible="{Binding MensajeError, Converter={x:Static ObjectConverters.IsNotNull}}">
+          <TextBlock Text="{Binding MensajeError}" Foreground="#FF8A80" FontWeight="SemiBold" TextWrapping="Wrap"/>
+        </Border>
+
+        <!-- KPIS -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,*,*,*,*,*" ColumnSpacing="10" Margin="0,0,0,16">
+          <Border Grid.Column="0" Classes="Card" Margin="0,0,5,0">
+            <StackPanel Spacing="4">
+              <TextBlock Classes="KpiLabel" Text="TOTAL INGREDIENTES"/>
+              <TextBlock Classes="KpiValue" Text="{Binding Reporte.Resumen.TotalIngredientes}"/>
+            </StackPanel>
+          </Border>
+
+          <Border Grid.Column="1" Classes="Card" Margin="5,0">
+            <StackPanel Spacing="4">
+              <TextBlock Classes="KpiLabel" Text="BAJO STOCK"/>
+              <TextBlock Classes="KpiValue" Text="{Binding Reporte.Resumen.IngredientesBajoStock}" Foreground="#E06A28"/>
+            </StackPanel>
+          </Border>
+
+          <Border Grid.Column="2" Classes="Card" Margin="5,0">
+            <StackPanel Spacing="4">
+              <TextBlock Classes="KpiLabel" Text="CRÍTICOS"/>
+              <TextBlock Classes="KpiValue" Text="{Binding Reporte.Resumen.IngredientesCriticos}" Foreground="#E74C3C"/>
+            </StackPanel>
+          </Border>
+
+          <Border Grid.Column="3" Classes="Card" Margin="5,0">
+            <StackPanel Spacing="4">
+              <TextBlock Classes="KpiLabel" Text="VALOR DEL INVENTARIO"/>
+              <TextBlock Classes="KpiValue" Text="{Binding ValorTotal}" Foreground="#27AE60"/>
+            </StackPanel>
+          </Border>
+
+          <Border Grid.Column="4" Classes="Card" Margin="5,0">
+            <StackPanel Spacing="4">
+              <TextBlock Classes="KpiLabel" Text="COSTO PROM. PRODUCTO"/>
+              <TextBlock Classes="KpiValue" Text="{Binding CostoPromedio}"/>
+            </StackPanel>
+          </Border>
+
+          <Border Grid.Column="5" Classes="Card" Margin="5,0,0,0">
+            <StackPanel Spacing="4">
+              <TextBlock Classes="KpiLabel" Text="MARGEN PROMEDIO"/>
+              <TextBlock Classes="KpiValue" Text="{Binding MargenPromedio}" Foreground="#27AE60"/>
+            </StackPanel>
+          </Border>
+        </Grid>
+
+        <!-- INGREDIENTES CRITICOS + COSTOS -->
+        <Grid Grid.Row="3" ColumnDefinitions="*,*" ColumnSpacing="16">
+          <!-- Criticos -->
+          <Border Grid.Column="0" Classes="Card" Margin="0,0,8,0">
+            <StackPanel>
+              <TextBlock Classes="SectionTitle" Text="⚠️ Ingredientes en nivel crítico"/>
+              <TextBlock Text="Sin ingredientes críticos" Opacity="0.6" Foreground="{DynamicResource TextoColor}"
+                         IsVisible="{Binding Criticos.Count, Converter={StaticResource ZeroToBooleanConverter}}"/>
+              <ItemsControl ItemsSource="{Binding Criticos}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate DataType="{x:Type models:IngredienteCriticoModel}">
+                    <Border Background="{DynamicResource FondoModal}" CornerRadius="8" Padding="12,8" Margin="0,0,0,6">
+                      <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Grid.Column="0">
+                          <TextBlock Text="{Binding Nombre}" Foreground="{DynamicResource TextoColor}" FontWeight="SemiBold"/>
+                          <TextBlock Text="{Binding Nivel}" FontSize="12" Foreground="#E74C3C" FontWeight="SemiBold"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" HorizontalAlignment="Right">
+                          <TextBlock Text="{Binding CantidadDisponible}" Foreground="{DynamicResource TextoColor}" FontWeight="SemiBold"/>
+                          <TextBlock Text="{Binding UnidadMedida}" Foreground="{DynamicResource TextoColor}" Opacity="0.7"/>
+                        </StackPanel>
+                      </Grid>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </StackPanel>
+          </Border>
+
+          <!-- Costos por producto -->
+          <Border Grid.Column="1" Classes="Card" Margin="8,0,0,0">
+            <StackPanel>
+              <TextBlock Classes="SectionTitle" Text="💰 Costos por producto"/>
+              <ScrollViewer MaxHeight="320" VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding CostosProductos}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type models:CostoProductoModel}">
+                      <Border Background="{DynamicResource FondoModal}" CornerRadius="8" Padding="12,8" Margin="0,0,0,6">
+                        <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+                          <TextBlock Grid.Column="0" Text="{Binding Nombre}" Foreground="{DynamicResource TextoColor}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                          <TextBlock Grid.Column="1" Text="{Binding CostoProduccion, StringFormat='S/ {0:N2}'}" Foreground="{DynamicResource TextoColor}" VerticalAlignment="Center"/>
+                          <TextBlock Grid.Column="2" Text="{Binding MargenGanancia, StringFormat='{}{0:N1}%'}" Foreground="#27AE60" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        </Grid>
+                      </Border>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </ScrollViewer>
+            </StackPanel>
+          </Border>
+        </Grid>
+
+        <!-- MOVIMIENTOS RECIENTES -->
+        <Border Grid.Row="4" Classes="Card">
+          <StackPanel>
+            <TextBlock Classes="SectionTitle" Text="🕘 Movimientos recientes de inventario"/>
+            <ScrollViewer MaxHeight="300" VerticalScrollBarVisibility="Auto">
+              <ItemsControl ItemsSource="{Binding Movimientos}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate DataType="{x:Type models:MovimientoInventarioModel}">
+                    <Border Background="{DynamicResource FondoModal}" CornerRadius="8" Padding="12,8" Margin="0,0,0,6">
+                      <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12">
+                        <TextBlock Grid.Column="0" Text="{Binding Tipo}" FontSize="11" FontWeight="Bold"
+                                   Foreground="#E06A28" VerticalAlignment="Center"/>
+                        <StackPanel Grid.Column="1">
+                          <TextBlock Text="{Binding Ingrediente}" Foreground="{DynamicResource TextoColor}" FontWeight="SemiBold"/>
+                          <TextBlock Text="{Binding Observaciones}" FontSize="12" Opacity="0.7" Foreground="{DynamicResource TextoColor}" TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <TextBlock Grid.Column="2" Text="{Binding Usuario}" FontSize="12" Opacity="0.8" Foreground="{DynamicResource TextoColor}" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="3" Text="{Binding Fecha, StringFormat='{}{0:dd/MM HH:mm}'}" FontSize="12" Opacity="0.7" Foreground="{DynamicResource TextoColor}" VerticalAlignment="Center"/>
+                      </Grid>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+          </StackPanel>
+        </Border>
+
+      </Grid>
+    </ScrollViewer>
+  </Grid>
+</UserControl>

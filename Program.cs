@@ -41,6 +41,8 @@ using MiComanderaApp.Core.Application.UseCases.Table;
 using MiComanderaApp.Presentation.Messages;
 using CommunityToolkit.Mvvm.Messaging;
 using MiComanderaApp.Core.Application.UseCases.Observacion;
+using MiComanderaApp.Core.Application.UseCases.Inventario;
+using MiComanderaApp.Core.Application.UseCases.Print;
 using MiComanderaApp.Presentation.Views.Dialogs.Modals;
 using MiComanderaApp.ViewModels.Dialogs.Modals;
 using MiComanderaApp.Views.Dialogs.Modals;
@@ -119,6 +121,7 @@ sealed class Program
                 services.AddSingleton<AdminDashboardViewModel>();
 
                 services.AddTransient<TablesViewModel>();
+                services.AddTransient<InventarioViewModel>();
                 services.AddTransient<TableViewModel>();
                 services.AddTransient<NewOrderViewModel>();
                 services.AddTransient<DataTableViewModel>();
@@ -132,6 +135,8 @@ sealed class Program
                 services.AddTransient<UserViewModel>();
                 services.AddTransient<TecladoComponentViewModel>();
                 services.AddTransient<InventarioComponentViewModel>();
+                services.AddTransient<ReportesInventarioViewModel>();
+                services.AddTransient<AjustarStockDialogViewModel>();
                 services.AddTransient<ReportesComponentViewModel>();
 
                 // modal
@@ -162,6 +167,8 @@ sealed class Program
                 // usescases 
                 services.AddScoped<GetSessionSave>();
                 services.AddScoped<GetAllCatalogoUseCase>();
+                services.AddScoped<CreateCatalogoUseCase>();
+                services.AddScoped<DeleteCatalogoUseCase>();
                 services.AddScoped<GetCatalogoXIdProdUseCase>();
                 services.AddScoped<GetAllTablesUseCase>();
 
@@ -180,6 +187,8 @@ sealed class Program
                 services.AddScoped<GetTablesOpenUseCase>();
                 services.AddScoped<GetAllIngredientesUseCase>();
                 services.AddScoped<GetAllObservacionUseCase>();
+                services.AddScoped<CreateObservacionUseCase>();
+                services.AddScoped<DeleteObservacionUseCase>();
                 services.AddScoped<UpdatePaxUseCase>();
                 services.AddScoped<CrearComandaUseCase>();
                 services.AddScoped<ComandaRepository>();
@@ -191,6 +200,18 @@ sealed class Program
                 services.AddScoped<UpdateRecetaUseCase>();
                 services.AddScoped<DeleteRecetaUseCase>();
                 services.AddScoped<AllUserUseCase>();
+                services.AddScoped<CreateUserUseCase>();
+                services.AddScoped<GetVentasActivasUseCase>();
+                services.AddScoped<GetVentaDetalleUseCase>();
+                services.AddScoped<ActualizarClienteUseCase>();
+                services.AddScoped<CerrarVentaUseCase>();
+                services.AddScoped<ImpresoraRepository>();
+                services.AddScoped<GetImpresorasUseCase>();
+                services.AddScoped<ImprimirDocumentoUseCase>();
+                services.AddScoped<StockRepository>();
+                services.AddScoped<AjustarStockUseCase>();
+                services.AddScoped<InventarioRepository>();
+                services.AddScoped<GetReporteInventarioUseCase>();
 
                 // signalR
                 services.AddSingleton<SignalRService>();
@@ -210,11 +231,15 @@ sealed class Program
                 services.AddTransient<CreateProduct>();
                 services.AddTransient<CreateIngredienteDialogViewModel>();
                 services.AddTransient<CreateIngrediente>();
+                services.AddTransient<CreateUser>();
+                services.AddTransient<CreateUserViewModel>();
                 services.AddTransient<EditIngrediente>();
                 services.AddTransient<RecipeEditorView>();
                 services.AddTransient<SelectProductForRecipeView>();
                 services.AddTransient<TerminosCatalogoView>();
                 services.AddTransient<AcompanamientosCatalogoView>();
+                services.AddTransient<CategoriasCatalogoView>();
+                services.AddTransient<ObservacionesCatalogoView>();
                 services.AddSingleton<IDialogService, DialogService>();
 
 

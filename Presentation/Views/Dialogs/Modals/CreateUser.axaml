@@ -1,0 +1,156 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:b="using:MiComanderaApp.Presentation.Services"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="https://github.com/projektanker/icons.avalonia"
+        xmlns:vm="using:MiComanderaApp.ViewModels.Dialogs.Modals"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:in="using:Avalonia.Xaml.Interactivity"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="MiComanderaApp.Views.Dialogs.Modals.CreateUser"
+        Title="{Binding Title}"
+        ShowInTaskbar="False"
+        SystemDecorations="None"
+        WindowStartupLocation="Manual"
+        Background="{DynamicResource FondoModal}"
+        x:DataType="vm:CreateUserViewModel"
+        WindowState="Maximized"
+        x:Name="Root"
+        >
+
+
+        <Grid RowDefinitions="*, *">
+                <Border Grid.Row="0" Padding="25"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        >
+
+                        <StackPanel Spacing="15"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Stretch" >
+
+                                <Border CornerRadius="15"
+                                        Width="900"
+                                        Padding="20"
+                                        Background="{DynamicResource FondoPrincipal}"
+                                        >
+                                        <Grid ColumnDefinitions="*, *"
+                                              RowDefinitions="*,*,*,*"
+                                              RowSpacing="10"
+                                              ColumnSpacing="10"
+                                              >
+
+                                                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding Title}"
+                                                           FontSize="24"
+                                                           FontWeight="Bold"
+                                                           HorizontalAlignment="Center"
+                                                           Foreground="{DynamicResource TextoBrush}"
+                                                           />
+
+                                                <StackPanel Spacing="15" Grid.Row="1" Grid.Column="0">
+
+                                                        <TextBlock Text="Nombre completo" Foreground="{DynamicResource TextoColor}"/>
+
+                                                        <TextBox Text="{Binding NombreCompleto, Mode=TwoWay}"
+                                                                 x:Name="TxtNombre"
+                                                                 Watermark="Ej: Juan Pérez" BorderBrush="{DynamicResource Border}"
+                                                                 Foreground="{DynamicResource TextoColor}">
+                                                                <in:Interaction.Behaviors>
+                                                                        <b:KeyboardFocusBehavior />
+                                                                </in:Interaction.Behaviors>
+                                                        </TextBox>
+
+                                                        <TextBlock Text="Email"
+                                                                   Foreground="{DynamicResource TextoColor}"/>
+
+                                                        <TextBox Text="{Binding Email, Mode=TwoWay}"
+                                                                 x:Name="TxtEmail"
+                                                                 BorderBrush="{DynamicResource Border}"
+                                                                 Watermark="correo@ejemplo.com" Foreground="{DynamicResource TextoColor}">
+                                                                <in:Interaction.Behaviors>
+                                                                        <b:KeyboardFocusBehavior />
+                                                                </in:Interaction.Behaviors>
+                                                        </TextBox>
+
+                                                        <TextBlock Text="Pin"
+                                                                   Foreground="{DynamicResource TextoColor}"/>
+
+                                                        <TextBox Text="{Binding Pin, Mode=TwoWay}"
+                                                                 x:Name="TxtPin"
+                                                                 BorderBrush="{DynamicResource Border}"
+                                                                 Watermark="Ej: 1234" Foreground="{DynamicResource TextoColor}">
+                                                                <in:Interaction.Behaviors>
+                                                                        <b:KeyboardFocusBehavior />
+                                                                </in:Interaction.Behaviors>
+                                                        </TextBox>
+                                                </StackPanel>
+
+                                                <StackPanel Spacing="15" Grid.Row="1" Grid.Column="1">
+
+                                                        <TextBlock Text="Rol"
+                                                                   Foreground="{DynamicResource TextoColor}"/>
+
+                                                        <ComboBox ItemsSource="{Binding Roles}"
+                                                                  SelectedItem="{Binding RolSeleccionado}"
+                                                                  Foreground="{DynamicResource TextoColor}"
+                                                                  BorderBrush="{DynamicResource Border}"
+                                                                  PlaceholderText="Selecciona un rol"/>
+
+                                                        <CheckBox Content="Usuario activo"
+                                                                  IsChecked="{Binding Activo}"/>
+
+                                                </StackPanel>
+
+                                                <TextBlock Grid.Row="2" Grid.ColumnSpan="2"
+                                                           Text="{Binding Error}"
+                                                           Foreground="Red"
+                                                           FontWeight="Bold"
+                                                           HorizontalAlignment="Center"
+                                                           />
+
+                                                <StackPanel Grid.Row="3" Grid.ColumnSpan="2"
+                                                            Orientation="Horizontal"
+                                                            HorizontalAlignment="Right"
+                                                            Spacing="10"
+                                                            Margin="0,20,0,0"
+                                                            VerticalAlignment="Bottom">
+
+                                                        <Button Content="Cancelar"
+                                                                Width="200"
+                                                                Height="40"
+                                                                Classes="btn-rojo"
+                                                                Command="{Binding CancelarCommand}"/>
+
+                                                        <Button Content="Guardar"
+                                                                Width="200"
+                                                                Height="40"
+                                                                Classes="btn-verde"
+                                                                Command="{Binding GuardarCommand}"/>
+
+                                                </StackPanel>
+
+                                        </Grid>
+                                </Border>
+
+                        </StackPanel>
+
+                </Border>
+
+                <Grid RowDefinitions="*" Grid.Row="1" VerticalAlignment="Bottom" >
+
+                        <Border Padding="10"
+                                Margin="20"
+                                Height="35"
+                                Width="100"
+                                HorizontalAlignment="Left"
+                                IsVisible="{Binding BotonTeclado}"
+                                >
+                                <StackPanel>
+                                        <Button i:Attached.Icon="fa-solid fa-chevron-up" Background="{DynamicResource FondoPrincipal}"  Classes="KeypadBtn" Command="{Binding VerTecladoCommand}" />
+                                </StackPanel>
+                        </Border>
+
+                        <ContentControl Padding="10" Height="500" IsVisible="{Binding Teclado}" Grid.Row="1" Content="{Binding VistaActual}" />
+                </Grid>
+        </Grid>
+</Window>

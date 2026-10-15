@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="https://github.com/projektanker/icons.avalonia"
+             xmlns:vm="using:MiComanderaApp.ViewModels.Routes"
+             xmlns:vmAdmin="using:MiComanderaApp.ViewModels.Components.Admin"
+             xmlns:views="using:MiComanderaApp.Views.Components.Admin"
+             mc:Ignorable="d" d:DesignWidth="1400" d:DesignHeight="900"
+             Background="{DynamicResource FondoPrincipal}"
+             x:Class="MiComanderaApp.Views.Routes.InventarioView"
+             x:DataType="vm:InventarioViewModel">
+
+  <UserControl.DataTemplates>
+    <DataTemplate DataType="{x:Type vmAdmin:InventarioComponentViewModel}">
+      <views:InventarioComponentView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vmAdmin:ReportesInventarioViewModel}">
+      <views:ReportesInventarioComponentView />
+    </DataTemplate>
+  </UserControl.DataTemplates>
+
+  <Grid RowDefinitions="Auto,*">
+
+    <Border Grid.Row="0" Background="{DynamicResource FondoTarjeta}" Height="60" Padding="20,0">
+      <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto">
+        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="8">
+          <i:Icon Value="fa-solid fa-fire" Foreground="#E06A28" FontSize="20"/>
+          <TextBlock Text="RESTROPOS" Foreground="{DynamicResource TextoColor}" FontWeight="Bold" VerticalAlignment="Center" LetterSpacing="1"/>
+        </StackPanel>
+
+        <Button Grid.Column="1" Content="INVENTARIO" Classes="NavBtn" Classes.Active="{Binding IsInventario}" Command="{Binding ChangeViewCommand}" CommandParameter="Inventario"/>
+        <Button Grid.Column="2" Content="REPORTES" Classes="NavBtn" Classes.Active="{Binding IsReportes}" Command="{Binding ChangeViewCommand}" CommandParameter="Reportes"/>
+
+        <StackPanel Grid.Column="4" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
+          <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right">
+            <TextBlock Text="{Binding User.NombreCompleto}" Foreground="{DynamicResource TextoColor}" FontWeight="SemiBold" FontSize="13"/>
+            <TextBlock Text="{Binding User.Rol}" Foreground="{DynamicResource TextoColor}" FontSize="11" HorizontalAlignment="Right"/>
+          </StackPanel>
+          <Button i:Attached.Icon="fa-solid fa-right-from-bracket" Foreground="#0A202D" FontSize="16" Cursor="Hand" Command="{Binding SalirCommand}"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <ContentControl Grid.Row="1" Content="{Binding VistaActual}" />
+  </Grid>
+</UserControl>

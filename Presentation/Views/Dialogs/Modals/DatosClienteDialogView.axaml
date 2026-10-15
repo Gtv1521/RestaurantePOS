@@ -1,0 +1,107 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:vm="using:MiComanderaApp.ViewModels.Dialogs.Modals"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="MiComanderaApp.Views.Dialogs.Modals.DatosClienteDialogView"
+        Title="{Binding Title}"
+        ShowInTaskbar="False"
+        SystemDecorations="None"
+        WindowStartupLocation="Manual"
+        Background="{DynamicResource FondoModal}"
+        x:DataType="vm:DatosClienteDialogViewModel"
+        WindowState="Maximized"
+        x:Name="Root">
+
+  <Grid RowDefinitions="*">
+    <Border Grid.Row="0"
+            Padding="25"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+
+      <StackPanel Spacing="15"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center">
+
+        <Border CornerRadius="15"
+                Width="700"
+                Padding="25"
+                Background="{DynamicResource FondoPrincipal}">
+
+          <Grid ColumnDefinitions="*,*"
+                RowDefinitions="*,*,*,*,*,*"
+                RowSpacing="12"
+                ColumnSpacing="12">
+
+            <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
+                       Text="{Binding Title}"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Foreground="White"/>
+
+            <StackPanel Grid.Row="1" Grid.Column="0" Spacing="6">
+              <TextBlock Text="Nombre / Razón social *" Foreground="White"/>
+              <TextBox Text="{Binding ClienteNombre, Mode=TwoWay}"
+                       Watermark="Ej: Juan Pérez / Empresa SAC"
+                       Foreground="{DynamicResource TextoColor}"
+                       BorderBrush="{DynamicResource Border}"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="1" Grid.Column="1" Spacing="6">
+              <TextBlock Text="NIT / Documento" Foreground="White"/>
+              <TextBox Text="{Binding ClienteDocumento, Mode=TwoWay}"
+                       Watermark="Ej: 12345678"
+                       Foreground="{DynamicResource TextoColor}"
+                       BorderBrush="{DynamicResource Border}"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="2" Grid.Column="0" Spacing="6">
+              <TextBlock Text="Dirección" Foreground="White"/>
+              <TextBox Text="{Binding ClienteDireccion, Mode=TwoWay}"
+                       Watermark="Ej: Av. Principal 123"
+                       Foreground="{DynamicResource TextoColor}"
+                       BorderBrush="{DynamicResource Border}"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="2" Grid.Column="1" Spacing="6">
+              <TextBlock Text="Teléfono" Foreground="White"/>
+              <TextBox Text="{Binding ClienteTelefono, Mode=TwoWay}"
+                       Watermark="Ej: 999888777"
+                       Foreground="{DynamicResource TextoColor}"
+                       BorderBrush="{DynamicResource Border}"/>
+            </StackPanel>
+
+            <TextBlock Grid.Row="3" Grid.ColumnSpan="2"
+                       Text="{Binding Error}"
+                       Foreground="Red"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"/>
+
+            <StackPanel Grid.Row="5" Grid.ColumnSpan="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Spacing="10"
+                        Margin="0,15,0,0">
+
+              <Button Content="Cancelar"
+                      Width="200"
+                      Height="40"
+                      Classes="btn-rojo"
+                      Command="{Binding CancelarCommand}"/>
+
+              <Button Content="Guardar"
+                      Width="200"
+                      Height="40"
+                      Classes="btn-verde"
+                      Command="{Binding GuardarCommand}"/>
+            </StackPanel>
+
+          </Grid>
+        </Border>
+
+      </StackPanel>
+    </Border>
+  </Grid>
+</Window>
