@@ -28,6 +28,7 @@ namespace MiComanderaApp.ViewModels.Components.Admin
         private readonly GetAllRecetasUseCase _getAllRecetasUseCase;
         private readonly CreateIngredienteUseCase _createIngredienteUseCase;
         private readonly EditIngredienteUseCase _editIngredienteUseCase;
+        private readonly AjustarStockUseCase _ajustarStockUseCase;
 
         [ObservableProperty]
 
@@ -63,6 +64,7 @@ namespace MiComanderaApp.ViewModels.Components.Admin
             IDialogService dialogService,
             CreateIngredienteUseCase createIngredienteUseCase,
             EditIngredienteUseCase editIngredienteUseCase,
+            AjustarStockUseCase ajustarStockUseCase,
             GetAllProductUseCase getAllProductUseCase,
             CreateRecetaUseCase createRecetaUseCase,
             UpdateRecetaUseCase updateRecetaUseCase,
@@ -75,6 +77,7 @@ namespace MiComanderaApp.ViewModels.Components.Admin
             _dialogService = dialogService;
             _createIngredienteUseCase = createIngredienteUseCase;
             _editIngredienteUseCase = editIngredienteUseCase;
+            _ajustarStockUseCase = ajustarStockUseCase;
             _getAllProductUseCase = getAllProductUseCase;
             _createRecetaUseCase = createRecetaUseCase;
             _updateRecetaUseCase = updateRecetaUseCase;
@@ -291,6 +294,32 @@ namespace MiComanderaApp.ViewModels.Components.Admin
                 var response = await _editIngredienteUseCase.Execute(updatedIngrediente);
                 if (response != null)
                     await LoadIngredientesAsync();
+            }
+        }
+
+        [RelayCommand]
+        private async Task AjustarStock(IngredienteModel ingrediente)
+        {
+            if (ingrediente == null) return;
+
+            var viewModel = new AjustarStockDialogViewModel(_factory);
+            viewModel.Initialize(ingrediente);
+
+            var result = await _dialogService
+                .ShowDialogAsync<AjustarStockDialogView, AjustarStockDialogViewModel, AjustarStockResult?>(
+                    viewModel, new PixelPoint(250, 30));
+
+            if (result != null)
+            {
+                try
+                {
+                    await _ajustarStockUseCase.Execute(ingrediente.Id, result.NewQuantity, result.Reason);
+                    await LoadIngredientesAsync();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error al ajustar stock: {ex.Message}");
+                }
             }
         }
 

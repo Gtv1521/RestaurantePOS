@@ -3,12 +3,40 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mesas="using:MiComanderaApp.ViewModels.Mesas"
+             xmlns:modals="using:MiComanderaApp.ViewModels.Dialogs.Modals"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MiComanderaApp.Views.Mesas.DataTableView"
              x:DataType="mesas:DataTableViewModel"
              Background="{DynamicResource FondoPrincipal}"
              x:Name="Root"
              >
+
+  <UserControl.Styles>
+    <Style Selector="Button.pago-metodo">
+      <Setter Property="CornerRadius" Value="8"/>
+      <Setter Property="Background" Value="{DynamicResource FondoModal}"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
+      <Setter Property="BorderBrush" Value="#E06A28"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="Padding" Value="8"/>
+      <Setter Property="Margin" Value="4"/>
+      <Setter Property="Height" Value="60"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="FontSize" Value="13"/>
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+      <Setter Property="VerticalAlignment" Value="Stretch"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+      <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+    <Style Selector="Button.pago-metodo.activo">
+      <Setter Property="Background" Value="#E06A28"/>
+      <Setter Property="Foreground" Value="White"/>
+    </Style>
+    <Style Selector="Button.pago-metodo:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#C2410C"/>
+    </Style>
+  </UserControl.Styles>
 
   <Grid ColumnDefinitions="3*, 7*" Margin="15">
 
@@ -207,9 +235,7 @@
 
     <Grid Grid.Column="1" RowDefinitions="7*,3*">
 
-      <Grid Grid.Row="0"
-            ColumnDefinitions="*,210"
-            ColumnSpacing="5">
+      <Grid Grid.Row="0" ColumnDefinitions="*,210" ColumnSpacing="5" IsVisible="{Binding !ModoPago}">
 
         <!-- Panel Productos -->
         <Border Grid.Column="0"
@@ -339,12 +365,12 @@
         </Border>
       </Grid>
 
-      <Border Grid.Row="1" Background="{DynamicResource FondoTarjeta}" BorderThickness="1" CornerRadius="12" Padding="10" Margin="0,8,0,0">
+      <Border Grid.Row="1" Background="{DynamicResource FondoTarjeta}" BorderThickness="1" CornerRadius="12" Padding="10" Margin="0,8,0,0" IsVisible="{Binding !ModoPago}">
         <Grid ColumnDefinitions="*,300" RowDefinitions="*" >
 
 
           <Grid Grid.Column="0"
-                RowDefinitions="Auto,*,*,*,*"
+                RowDefinitions="Auto,*,*,*"
                 ColumnDefinitions="*,*,*,*"
                 RowSpacing="5"
                 ColumnSpacing="5"
@@ -424,26 +450,22 @@
             <!-- tercera fila -->
             <Button Grid.Row="3"
                     Grid.Column="0"
-                    Content="Boton"
+                    IsVisible="{Binding EsCaja}"
+                    Content="👤 Cliente"
                     VerticalAlignment="Stretch"
                     HorizontalAlignment="Stretch"
-                    Classes="btn-verde"
+                    Classes="btn-azul"
+                    Command="{Binding EditarDatosClienteCommand}"
                     />
 
             <Button Grid.Row="3"
                     Grid.Column="1"
-                    Content="Boton"
+                    IsVisible="{Binding EsCaja}"
+                    Content="Prefactura"
                     VerticalAlignment="Stretch"
                     HorizontalAlignment="Stretch"
-                    Classes="btn-verde"
-                    />
-
-            <Button Grid.Row="3"
-                    Grid.Column="2"
-                    Content="Historial"
-                    VerticalAlignment="Stretch"
-                    HorizontalAlignment="Stretch"
-                    Classes="btn-verde"
+                    Classes="btn-gris"
+                    Command="{Binding PrefacturaCommand}"
                     />
 
             <Button Grid.Row="3"
@@ -457,12 +479,15 @@
 
 
             <!-- cuarta fila -->
-            <Button Grid.Row="4"
-                    Grid.Column="0"
-                    Content="Botton"
+            <Button Grid.Row="3"
+                    Grid.Column="2"
+                    IsVisible="{Binding EsCaja}"
+                    Content="💰 Pagar"
+                    FontWeight="Bold"
                     VerticalAlignment="Stretch"
                     HorizontalAlignment="Stretch"
                     Classes="btn-verde"
+                    Command="{Binding CobrarCommand}"
                     />
           </Grid>
 
@@ -494,6 +519,256 @@
         </Grid>
       </Border>
 
+      <!-- ============================================================ -->
+      <!-- VISTA DE COBRO (en línea, sin ventana modal)                  -->
+      <!-- ============================================================ -->
+      <Border Grid.Row="0"
+              Grid.RowSpan="2"
+              IsVisible="{Binding ModoPago}"
+              Background="{DynamicResource FondoTarjeta}"
+              BorderThickness="1"
+              CornerRadius="12"
+              Padding="15">
+        <Grid RowDefinitions="*,330" RowSpacing="12">
+
+          <Grid Grid.Row="0" RowDefinitions="Auto,*" RowSpacing="10">
+
+            <!-- Datos del cliente -->
+            <Border Grid.Row="0"
+                    Background="{DynamicResource FondoModal}"
+                    CornerRadius="10"
+                    Padding="12">
+              <StackPanel Spacing="8">
+                <TextBlock Text="DATOS DEL CLIENTE"
+                           IsVisible="{Binding !AgregandoCliente}"
+                           FontSize="13"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource TextoBrush}"/>
+
+                <!-- MODO BUSCAR (visible mientras no se agrega un cliente) -->
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8" IsVisible="{Binding !AgregandoCliente}">
+                  <TextBox Grid.Column="0"
+                           Text="{Binding ClienteBusqueda, Mode=TwoWay}"
+                           Watermark="Documento o nombre del cliente..."
+                           Foreground="{DynamicResource TextoColor}"
+                           BorderBrush="{DynamicResource Border}"/>
+                  <Button Grid.Column="1"
+                          Content="🔍 Cargar"
+                          Height="36"
+                          Classes="btn-azul"
+                          Command="{Binding CargarClienteCommand}"/>
+                  <Button Grid.Column="2"
+                          Content="➕ Agregar cliente"
+                          Height="36"
+                          Classes="btn-verde"
+                          Command="{Binding AgregarClienteCommand}"/>
+                </Grid>
+
+                <!-- MODO AGREGAR (formulario; oculta la búsqueda) -->
+                <StackPanel Spacing="8" IsVisible="{Binding AgregandoCliente}">
+                  <Grid ColumnDefinitions="Auto,*">
+                    <Button Grid.Column="0"
+                            Content="← Volver a buscar"
+                            Height="30"
+                            Padding="10,0"
+                            Classes="btn-gris"
+                            Command="{Binding VolverBuscarClienteCommand}"/>
+                    <TextBlock Grid.Column="1"
+                               Text="DATOS DEL CLIENTE"
+                               FontSize="13"
+                               FontWeight="Bold"
+                               Foreground="{DynamicResource TextoBrush}"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"/>
+                  </Grid>
+
+                  <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="8">
+                    <StackPanel Grid.Row="0" Grid.Column="0" Spacing="3">
+                      <TextBlock Text="Nombre / Razón social" FontSize="12" Foreground="{DynamicResource TextoColor}" Opacity="0.8"/>
+                      <TextBox Text="{Binding PagoClienteNombre, Mode=TwoWay}"
+                               Watermark="Consumidor final"
+                               Foreground="{DynamicResource TextoColor}"
+                               BorderBrush="{DynamicResource Border}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="1" Spacing="3">
+                      <TextBlock Text="NIT / Documento" FontSize="12" Foreground="{DynamicResource TextoColor}" Opacity="0.8"/>
+                      <TextBox Text="{Binding PagoClienteDocumento, Mode=TwoWay}"
+                               Watermark="Ej: 12345678"
+                               Foreground="{DynamicResource TextoColor}"
+                               BorderBrush="{DynamicResource Border}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0" Spacing="3">
+                      <TextBlock Text="Dirección" FontSize="12" Foreground="{DynamicResource TextoColor}" Opacity="0.8"/>
+                      <TextBox Text="{Binding PagoClienteDireccion, Mode=TwoWay}"
+                               Watermark="Ej: Av. Principal 123"
+                               Foreground="{DynamicResource TextoColor}"
+                               BorderBrush="{DynamicResource Border}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="1" Spacing="3">
+                      <TextBlock Text="Teléfono" FontSize="12" Foreground="{DynamicResource TextoColor}" Opacity="0.8"/>
+                      <TextBox Text="{Binding PagoClienteTelefono, Mode=TwoWay}"
+                               Watermark="Ej: 999888777"
+                               Foreground="{DynamicResource TextoColor}"
+                               BorderBrush="{DynamicResource Border}"/>
+                    </StackPanel>
+                  </Grid>
+                </StackPanel>
+
+                <!-- Mensaje (compartido en ambos modos) -->
+                <TextBlock Text="{Binding ClienteMensaje}"
+                           IsVisible="{Binding ClienteMensajeVisible}"
+                           FontSize="12"
+                           Foreground="#E06A28"
+                           TextWrapping="Wrap"/>
+              </StackPanel>
+            </Border>
+
+            <!-- Pagos agregados -->
+            <Border Grid.Row="1"
+                    Background="{DynamicResource FondoModal}"
+                    CornerRadius="10"
+                    Padding="10">
+              <Grid RowDefinitions="Auto,*,Auto">
+                <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,6">
+                  <TextBlock Grid.Column="0" Text="PAGOS AGREGADOS" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource TextoBrush}" VerticalAlignment="Center"/>
+                  <Border Grid.Column="1" Background="{DynamicResource FondoPrincipal}" CornerRadius="8" Padding="12,2">
+                    <TextBlock Text="{Binding PagoValorTeclado, StringFormat='${0:N2}'}" FontSize="20" FontWeight="Black" Foreground="#27AE60"/>
+                  </Border>
+                </Grid>
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                  <ItemsControl ItemsSource="{Binding PagosAgregados}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate>
+                        <Border Background="{DynamicResource FondoPrincipal}" CornerRadius="8" Padding="10,6" Margin="0,0,0,6">
+                          <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                            <TextBlock Grid.Column="0" Text="{Binding MetodoNombre}" FontWeight="SemiBold" Foreground="{DynamicResource TextoColor}" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="1" Text="{Binding MontoTexto}" Foreground="#27AE60" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            <Button Grid.Column="2"
+                                    Content="✕"
+                                    Background="Transparent"
+                                    Foreground="#E74C3C"
+                                    Padding="6,2"
+                                    Command="{Binding #Root.DataContext.QuitarPagoCommand}"
+                                    CommandParameter="{Binding}"/>
+                          </Grid>
+                        </Border>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </ScrollViewer>
+
+                <!-- Totales -->
+                <Grid Grid.Row="2" RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto" RowSpacing="5" Margin="0,8,0,0">
+                  <TextBlock Grid.Row="0" Grid.Column="0" Text="TOTAL" FontSize="12" Foreground="{DynamicResource TextoColor}" Opacity="0.8" VerticalAlignment="Center"/>
+                  <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding PagoTotalTexto}" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextoColor}" HorizontalAlignment="Right"/>
+
+                  <TextBlock Grid.Row="1" Grid.Column="0" Text="PAGADO" FontSize="12" Foreground="{DynamicResource TextoColor}" Opacity="0.8" VerticalAlignment="Center"/>
+                  <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding PagoPagadoTexto}" FontSize="15" FontWeight="SemiBold" Foreground="#27AE60" HorizontalAlignment="Right"/>
+
+                  <TextBlock Grid.Row="2" Grid.Column="0" Text="RESTANTE" IsVisible="{Binding !PagoEsCambio}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextoBrush}" VerticalAlignment="Center"/>
+                  <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding PagoRestanteTexto}" IsVisible="{Binding !PagoEsCambio}" FontSize="24" FontWeight="Black" Foreground="#E06A28" HorizontalAlignment="Right"/>
+
+                  <TextBlock Grid.Row="2" Grid.Column="0" Text="CAMBIO" IsVisible="{Binding PagoEsCambio}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextoBrush}" VerticalAlignment="Center"/>
+                  <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding PagoRestanteTexto}" IsVisible="{Binding PagoEsCambio}" FontSize="24" FontWeight="Black" Foreground="#27AE60" HorizontalAlignment="Right"/>
+
+                  <TextBlock Grid.Row="3" Grid.Column="0" Text="Propina" FontSize="12" Foreground="{DynamicResource TextoColor}" Opacity="0.8" VerticalAlignment="Center"/>
+                  <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding PagoPropina, StringFormat='${0:N2}'}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextoColor}" HorizontalAlignment="Right"/>
+
+                  <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Text="{Binding PagoError}" Foreground="#E74C3C" FontWeight="Bold" TextWrapping="Wrap"/>
+                </Grid>
+              </Grid>
+            </Border>
+          </Grid>
+
+          <Border Grid.Row="1" Padding="10" Background="{DynamicResource FondoModal}" CornerRadius="10">
+            <Grid ColumnDefinitions="7*,3*">
+
+              <Grid Grid.Column="0">
+                <StackPanel Spacing="8">
+                  <Grid ColumnDefinitions="Auto,Auto,Auto,*">
+                    <TextBlock Grid.Column="0" Text="MÉTODOS DE PAGO"
+                               FontSize="13"
+                               FontWeight="Bold"
+                               Foreground="{DynamicResource TextoBrush}"
+                               VerticalAlignment="Center"/>
+                  </Grid>
+                  <ItemsControl ItemsSource="{Binding MetodosPago}">
+                    <ItemsControl.ItemsPanel>
+                      <ItemsPanelTemplate>
+                        <UniformGrid Columns="3"/>
+                      </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate DataType="modals:MetodoPagoOption">
+                        <Button Classes="pago-metodo"
+                                Classes.activo="{Binding Seleccionado}"
+                                Content="{Binding Etiqueta}"
+                                Command="{Binding #Root.DataContext.SeleccionarMetodoPagoCommand}"
+                                CommandParameter="{Binding}"/>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                  <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto">
+                    <Button Grid.Column="0" Grid.Row="0"
+                            Content="Modificar propina"
+                            Margin="4"
+                            Classes="pago-metodo"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Command="{Binding ModificarPropinaCommand}"/>
+
+                    <Button Grid.Column="1" Grid.Row="0"
+                            Content="Quitar propina"
+                            Margin="4"
+                            Classes="pago-metodo"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Command="{Binding QuitarPropinaCommand}"/>
+
+                    <Button Grid.Column="2" Grid.Row="0" Grid.RowSpan="2"
+                            Content="Cancelar"
+                            Margin="4"
+                            Classes="btn-rojo"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Command="{Binding CancelarPagoCommand}"/>
+                  </Grid>
+                </StackPanel>
+              </Grid>
+
+              <Grid Grid.Column="1" RowDefinitions="Auto,*" RowSpacing="8">
+
+                <TextBlock Grid.Row="0"
+                           Text="{Binding PagoTecladoAyuda}"
+                           FontSize="11"
+                           TextWrapping="Wrap"
+                           Foreground="{DynamicResource TextoColor}"
+                           Opacity="0.7"
+                           HorizontalAlignment="Center"/>
+
+                <Grid Grid.Row="1" RowDefinitions="*,*,*,*" ColumnDefinitions="*,*,*" RowSpacing="5" ColumnSpacing="5">
+                  <Button Grid.Row="0" Grid.Column="0" Classes="KeypadBtn" Command="{Binding TecladoCommand}" CommandParameter="1" Content="1"/>
+                  <Button Grid.Row="0" Grid.Column="1" Classes="KeypadBtn" Command="{Binding TecladoCommand}" CommandParameter="2" Content="2"/>
+                  <Button Grid.Row="0" Grid.Column="2" Classes="KeypadBtn" Command="{Binding TecladoCommand}" CommandParameter="3" Content="3"/>
+
+                  <Button Grid.Row="1" Grid.Column="0" Classes="KeypadBtn" Command="{Binding TecladoCommand}" CommandParameter="4" Content="4"/>
+                  <Button Grid.Row="1" Grid.Column="1" Classes="KeypadBtn" Command="{Binding TecladoCommand}" CommandParameter="5" Content="5"/>
+                  <Button Grid.Row="1" Grid.Column="2" Classes="KeypadBtn" Command="{Binding TecladoCommand}" CommandParameter="6" Content="6"/>
+
+                  <Button Grid.Row="2" Grid.Column="0" Classes="KeypadBtn" Command="{Binding TecladoCommand}" CommandParameter="7" Content="7"/>
+                  <Button Grid.Row="2" Grid.Column="1" Classes="KeypadBtn" Command="{Binding TecladoCommand}" CommandParameter="8" Content="8"/>
+                  <Button Grid.Row="2" Grid.Column="2" Classes="KeypadBtn" Command="{Binding TecladoCommand}" CommandParameter="9" Content="9"/>
+
+                  <Button Grid.Row="3" Grid.Column="0" Classes="KeypadBtn" Command="{Binding PuntoDecimalCommand}" Content="."/>
+                  <Button Grid.Row="3" Grid.Column="1" Classes="KeypadBtn" Command="{Binding TecladoCommand}" CommandParameter="0" Content="0"/>
+                  <Button Grid.Row="3" Grid.Column="2" Classes="KeypadBtn" Command="{Binding BorrarNumeroCommand}" Content="⌫"/>
+                </Grid>
+
+              </Grid>
+            </Grid>
+          </Border>
+        </Grid>
+      </Border>
     </Grid>
   </Grid>
 </UserControl>

@@ -1,0 +1,183 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="https://github.com/projektanker/icons.avalonia"
+        xmlns:vm="using:MiComanderaApp.ViewModels.Dialogs.Modals"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+        x:Class="MiComanderaApp.Views.Dialogs.Modals.CobrarDialogView"
+        Title="{Binding Title}"
+        ShowInTaskbar="False"
+        SystemDecorations="None"
+        WindowStartupLocation="Manual"
+        Background="{DynamicResource FondoModal}"
+        x:DataType="vm:CobrarDialogViewModel"
+        WindowState="Maximized"
+        x:Name="Root">
+
+  <Window.Styles>
+    <Style Selector="Button.mtd">
+      <Setter Property="CornerRadius" Value="8"/>
+      <Setter Property="Background" Value="{DynamicResource FondoModal}"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
+      <Setter Property="BorderBrush" Value="#E06A28"/>
+      <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+    <Style Selector="Button.mtd.active">
+      <Setter Property="Background" Value="#E06A28"/>
+      <Setter Property="Foreground" Value="White"/>
+    </Style>
+  </Window.Styles>
+
+  <Grid>
+    <Border Padding="25"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+
+      <StackPanel Spacing="15"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center">
+
+        <Border CornerRadius="15"
+                Width="950"
+                Padding="25"
+                Background="{DynamicResource FondoPrincipal}">
+
+          <Grid ColumnDefinitions="*,*"
+                RowDefinitions="Auto,*,Auto,Auto"
+                RowSpacing="12"
+                ColumnSpacing="20">
+
+            <!-- TITULO -->
+            <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
+                       Text="{Binding Title, StringFormat='COBRAR - MESA {0}'}"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Foreground="{DynamicResource TextoColor}"/>
+
+            <!-- RESUMEN -->
+            <Border Grid.Row="1" Grid.Column="0"
+                    Background="{DynamicResource FondoModal}"
+                    CornerRadius="10"
+                    Padding="16">
+              <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,Auto" RowSpacing="10">
+
+                <StackPanel Grid.Row="0">
+                  <TextBlock Text="TOTAL A PAGAR" FontSize="12" Foreground="{DynamicResource TextoColor}" Opacity="0.7"/>
+                  <TextBlock Text="{Binding TotalTexto}" FontSize="30" FontWeight="Bold" Foreground="#27AE60"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1">
+                  <TextBlock Text="Propina (opcional)" FontSize="12" Foreground="{DynamicResource TextoColor}" Opacity="0.7"/>
+                  <TextBox Text="{Binding Propina, Mode=TwoWay}"
+                           Watermark="0.00"
+                           Foreground="{DynamicResource TextoColor}"
+                           BorderBrush="{DynamicResource Border}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Grid.Column="0">
+                  <TextBlock Text="Pagado" FontSize="12" Foreground="{DynamicResource TextoColor}" Opacity="0.7"/>
+                  <TextBlock Text="{Binding PagadoTexto}" FontSize="20" FontWeight="SemiBold" Foreground="{DynamicResource TextoColor}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="3">
+                  <TextBlock Text="Pendiente" FontSize="12" Foreground="{DynamicResource TextoColor}" Opacity="0.7"/>
+                  <TextBlock Text="{Binding PendienteTexto}" FontSize="20" FontWeight="SemiBold" Foreground="#E06A28"/>
+                </StackPanel>
+
+                <!-- Pagos agregados -->
+                <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto" Margin="0,8,0,0">
+                  <ItemsControl ItemsSource="{Binding PagosAgregados}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate>
+                        <Border Background="{DynamicResource FondoPrincipal}" CornerRadius="8" Padding="10,6" Margin="0,0,0,6">
+                          <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                            <TextBlock Grid.Column="0" Text="{Binding MetodoNombre}" FontWeight="SemiBold" Foreground="{DynamicResource TextoColor}" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="1" Text="{Binding MontoTexto}" Foreground="#27AE60" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            <Button Grid.Column="2"
+                                    Content="✕"
+                                    Background="Transparent"
+                                    Foreground="#E74C3C"
+                                    Padding="6,2"
+                                    Command="{Binding $parent[ItemsControl].((vm:CobrarDialogViewModel)DataContext).QuitarPagoCommand}"
+                                    CommandParameter="{Binding}"/>
+                          </Grid>
+                        </Border>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </ScrollViewer>
+
+                <TextBlock Grid.Row="5"
+                           Text="{Binding Error}"
+                           Foreground="Red"
+                           FontWeight="Bold"
+                           TextWrapping="Wrap"/>
+              </Grid>
+            </Border>
+
+            <!-- METODOS DE PAGO -->
+            <StackPanel Grid.Row="1" Grid.Column="1" Spacing="12">
+              <TextBlock Text="Método de pago" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextoColor}"/>
+
+              <ItemsControl ItemsSource="{Binding Metodos}">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <WrapPanel/>
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate DataType="vm:MetodoPagoOption">
+                    <Button Margin="0,0,8,8"
+                            Padding="14,12"
+                            Classes="mtd"
+                            Classes.Active="{Binding Seleccionado}"
+                            HorizontalAlignment="Left"
+                            Command="{Binding $parent[ItemsControl].((vm:CobrarDialogViewModel)DataContext).SeleccionarMetodoCommand}"
+                            CommandParameter="{Binding}">
+                      <TextBlock Text="{Binding Nombre}" FontWeight="SemiBold"/>
+                    </Button>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+
+              <TextBlock Text="Monto del pago" FontSize="14" Foreground="{DynamicResource TextoColor}"/>
+              <TextBox Text="{Binding MontoPago, Mode=TwoWay}"
+                       FontSize="18"
+                       Watermark="0.00"
+                       Foreground="{DynamicResource TextoColor}"
+                       BorderBrush="{DynamicResource Border}"/>
+
+              <Button Content="+ Agregar pago"
+                      Height="44"
+                      Classes="btn-verde"
+                      Command="{Binding AgregarPagoCommand}"/>
+            </StackPanel>
+
+            <!-- ACCIONES -->
+            <StackPanel Grid.Row="3" Grid.ColumnSpan="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Spacing="10">
+
+              <Button Content="Cancelar"
+                      Width="200"
+                      Height="44"
+                      Classes="btn-rojo"
+                      Command="{Binding CancelarCommand}"/>
+
+              <Button Content="CONFIRMAR COBRO"
+                      Width="260"
+                      Height="44"
+                      Classes="btn-verde"
+                      Command="{Binding ConfirmarCommand}"/>
+            </StackPanel>
+
+          </Grid>
+        </Border>
+
+      </StackPanel>
+    </Border>
+  </Grid>
+</Window>

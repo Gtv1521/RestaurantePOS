@@ -2,13 +2,18 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MiComanderaApp.Core.Application.UseCases.User;
+using MiComanderaApp.Core.Domain.Interfaces;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
 using MiComanderaApp.Presentation.ViewModels.Components.Admin;
+using MiComanderaApp.Request;
 using MiComanderaApp.ViewModels;
+using MiComanderaApp.ViewModels.Dialogs.Modals;
+using MiComanderaApp.Views.Dialogs.Modals;
 
 namespace MiComanderaApp.Presentation.Views.Components.Admin;
 
@@ -16,7 +21,8 @@ public partial class UsuariosViewModel : ViewModelBase
 {
     private readonly IViewModelFactory _factory;
     private readonly AllUserUseCase _allUsers;
-    // private readonly IDialogService _dialogService;
+    private readonly CreateUserUseCase _createUser;
+    private readonly IDialogService _dialogService;
 
     public ObservableCollection<UserViewModel> Users { get; } = new();
 
@@ -51,11 +57,15 @@ public partial class UsuariosViewModel : ViewModelBase
 
     public UsuariosViewModel(
         IViewModelFactory factory,
-        AllUserUseCase allUsers
+        AllUserUseCase allUsers,
+        CreateUserUseCase createUser,
+        IDialogService dialogService
         )
     {
         _factory = factory;
         _allUsers = allUsers;
+        _createUser = createUser;
+        _dialogService = dialogService;
         _ = CargarUsuariosAsync();
     }
 
@@ -95,18 +105,21 @@ public partial class UsuariosViewModel : ViewModelBase
     [RelayCommand]
     public async Task AgregarUsuarioAsync()
     {
-        // var dialogVm = _factory.Create<UserDialogViewModel>();
-        // dialogVm.InitializeForCreate();
+        var result = await _dialogService.ShowDialogAsync<CreateUser, CreateUserViewModel, UserRequest?>(
+            new PixelPoint(250, 30));
 
-        // var result = await _dialogService.ShowDialogAsync<UserModel>(dialogVm);
-        // if (result != null)
-        // {
-        //     var newUser = new UserViewModel();
-        //     newUser.Initialize(result);
-        //     Users.Add(newUser);
-        //     ActualizarEstadisticas();
-        //     System.Console.WriteLine($"Usuario agregado: {result.NombreCompleto} ({result.Email})");
-        // }
+        if (result != null)
+        {
+            try
+            {
+                await _createUser.ExecuteAsync(result);
+                await CargarUsuariosAsync();
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine($"Error al crear usuario: {ex.Message}");
+            }
+        }
     }
 
     [RelayCommand]
