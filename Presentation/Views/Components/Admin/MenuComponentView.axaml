@@ -39,6 +39,15 @@
 
           <Button Padding="16,8"
                   CornerRadius="6"
+                  Command="{Binding GestionarCatalogoCategoriasCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <i:Icon Value="fa-solid fa-tags" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
+              <TextBlock Text="Categorías" Foreground="White" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+            </StackPanel>
+          </Button>
+
+          <Button Padding="16,8"
+                  CornerRadius="6"
                   Command="{Binding GestionarCatalogoTerminosCommand}">
             <StackPanel Orientation="Horizontal" Spacing="8">
               <i:Icon Value="fa-solid fa-fire" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
@@ -57,7 +66,7 @@
 
           <Button Padding="16,8"
                   CornerRadius="6"
-                  Command="{Binding GestionarCatalogoAcompanamientosCommand}"> <!--falta agregar las observaciones-->
+                  Command="{Binding GestionarCatalogoObservacionesCommand}">
                   <StackPanel Orientation="Horizontal" Spacing="8">
                     <i:Icon Value="fa-solid fa-eye" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
                     <TextBlock Text="Observaciones" Foreground="White" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>

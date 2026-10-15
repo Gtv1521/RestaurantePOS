@@ -10,6 +10,7 @@ using MiComanderaApp.ViewModels.Routes;
 using System;
 using System.Drawing;
 using System.Globalization;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -22,6 +23,15 @@ public partial class LoginViewModel : ViewModelBase
     private readonly ISession<SessionModel> _sessionService;
     private readonly SignalRService _signalR;
     private readonly CultureInfo _culturaEspanol = new CultureInfo("es-ES");
+
+    private static readonly Dictionary<string, Action<INavigationService>> RoleRoutes =
+        new(StringComparer.OrdinalIgnoreCase)
+        {
+            ["Mesero"] = nav => { var vm = nav.NavigateTo<TablesViewModel>(); vm.InitializeComponent(); },
+            ["Administrador"] = nav => { var vm = nav.NavigateTo<AdminDashboardViewModel>(); vm.InitializeComponent(); },
+            ["Cajero"] = nav => { var vm = nav.NavigateTo<TablesViewModel>(); vm.InitializeComponent(); },
+            ["Inventario"] = nav => { var vm = nav.NavigateTo<InventarioViewModel>(); vm.InitializeComponent(); },
+        };
 
     public LoginViewModel(INavigationService navigation, ISession<SessionModel> sessionService, IViewModelFactory factory, SignalRService signalR)
     {
@@ -81,15 +91,13 @@ public partial class LoginViewModel : ViewModelBase
             var session = await _sessionService.LoginAsync(PinCode);
 
             PinCode = string.Empty;
-            if (session.Rol.Equals("Mesero", StringComparison.OrdinalIgnoreCase))
+            if (RoleRoutes.TryGetValue(session.Rol, out var route))
             {
-               var vm = _navigation.NavigateTo<TablesViewModel>();
-               vm.InitializeComponent();
+                route(_navigation);
             }
-            if (session.Rol.Equals("Administrador", StringComparison.OrdinalIgnoreCase))
+            else
             {
-                var vm = _navigation.NavigateTo<AdminDashboardViewModel>();
-                vm.InitializeComponent();
+                ErrorMessage = $"Rol no reconocido: {session.Rol}";
             }
         }
         catch (System.Exception ex)

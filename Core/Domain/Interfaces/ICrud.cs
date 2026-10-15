@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MiComanderaApp.Core.Application.Request;
+using MiComanderaApp.Core.Domain.Models;
 
 namespace MiComanderaApp.Interfaces
 {
@@ -42,6 +44,10 @@ namespace MiComanderaApp.Interfaces
     public interface IOptionVenta
     {
         Task<bool> UptatePax(int id, int pax);
+        Task<IEnumerable<VentaActivaModel>> GetActivasAsync();
+        Task<VentaDetalleModel> GetDetalleAsync(int id);
+        Task<bool> ActualizarClienteAsync(int id, VentaClienteRequest cliente);
+        Task<bool> CerrarAsync(CerrarVentaRequest request);
     }
 
 }

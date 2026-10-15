@@ -1,0 +1,136 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="https://github.com/projektanker/icons.avalonia"
+        xmlns:vm="using:MiComanderaApp.ViewModels.Dialogs.Modals"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="700"
+        x:Class="MiComanderaApp.Views.Dialogs.Modals.PrintPreviewDialogView"
+        Title="{Binding Title}"
+        ShowInTaskbar="False"
+        SystemDecorations="None"
+        WindowStartupLocation="Manual"
+        Background="{DynamicResource FondoModal}"
+        x:DataType="vm:PrintPreviewDialogViewModel"
+        WindowState="Maximized"
+        x:Name="Root">
+
+  <Grid>
+    <Border Padding="25"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+
+      <StackPanel Spacing="15"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center">
+
+        <Border CornerRadius="15"
+                Width="760"
+                Padding="25"
+                Background="{DynamicResource FondoPrincipal}">
+
+          <Grid ColumnDefinitions="*"
+                RowDefinitions="Auto,*,Auto,Auto,Auto"
+                RowSpacing="12">
+
+            <!-- TITULO -->
+            <TextBlock Grid.Row="0"
+                       Text="{Binding Title}"
+                       FontSize="22"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Foreground="{DynamicResource TextoColor}"/>
+
+            <!-- DOCUMENTO -->
+            <Border Grid.Row="1"
+                    Background="#101418"
+                    CornerRadius="8"
+                    Padding="4"
+                    Height="420">
+              <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <TextBox x:Name="TxtDocumento"
+                         Text="{Binding Texto, Mode=OneWay}"
+                         AcceptsReturn="True"
+                         TextWrapping="NoWrap"
+                         FontFamily="Cascadia Mono,Consolas,DejaVu Sans Mono,monospace"
+                         FontSize="13"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         IsReadOnly="True"
+                         Foreground="#DCE3E9"/>
+              </ScrollViewer>
+            </Border>
+
+            <!-- IMPRESORA -->
+            <StackPanel Grid.Row="2" Spacing="6">
+              <TextBlock Text="Impresora" Foreground="{DynamicResource TextoColor}" FontWeight="SemiBold"/>
+              <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                <ComboBox Grid.Column="0"
+                          ItemsSource="{Binding Impresoras}"
+                          SelectedItem="{Binding ImpresoraSeleccionada}"
+                          HorizontalAlignment="Stretch"
+                          Foreground="{DynamicResource TextoColor}"
+                          PlaceholderText="Seleccionar impresora">
+                  <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                      <TextBlock Text="{Binding NombreConCategoria}"/>
+                    </DataTemplate>
+                  </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <Button Grid.Column="1"
+                        Content="↻"
+                        Padding="12,6"
+                        ToolTip.Tip="Actualizar impresoras"
+                        Command="{Binding CargarImpresorasCommand}"/>
+              </Grid>
+
+              <ProgressBar IsIndeterminate="True" Height="4" IsVisible="{Binding CargandoImpresoras}"/>
+            </StackPanel>
+
+            <!-- MENSAJE -->
+            <TextBlock Grid.Row="3"
+                       Text="{Binding Mensaje}"
+                       FontWeight="SemiBold"
+                       TextWrapping="Wrap"
+                       IsVisible="{Binding MensajeError}"
+                       Foreground="#E74C3C"/>
+            <TextBlock Grid.Row="3"
+                       Text="{Binding Mensaje}"
+                       FontWeight="SemiBold"
+                       TextWrapping="Wrap"
+                       IsVisible="{Binding MensajeOk}"
+                       Foreground="#27AE60"/>
+
+            <!-- ACCIONES -->
+            <StackPanel Grid.Row="4"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Spacing="10">
+
+              <Button Content="Cerrar"
+                      Width="160"
+                      Height="44"
+                      Classes="btn-rojo"
+                      Command="{Binding CerrarCommand}"/>
+
+              <Button Content="Copiar"
+                      Width="160"
+                      Height="44"
+                      Click="OnCopiar"/>
+
+              <Button Content="🖨 Imprimir"
+                      Width="200"
+                      Height="44"
+                      Classes="btn-verde"
+                      IsVisible="{Binding !Procesando}"
+                      Command="{Binding ImprimirCommand}"/>
+            </StackPanel>
+
+          </Grid>
+        </Border>
+
+      </StackPanel>
+    </Border>
+  </Grid>
+</Window>

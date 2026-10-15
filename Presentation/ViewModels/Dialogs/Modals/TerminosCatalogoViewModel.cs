@@ -61,7 +61,7 @@ namespace MiComanderaApp.ViewModels.Dialogs.Modals
         [RelayCommand]
         private async Task Agregar()
         {
-            var texto = NuevoTermino.Trim();
+            var texto = NuevoTermino.ToString().Trim();
             if (string.IsNullOrWhiteSpace(texto)) return;
 
             var creado = await _createTermino.Execute(new TerminoRequest { Termino = texto });

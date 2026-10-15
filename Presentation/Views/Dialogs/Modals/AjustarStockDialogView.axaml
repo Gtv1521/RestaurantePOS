@@ -1,0 +1,145 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:b="using:MiComanderaApp.Presentation.Services"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="https://github.com/projektanker/icons.avalonia"
+        xmlns:vm="using:MiComanderaApp.ViewModels.Dialogs.Modals"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:in="using:Avalonia.Xaml.Interactivity"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="MiComanderaApp.Views.Dialogs.Modals.AjustarStockDialogView"
+        Title="{Binding Title}"
+        ShowInTaskbar="False"
+        SystemDecorations="None"
+        WindowStartupLocation="Manual"
+        Background="{DynamicResource FondoModal}"
+        x:DataType="vm:AjustarStockDialogViewModel"
+        WindowState="Maximized"
+        x:Name="Root"
+        >
+
+
+        <Grid RowDefinitions="*, *">
+                <Border Grid.Row="0" Padding="25"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        >
+
+                        <StackPanel Spacing="15"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Stretch" >
+
+                                <Border CornerRadius="15"
+                                        Width="900"
+                                        Padding="20"
+                                        Background="{DynamicResource FondoPrincipal}"
+                                        >
+                                        <Grid ColumnDefinitions="*, *"
+                                              RowDefinitions="*,*,*,*"
+                                              RowSpacing="10"
+                                              ColumnSpacing="10"
+                                              >
+
+                                                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding Title}"
+                                                           FontSize="24"
+                                                           FontWeight="Bold"
+                                                           HorizontalAlignment="Center"
+                                                           Foreground="{DynamicResource TextoBrush}"
+                                                           />
+
+                                                <StackPanel Spacing="15" Grid.Row="1" Grid.Column="0">
+
+                                                        <TextBlock Text="Ingrediente" Foreground="{DynamicResource TextoColor}"/>
+
+                                                        <TextBox Text="{Binding IngredienteNombre, Mode=TwoWay}"
+                                                                 IsReadOnly="True"
+                                                                 BorderBrush="{DynamicResource Border}"
+                                                                 Foreground="{DynamicResource TextoColor}"/>
+
+                                                        <TextBlock Text="Cantidad actual" Foreground="{DynamicResource TextoColor}"/>
+
+                                                        <TextBox Text="{Binding CantidadActual, Mode=TwoWay}"
+                                                                 IsReadOnly="True"
+                                                                 BorderBrush="{DynamicResource Border}"
+                                                                 Foreground="{DynamicResource TextoColor}"/>
+                                                </StackPanel>
+
+                                                <StackPanel Spacing="15" Grid.Row="1" Grid.Column="1">
+
+                                                        <TextBlock Text="Nueva cantidad" Foreground="{DynamicResource TextoColor}"/>
+
+                                                        <TextBox Text="{Binding NuevaCantidad, Mode=TwoWay}"
+                                                                 x:Name="TxtNuevaCantidad"
+                                                                 BorderBrush="{DynamicResource Border}"
+                                                                 Watermark="0.00"
+                                                                 Foreground="{DynamicResource TextoColor}">
+                                                                <in:Interaction.Behaviors>
+                                                                        <b:KeyboardFocusBehavior />
+                                                                </in:Interaction.Behaviors>
+                                                        </TextBox>
+
+                                                        <TextBlock Text="Motivo del ajuste" Foreground="{DynamicResource TextoColor}"/>
+
+                                                        <TextBox Text="{Binding Motivo, Mode=TwoWay}"
+                                                                 x:Name="TxtMotivo"
+                                                                 BorderBrush="{DynamicResource Border}"
+                                                                 Watermark="Ej: Merma, reposición, conteo físico..."
+                                                                 Foreground="{DynamicResource TextoColor}">
+                                                                <in:Interaction.Behaviors>
+                                                                        <b:KeyboardFocusBehavior />
+                                                                </in:Interaction.Behaviors>
+                                                        </TextBox>
+                                                </StackPanel>
+
+                                                <TextBlock Grid.Row="2" Grid.ColumnSpan="2"
+                                                           Text="{Binding Error}"
+                                                           Foreground="Red"
+                                                           FontWeight="Bold"
+                                                           HorizontalAlignment="Center"
+                                                           />
+
+                                                <StackPanel Grid.Row="3" Grid.ColumnSpan="2"
+                                                            Orientation="Horizontal"
+                                                            HorizontalAlignment="Right"
+                                                            Spacing="10"
+                                                            Margin="0,20,0,0">
+
+                                                        <Button Content="Cancelar"
+                                                                Width="200"
+                                                                Height="40"
+                                                                Classes="btn-rojo"
+                                                                Command="{Binding CancelarCommand}"/>
+
+                                                        <Button Content="Guardar"
+                                                                Width="200"
+                                                                Height="40"
+                                                                Classes="btn-verde"
+                                                                Command="{Binding GuardarCommand}"/>
+
+                                                </StackPanel>
+
+                                        </Grid>
+                                </Border>
+
+                        </StackPanel>
+
+                </Border>
+
+                <Grid RowDefinitions="*" Grid.Row="1" VerticalAlignment="Bottom" >
+
+                        <Border Padding="10"
+                                Margin="20"
+                                Height="35"
+                                Width="100"
+                                HorizontalAlignment="Left"
+                                IsVisible="{Binding BotonTeclado}"
+                                >
+                                <StackPanel>
+                                        <Button i:Attached.Icon="fa-solid fa-chevron-up" Background="{DynamicResource FondoPrincipal}"  Classes="KeypadBtn" Command="{Binding VerTecladoCommand}" />
+                                </StackPanel>
+                        </Border>
+
+                        <ContentControl Padding="10" Height="500" IsVisible="{Binding Teclado}" Grid.Row="1" Content="{Binding VistaActual}" />
+                </Grid>
+        </Grid>
+</Window>

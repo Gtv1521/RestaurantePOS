@@ -12,6 +12,7 @@ using CommunityToolkit.Mvvm.Input;
 using MiComanderaApp.Core.Application.Request;
 using MiComanderaApp.Core.Application.UseCases.Acompanamiento;
 using MiComanderaApp.Core.Application.UseCases.Catalogo;
+using MiComanderaApp.Core.Application.UseCases.Observacion;
 using MiComanderaApp.Core.Application.UseCases.Product;
 using MiComanderaApp.Core.Application.UseCases.Termino;
 using MiComanderaApp.Core.Domain.Interfaces;
@@ -42,6 +43,11 @@ public partial class MenuComponentViewModel : ViewModelBase
     private readonly GetAllAcompanamientosUseCase _todosAcomp;
     private readonly CreateAcompanamientoUseCase _createAcomp;
     private readonly DeleteAcompanamientoUseCase _deleteAcomp;
+    private readonly CreateCatalogoUseCase _createCatalogo;
+    private readonly DeleteCatalogoUseCase _deleteCatalogo;
+    private readonly GetAllObservacionUseCase _todosObservaciones;
+    private readonly CreateObservacionUseCase _createObservacion;
+    private readonly DeleteObservacionUseCase _deleteObservacion;
     private readonly IViewModelFactory _factory;
 
 
@@ -63,6 +69,11 @@ public partial class MenuComponentViewModel : ViewModelBase
         GetAllAcompanamientosUseCase todosAcomp,
         CreateAcompanamientoUseCase createAcomp,
         DeleteAcompanamientoUseCase deleteAcomp,
+        CreateCatalogoUseCase createCatalogo,
+        DeleteCatalogoUseCase deleteCatalogo,
+        GetAllObservacionUseCase todosObservaciones,
+        CreateObservacionUseCase createObservacion,
+        DeleteObservacionUseCase deleteObservacion,
         IViewModelFactory factory
         )
     {
@@ -77,6 +88,11 @@ public partial class MenuComponentViewModel : ViewModelBase
         _todosAcomp = todosAcomp;
         _createAcomp = createAcomp;
         _deleteAcomp = deleteAcomp;
+        _createCatalogo = createCatalogo;
+        _deleteCatalogo = deleteCatalogo;
+        _todosObservaciones = todosObservaciones;
+        _createObservacion = createObservacion;
+        _deleteObservacion = deleteObservacion;
         _deleteProductUseCase = deleteProductUseCase;
         _productEvents = productEvents;
         _ = LoadProducts();
@@ -189,6 +205,42 @@ public partial class MenuComponentViewModel : ViewModelBase
 
         await _dialogService
             .ShowDialogAsync<TerminosCatalogoView, TerminosCatalogoViewModel, bool?>(
+                viewModel,
+                new PixelPoint(250, 30));
+    }
+
+    [RelayCommand]
+    private async Task GestionarCatalogoCategorias()
+    {
+        var viewModel = new CategoriasCatalogoViewModel(
+            _categorias,
+            _createCatalogo,
+            _deleteCatalogo,
+            _factory);
+
+        var changed = await _dialogService
+            .ShowDialogAsync<CategoriasCatalogoView, CategoriasCatalogoViewModel, bool?>(
+                viewModel,
+                new PixelPoint(250, 30));
+
+        if (changed == true)
+        {
+            Categorias.Clear();
+            await CargeCategorias();
+        }
+    }
+
+    [RelayCommand]
+    private async Task GestionarCatalogoObservaciones()
+    {
+        var viewModel = new ObservacionesCatalogoViewModel(
+            _todosObservaciones,
+            _createObservacion,
+            _deleteObservacion,
+            _factory);
+
+        await _dialogService
+            .ShowDialogAsync<ObservacionesCatalogoView, ObservacionesCatalogoViewModel, bool?>(
                 viewModel,
                 new PixelPoint(250, 30));
     }
