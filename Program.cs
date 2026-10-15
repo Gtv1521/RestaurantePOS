@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using System;
 using Avalonia.Diagnostics;
 using Microsoft.Extensions.Hosting;
@@ -111,6 +111,7 @@ sealed class Program
                     type => (ViewModelBase)provider.GetRequiredService(type));
 
                 services.AddSingleton<IWindowProvider, WindowProvider>();
+                services.AddSingleton<LoadingState>();
                 services.AddSingleton<IDialogService, DialogService>();
                 services.AddSingleton<INavigationService, NavigationService>();
                 services.AddSingleton<IFocusService, FocusService>();

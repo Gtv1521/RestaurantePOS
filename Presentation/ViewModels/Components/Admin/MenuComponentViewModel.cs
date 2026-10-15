@@ -20,6 +20,7 @@ using MiComanderaApp.Core.Domain.Models;
 using MiComanderaApp.Core.Infrastructure.SignalR.Events;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
+using MiComanderaApp.Presentation.Services;
 using MiComanderaApp.Presentation.Views.Dialogs.Modals;
 using MiComanderaApp.ViewModels.Components.Products;
 using MiComanderaApp.ViewModels.Dialogs.Modals;
@@ -49,12 +50,12 @@ public partial class MenuComponentViewModel : ViewModelBase
     private readonly CreateObservacionUseCase _createObservacion;
     private readonly DeleteObservacionUseCase _deleteObservacion;
     private readonly IViewModelFactory _factory;
+    public LoadingState Loading { get; }
 
 
     public ObservableCollection<ProductoModel> Products { get; } = new();
     public ObservableCollection<CatalogoModel> Categorias { get; } = new();
 
-    [ObservableProperty] private bool _isLoading = false;
     public MenuComponentViewModel(
         IServiceProvider serviceProvider,
         IDialogService dialogService,
@@ -74,7 +75,8 @@ public partial class MenuComponentViewModel : ViewModelBase
         GetAllObservacionUseCase todosObservaciones,
         CreateObservacionUseCase createObservacion,
         DeleteObservacionUseCase deleteObservacion,
-        IViewModelFactory factory
+        IViewModelFactory factory,
+        LoadingState loading
         )
     {
         _serviceProvider = serviceProvider;
@@ -95,6 +97,7 @@ public partial class MenuComponentViewModel : ViewModelBase
         _deleteObservacion = deleteObservacion;
         _deleteProductUseCase = deleteProductUseCase;
         _productEvents = productEvents;
+        Loading = loading;
         _ = LoadProducts();
         _ = CargeCategorias();
         _productEvents.ProductCreated += OnProductCreated;
@@ -109,13 +112,21 @@ public partial class MenuComponentViewModel : ViewModelBase
     [RelayCommand]
     private async Task LoadProducts()
     {
-        Products.Clear();
-        var products = await _repo.Execute();
-
-
-        foreach (var table in products)
+        try
         {
-            Products.Add(table);
+            Loading.Show("Cargando menú...");
+            Products.Clear();
+            var products = await _repo.Execute();
+
+
+            foreach (var table in products)
+            {
+                Products.Add(table);
+            }
+        }
+        finally
+        {
+            Loading.Hide();
         }
 
     }
@@ -125,7 +136,7 @@ public partial class MenuComponentViewModel : ViewModelBase
     {
         try
         {
-            IsLoading = true;
+            Loading.Show("Cargando menú...");
             var categorias = await _categorias.Execute();
             foreach (var categoria in categorias)
             {
@@ -139,7 +150,7 @@ public partial class MenuComponentViewModel : ViewModelBase
         }
         finally
         {
-            IsLoading = false;
+            Loading.Hide();
         }
 
     }

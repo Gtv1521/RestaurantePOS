@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="using:MiComanderaApp.Presentation.Views.Components.Icones"
+             mc:Ignorable="d" d:DesignWidth="40" d:DesignHeight="40"
+             x:Class="MiComanderaApp.Presentation.Views.Components.Icones.IngredientView">
+
+  <Grid Width="32" Height="32">
+    <!-- Ingrediente: círculo de color con anillo -->
+    <Ellipse Width="30" Height="30"
+             Fill="{Binding Color, RelativeSource={RelativeSource AncestorType=local:IngredientView}}"
+             Opacity="0.9"/>
+    <Ellipse Width="30" Height="30"
+             Stroke="White"
+             StrokeThickness="2"
+             Opacity="0.7"/>
+    <Ellipse Width="10" Height="10"
+             Fill="White"
+             Opacity="0.85"/>
+  </Grid>
+</UserControl>

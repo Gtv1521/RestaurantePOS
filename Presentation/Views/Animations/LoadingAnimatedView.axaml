@@ -1,0 +1,116 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:behaviors="using:MiComanderaApp.Presentation.Services"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="https://github.com/projektanker/icons.avalonia"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="using:MiComanderaApp.Presentation.Views.Animations"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="MiComanderaApp.Presentation.Views.Animations.LoadingAnimatedView">
+
+    <UserControl.Resources>
+        <LinearGradientBrush x:Key="OroBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Offset="0" Color="#8C6D1F"/>
+            <GradientStop Offset="0.5" Color="#E8C86A"/>
+            <GradientStop Offset="1" Color="#8C6D1F"/>
+        </LinearGradientBrush>
+    </UserControl.Resources>
+
+    <Grid Background="{DynamicResource FondoPrincipal}"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch">
+
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="0">
+
+            <!-- Emblema -->
+            <Border Width="110" Height="110" CornerRadius="55"
+                    BorderBrush="{StaticResource OroBrush}" BorderThickness="1.5"
+                    HorizontalAlignment="Center">
+                <Panel>
+                    <i:Icon Value="fa-solid fa-utensils" FontSize="42" Foreground="#C9A227"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Panel>
+            </Border>
+            <i:Icon Value="fa-solid fa-star" FontSize="14" Foreground="#C9A227"
+                    HorizontalAlignment="Center" Margin="0,8,0,0"/>
+
+            <!-- Marca -->
+            <TextBlock Text="RESTROPOS" Foreground="{DynamicResource TextoColor}"
+                       FontFamily="Georgia, 'Times New Roman', serif"
+                       FontSize="34" FontWeight="Bold" LetterSpacing="4"
+                       HorizontalAlignment="Center" Margin="0,14,0,0"/>
+            <Border Width="120" Height="1" Background="{StaticResource OroBrush}"
+                    HorizontalAlignment="Center" Margin="0,10,0,0" Opacity="0.8"/>
+
+            <!-- Eslogan -->
+            <TextBlock Text="Preparando tu experiencia gastronómica..."
+                       Foreground="#C9A227"
+                       FontFamily="Georgia, 'Times New Roman', serif"
+                       FontStyle="Italic" FontSize="17"
+                       HorizontalAlignment="Center" Margin="0,14,0,0"/>
+
+            <!-- Ruleta gastronómica -->
+            <Canvas Width="240" Height="240" Margin="0,10,0,0">
+                <!-- Círculo base -->
+                <Ellipse Canvas.Left="35" Canvas.Top="35" Width="170" Height="170"
+                         Stroke="{DynamicResource TextoColor}" StrokeThickness="1" Opacity="0.18"/>
+
+                <!-- Arco dorado girando -->
+                <Ellipse Canvas.Left="35" Canvas.Top="35" Width="170" Height="170"
+                         Stroke="{StaticResource OroBrush}" StrokeThickness="6"
+                         StrokeDashArray="130, 404" StrokeLineCap="Round">
+                    <Interaction.Behaviors>
+                        <behaviors:RotateBehavior Duration="1.6" />
+                    </Interaction.Behaviors>
+                </Ellipse>
+
+                <!-- Iconos orbitando -->
+                <i:Icon Value="fa-solid fa-bell-concierge" Width="22" Height="22" FontSize="18" Foreground="#C9A227">
+                    <Interaction.Behaviors>
+                        <behaviors:OrbitBehavior CenterX="120" CenterY="120"
+                                                 RadiusX="104" RadiusY="104"
+                                                 CycleSeconds="4" PhaseOffset="0" />
+                    </Interaction.Behaviors>
+                </i:Icon>
+                <i:Icon Value="fa-solid fa-wine-glass" Width="22" Height="22" FontSize="18" Foreground="#C9A227">
+                    <Interaction.Behaviors>
+                        <behaviors:OrbitBehavior CenterX="120" CenterY="120"
+                                                 RadiusX="104" RadiusY="104"
+                                                 CycleSeconds="4" PhaseOffset="0.25" />
+                    </Interaction.Behaviors>
+                </i:Icon>
+                <i:Icon Value="fa-solid fa-star" Width="22" Height="22" FontSize="18" Foreground="#C9A227">
+                    <Interaction.Behaviors>
+                        <behaviors:OrbitBehavior CenterX="120" CenterY="120"
+                                                 RadiusX="104" RadiusY="104"
+                                                 CycleSeconds="4" PhaseOffset="0.5" />
+                    </Interaction.Behaviors>
+                </i:Icon>
+                <i:Icon Value="fa-solid fa-mug-hot" Width="22" Height="22" FontSize="18" Foreground="#C9A227">
+                    <Interaction.Behaviors>
+                        <behaviors:OrbitBehavior CenterX="120" CenterY="120"
+                                                 RadiusX="104" RadiusY="104"
+                                                 CycleSeconds="4" PhaseOffset="0.75" />
+                    </Interaction.Behaviors>
+                </i:Icon>
+
+                <!-- Flecha central -->
+                <i:Icon Value="fa-solid fa-arrow-rotate-right" FontSize="38" Foreground="#C9A227"
+                        Canvas.Left="101" Canvas.Top="101" Width="38" Height="38"/>
+            </Canvas>
+
+            <!-- Barra de progreso -->
+            <ProgressBar Width="320" Height="8" MinWidth="320" Margin="0,6,0,0"
+                         IsIndeterminate="True"
+                         Foreground="{StaticResource OroBrush}"
+                         Background="{DynamicResource FondoModal}"
+                         BorderBrush="{DynamicResource Border}"
+                         BorderThickness="1" CornerRadius="4"/>
+
+            <!-- Estado -->
+            <TextBlock Text="{Binding StatusText, RelativeSource={RelativeSource AncestorType=local:LoadingAnimatedView}}" Foreground="{DynamicResource TextoColor}"
+                       Opacity="0.8" FontSize="13"
+                       HorizontalAlignment="Center" Margin="0,10,0,0"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
