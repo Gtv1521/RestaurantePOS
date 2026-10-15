@@ -1,7 +1,8 @@
 <Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:MiComanderaApp.ViewModels"
-        xmlns:vmOrder="using:MiComanderaApp.ViewModels.Orders"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:vm="using:MiComanderaApp.ViewModels"
+         xmlns:anim="using:MiComanderaApp.Presentation.Views.Animations"
+         xmlns:vmOrder="using:MiComanderaApp.ViewModels.Orders"
         xmlns:vOrder="using:MiComanderaApp.Views.Orders"
         xmlns:vmLogin="using:MiComanderaApp.ViewModels"
         xmlns:vLogin="using:MiComanderaApp.Views"
@@ -27,6 +28,13 @@
             <ContentControl 
                 Content="{Binding Navigation.OverlayView}"
                 IsVisible="{Binding Navigation.IsOverlayVisible}"/>
+
+            <!-- Loading global (cubre toda la app) -->
+            <anim:LoadingAnimatedView
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                IsVisible="{Binding Loading.IsLoading}"
+                StatusText="{Binding Loading.StatusText}"/>
         </Grid>
     </Grid>
 

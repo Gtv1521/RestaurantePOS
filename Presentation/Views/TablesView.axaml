@@ -7,6 +7,7 @@
              xmlns:vmTables="using:MiComanderaApp.ViewModels.Components"
              xmlns:views="using:MiComanderaApp.Views.Components"
              xmlns:models="using:MiComanderaApp.Models"
+             xmlns:anim="using:MiComanderaApp.Presentation.Views.Animations"
              mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="768"
              x:Class="MiComanderaApp.Views.TablesView"
              x:DataType="vm:TablesViewModel"
@@ -496,6 +497,10 @@
 
 
         </Grid>
-
+        <anim:LoadingAnimatedView
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            IsVisible="{Binding Loading.IsLoading}"
+            StatusText="{Binding Loading.StatusText}"/>
     </Grid>
 </UserControl>
