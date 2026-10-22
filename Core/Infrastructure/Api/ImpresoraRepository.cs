@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using MiComanderaApp.Core.Application.Request;
 using MiComanderaApp.Core.Domain.Models;
 using MiComanderaApp.Exceptions;
 using MiComanderaApp.Interfaces;
@@ -39,6 +40,59 @@ namespace MiComanderaApp.Core.Infrastructure.Api
 
             var result = await response.Content.ReadFromJsonAsync<List<ImpresoraModel>>();
             return result ?? new List<ImpresoraModel>();
+        }
+
+        public async Task<ImpresoraModel?> CreateAsync(ImpresoraRequest request)
+        {
+            var response = await _http.PostAsJsonAsync(_url, request);
+            EnsureSuccess(response);
+            return await response.Content.ReadFromJsonAsync<ImpresoraModel>();
+        }
+
+        public async Task<List<ImpresoraDescubiertaModel>> DiscoverAsync(string? subnet)
+        {
+            var url = string.IsNullOrWhiteSpace(subnet)
+                ? $"{_url}/discover"
+                : $"{_url}/discover?subnet={Uri.EscapeDataString(subnet)}";
+
+            var response = await _http.GetAsync(url);
+            EnsureSuccess(response);
+
+            var result = await response.Content.ReadFromJsonAsync<List<ImpresoraDescubiertaModel>>();
+            return result ?? new List<ImpresoraDescubiertaModel>();
+        }
+
+        public async Task<ImpresoraModel?> RegisterDiscoveredAsync(ImpresoraRequest request)
+        {
+            var response = await _http.PostAsJsonAsync($"{_url}/discovered", request);
+            EnsureSuccess(response);
+            return await response.Content.ReadFromJsonAsync<ImpresoraModel>();
+        }
+
+        public async Task<ImpresoraModel?> UpdateAsync(int id, ImpresoraRequest request)
+        {
+            var response = await _http.PutAsJsonAsync($"{_url}/{id}", request);
+            EnsureSuccess(response);
+            return await response.Content.ReadFromJsonAsync<ImpresoraModel>();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var response = await _http.DeleteAsync($"{_url}/{id}");
+            EnsureSuccess(response);
+        }
+
+        private static void EnsureSuccess(HttpResponseMessage response)
+        {
+            if (response.IsSuccessStatusCode) return;
+            var error = response.Content.ReadAsStringAsync().Result;
+            throw response.StatusCode switch
+            {
+                HttpStatusCode.BadRequest => new BadRequestException(error),
+                HttpStatusCode.NotFound => new NotFoundException(error),
+                HttpStatusCode.Unauthorized => new UnauthorizedAccessException(error),
+                _ => new HttpRequestException($"Error {(int)response.StatusCode}: {error}")
+            };
         }
 
         public async Task<bool> ImprimirAsync(int impresoraId, string texto)

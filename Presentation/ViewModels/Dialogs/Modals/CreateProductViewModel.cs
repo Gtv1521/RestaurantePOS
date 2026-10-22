@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,6 +8,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MiComanderaApp.Core.Application.Request;
 using MiComanderaApp.Core.Application.UseCases.Catalogo;
+using MiComanderaApp.Core.Application.UseCases.Print;
 using MiComanderaApp.Core.Application.UseCases.Product;
 using MiComanderaApp.Core.Domain.Interfaces;
 using MiComanderaApp.Core.Domain.Models;
@@ -17,26 +19,48 @@ using MiComanderaApp.ViewModels;
 
 namespace MiComanderaApp.Presentation.Views.Dialogs.Modals;
 
+/// <summary>Impresora disponible con su estado de selección en el modal de producto.</summary>
+public partial class ImpresoraSeleccionItem : ObservableObject
+{
+    public int Id { get; }
+    public string Name { get; }
+
+    [ObservableProperty] private bool _isSelected;
+
+    public ImpresoraSeleccionItem(int id, string name)
+    {
+        Id = id;
+        Name = name;
+    }
+}
+
 public partial class CreateProductViewModel : ObservableValidator, IDialogViewModel<ProductoRequest>
 {
     private readonly GetAllCatalogoUseCase _allCatalogoCase;
     private readonly InsertProductUseCase _insertProductUseCase;
     private readonly UpdateProductUseCase _updateProductUseCase;
+    private readonly GetImpresorasUseCase _getImpresorasUseCase;
     private readonly IViewModelFactory _factory;
+
+    private List<int> _printerIdsPendientes = new();
+    private List<int> _acompanamientoPrinterIdsPendientes = new();
 
 
     public CreateProductViewModel(
         GetAllCatalogoUseCase allCatalogoCase,
         InsertProductUseCase insertProductUseCase,
         UpdateProductUseCase updateProductUseCase,
+        GetImpresorasUseCase getImpresorasUseCase,
         IViewModelFactory factory
         )
     {
         _allCatalogoCase = allCatalogoCase;
         _insertProductUseCase = insertProductUseCase;
         _updateProductUseCase = updateProductUseCase;
+        _getImpresorasUseCase = getImpresorasUseCase;
         _factory = factory;
         _ = LoadCategories();
+        _ = LoadImpresoras();
         _vistaActual = _factory.Create<TecladoComponentViewModel>();
 
     }
@@ -75,6 +99,14 @@ public partial class CreateProductViewModel : ObservableValidator, IDialogViewMo
     public ObservableCollection<CatalogoModel> Categorias { get; } = new();
     public ObservableCollection<string> Errores { get; } = new();
 
+    /// <summary>Impresoras que imprimen el plato completo.</summary>
+    public ObservableCollection<ImpresoraSeleccionItem> ImpresorasPlato { get; } = new();
+
+    /// <summary>Impresoras que imprimen solo los acompañamientos.</summary>
+    public ObservableCollection<ImpresoraSeleccionItem> ImpresorasAcompanamientos { get; } = new();
+
+    public bool HayImpresoras => ImpresorasPlato.Count > 0;
+
 
 
     public void Initialize(ProductoModel? model)
@@ -95,6 +127,40 @@ public partial class CreateProductViewModel : ObservableValidator, IDialogViewMo
             CategoriaSeleccionada = Categorias.FirstOrDefault(c =>
                 string.Equals(c.Name, model.CategoryName, StringComparison.OrdinalIgnoreCase))
                 ?? new CatalogoModel();
+
+            _printerIdsPendientes = model.PrinterIds.Distinct().ToList();
+            _acompanamientoPrinterIdsPendientes = model.AccompanimentPrinterIds.Distinct().ToList();
+            AplicarSeleccionImpresoras();
+        }
+    }
+
+    private void AplicarSeleccionImpresoras()
+    {
+        foreach (var item in ImpresorasPlato)
+            item.IsSelected = _printerIdsPendientes.Contains(item.Id);
+
+        foreach (var item in ImpresorasAcompanamientos)
+            item.IsSelected = _acompanamientoPrinterIdsPendientes.Contains(item.Id);
+    }
+
+    private async Task LoadImpresoras()
+    {
+        try
+        {
+            var impresoras = await _getImpresorasUseCase.Execute();
+            ImpresorasPlato.Clear();
+            ImpresorasAcompanamientos.Clear();
+            foreach (var impresora in impresoras.Where(i => i.Active))
+            {
+                ImpresorasPlato.Add(new ImpresoraSeleccionItem(impresora.Id, impresora.Name));
+                ImpresorasAcompanamientos.Add(new ImpresoraSeleccionItem(impresora.Id, impresora.Name));
+            }
+            OnPropertyChanged(nameof(HayImpresoras));
+            AplicarSeleccionImpresoras();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar las impresoras: {ex.Message}");
         }
     }
 
@@ -133,7 +199,9 @@ public partial class CreateProductViewModel : ObservableValidator, IDialogViewMo
                 ImageUrl = "",
                 ConTermino = ConTermino,
                 HasAccompaniments = LlevaAcompanamientos,
-                MaxAccompaniments = MaxAcompanamientos
+                MaxAccompaniments = MaxAcompanamientos,
+                PrinterIds = ImpresorasPlato.Where(i => i.IsSelected).Select(i => i.Id).ToList(),
+                AccompanimentPrinterIds = ImpresorasAcompanamientos.Where(i => i.IsSelected).Select(i => i.Id).ToList()
             };
 
             if (Editar)

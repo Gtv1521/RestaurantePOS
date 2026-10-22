@@ -97,6 +97,7 @@ public partial class DataTableViewModel : ViewModelBase
     private readonly CerrarVentaUseCase _cerrarVenta;
     private readonly GetImpresorasUseCase _getImpresoras;
     private readonly ImprimirDocumentoUseCase _imprimirDocumento;
+    private readonly GeneralSettingsStore _settings;
 
 
     // 2. Propiedades Reactivas del Lado Izquierdo (La Cuenta)
@@ -270,7 +271,8 @@ public partial class DataTableViewModel : ViewModelBase
         ActualizarClienteUseCase actualizarCliente,
         CerrarVentaUseCase cerrarVenta,
         GetImpresorasUseCase getImpresoras,
-        ImprimirDocumentoUseCase imprimirDocumento
+        ImprimirDocumentoUseCase imprimirDocumento,
+        GeneralSettingsStore settings
         )
     {
         _getCatalogoUseCase = getCatalogoUseCase;
@@ -288,6 +290,8 @@ public partial class DataTableViewModel : ViewModelBase
         _cerrarVenta = cerrarVenta;
         _getImpresoras = getImpresoras;
         _imprimirDocumento = imprimirDocumento;
+        _settings = settings;
+        _ = _settings.RefreshAsync();
 
         // El cajero (y el administrador) ven las acciones de caja en la mesa
         var rol = _getUserUseCase.Execute()?.Rol ?? string.Empty;
@@ -364,16 +368,31 @@ public partial class DataTableViewModel : ViewModelBase
         return baseProductos > 0 ? baseProductos : _totalServidor;
     }
 
+    private decimal PorcentajeImpuesto =>
+        _settings.Current.TaxEnabled && _settings.Current.TaxIncludedInPrice
+            ? _settings.Current.TaxPercentage / 100m
+            : 0m;
+
+    private decimal PorcentajeServicio =>
+        _settings.Current.ServiceChargeEnabled
+            ? _settings.Current.ServiceChargePercentage / 100m
+            : 0m;
+
     private void ActualizarTotalCuenta()
     {
         decimal baseProductos = CalcularBaseCuenta();
 
-        TotalIpoconsumo = baseProductos - (baseProductos / 1.08m);
+        // Impuesto al consumo incluido en el precio (impoconsumo).
+        TotalIpoconsumo = PorcentajeImpuesto > 0
+            ? baseProductos - (baseProductos / (1 + PorcentajeImpuesto))
+            : 0m;
+
         TotalNeto = baseProductos;
 
         // El servicio es la propina: durante el cobro sigue a la propina editable
-        // (botones "Modificar propina" / "Quitar propina"); fuera del cobro es el 10%.
-        TotalServicio = ModoPago ? PagoPropina : baseProductos * 0.10m;
+        // (botones "Modificar propina" / "Quitar propina"); fuera del cobro es el
+        // porcentaje configurado.
+        TotalServicio = ModoPago ? PagoPropina : baseProductos * PorcentajeServicio;
         TotalCuenta = baseProductos + TotalServicio;
     }
 
@@ -668,11 +687,11 @@ public partial class DataTableViewModel : ViewModelBase
 
     [RelayCommand]
     private async Task Prefactura() =>
-        await MostrarDocumento("PREFACTURA", DocumentosVenta.BuildPrefactura);
+        await MostrarDocumento("PREFACTURA", new DocumentosVenta(_settings.Current).BuildPrefactura);
 
     [RelayCommand]
     private async Task Factura() =>
-        await MostrarDocumento("FACTURA", DocumentosVenta.BuildFactura);
+        await MostrarDocumento("FACTURA", new DocumentosVenta(_settings.Current).BuildFactura);
 
     [RelayCommand]
     private async Task Cobrar()
@@ -686,7 +705,7 @@ public partial class DataTableViewModel : ViewModelBase
         // Si la venta ya está cobrada, solo volvemos a mostrar el comprobante
         if (detalle.TienePagos)
         {
-            await MostrarDocumento("COMPROBANTE DE PAGO", DocumentosVenta.BuildComprobantePago, detalle);
+            await MostrarDocumento("COMPROBANTE DE PAGO", new DocumentosVenta(_settings.Current).BuildComprobantePago, detalle);
             return;
         }
 
@@ -697,9 +716,9 @@ public partial class DataTableViewModel : ViewModelBase
         PagoClienteDireccion = detalle.ClienteDireccion ?? string.Empty;
         PagoClienteTelefono = detalle.ClienteTelefono ?? string.Empty;
 
-        // Precargamos la propina calculada (10% de servicio) sobre el total de la cuenta.
+        // Precargamos la propina calculada (servicio) sobre el total de la cuenta.
         // Queda editable con los botones "Modificar propina" / "Quitar propina".
-        PropinaTexto = (CalcularBaseCuenta() * 0.10m).ToString("0.##", CultureInfo.InvariantCulture);
+        PropinaTexto = (CalcularBaseCuenta() * PorcentajeServicio).ToString("0.##", CultureInfo.InvariantCulture);
         EditandoPropina = false;
         PagosAgregados.Clear();
         PagoError = null;
@@ -869,7 +888,7 @@ public partial class DataTableViewModel : ViewModelBase
 
             ModoPago = false;
             var cerrada = await _getVentaDetalle.Execute(_ventaId);
-            await MostrarDocumento("COMPROBANTE DE PAGO", DocumentosVenta.BuildComprobantePago, cerrada);
+            await MostrarDocumento("COMPROBANTE DE PAGO", new DocumentosVenta(_settings.Current).BuildComprobantePago, cerrada);
             Volver();
         }
         catch (Exception ex)
