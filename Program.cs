@@ -137,6 +137,8 @@ sealed class Program
                 services.AddTransient<InventarioComponentViewModel>();
                 services.AddTransient<ReportesInventarioViewModel>();
                 services.AddTransient<AjustarStockDialogViewModel>();
+                services.AddTransient<ConfirmDialogViewModel>();
+                services.AddTransient<AutorizacionPinDialogViewModel>();
                 services.AddTransient<ReportesComponentViewModel>();
 
                 // modal

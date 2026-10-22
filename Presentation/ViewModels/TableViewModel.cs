@@ -11,13 +11,17 @@ using Avalonia.Data.Converters;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using MiComanderaApp.Core.Application.UseCases.Session;
 using MiComanderaApp.Core.Application.UseCases.Table;
+using MiComanderaApp.Core.Domain.Interfaces;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
 using MiComanderaApp.Presentation.Messages;
 using MiComanderaApp.Presentation.States;
+using MiComanderaApp.ViewModels.Dialogs.Modals;
 using MiComanderaApp.ViewModels.Mesas;
 using MiComanderaApp.ViewModels.Orders;
+using MiComanderaApp.Views.Dialogs.Modals;
 
 namespace MiComanderaApp.ViewModels;
 
@@ -28,19 +32,28 @@ public partial class TableViewModel : ViewModelBase
     private readonly OcuparTableUseCase _ocuparMesa;
     private readonly TableState _dataTable;
     private readonly IMessenger _messenger;
+    private readonly GetSessionSave _userSesion;
+    private readonly IDialogService _dialogService;
+    private readonly ISession<SessionModel> _session;
 
     public TableViewModel(
         INavigationService navigationService,
         IViewModelFactory factory,
         IMessenger messenger,
         OcuparTableUseCase ocuparMesa,
-        TableState dataTable)
+        TableState dataTable,
+        GetSessionSave userSesion,
+        IDialogService dialogService,
+        ISession<SessionModel> session)
     {
         _navigationService = navigationService;
         _dataTable = dataTable;
         _ocuparMesa = ocuparMesa;
         _messenger = messenger;
         _factory = factory;
+        _userSesion = userSesion;
+        _dialogService = dialogService;
+        _session = session;
     }
 
     [NotifyPropertyChangedFor(nameof(ColorEstado))]
@@ -158,13 +171,19 @@ public partial class TableViewModel : ViewModelBase
 
                 if (Table?.VentasActivas.Count() > 1)
                 {
+                    // Varias ventas en la misma mesa: pasa a la vista de mesas abiertas.
+                    // Cada venta se valida al abrirla (SelectTable).
                     var ventasActivas = Table.VentasActivas.ToList();
                     _messenger.Send(new TableOpenedMessage(TableNumber, ventasActivas));
                 }
                 else
                 {
+                    var venta = Table!.VentasActivas.FirstOrDefault();
+
+                    if (!await PuedeAccederAsync(venta))
+                        return;
+
                     var dataTableVm = _factory.Create<DataTableViewModel>();
-                    var venta = Table!.VentasActivas.FirstOrDefault(); // Ejemplo
                     dataTableVm.Initialize(venta!, venta!.Pax);
                     _navigationService.NavigateTo(dataTableVm);
 
@@ -185,11 +204,55 @@ public partial class TableViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void SelectTable()
+    private async Task SelectTable()
     {
+        if (!await PuedeAccederAsync(Venta))
+            return;
+
         var dataTableVm = _factory.Create<DataTableViewModel>();
         dataTableVm.Initialize(Venta!, Venta!.Pax);
         _navigationService.NavigateTo(dataTableVm);
+    }
+
+    /// <summary>
+    /// Determina si el usuario en sesión puede abrir la venta indicada.
+    /// Administrador y Cajero siempre pueden. Un Mesero solo puede abrir sus
+    /// propias ventas; si la venta es de otro mesero, se pide el PIN de un
+    /// Administrador o Cajero.
+    /// </summary>
+    private async Task<bool> PuedeAccederAsync(VentaModel? venta)
+    {
+        if (venta == null)
+            return false;
+
+        var usuario = _userSesion.Execute();
+        var rol = usuario?.Rol ?? string.Empty;
+
+        // Administrador y Cajero pueden ver cualquier mesa
+        if (rol == "Administrador" || rol == "Cajero")
+            return true;
+
+        // Si la venta no tiene mesero asignado, permitimos el acceso
+        if (string.IsNullOrWhiteSpace(venta.Mesero))
+            return true;
+
+        // Un Mesero solo entra a sus propias mesas
+        if (string.Equals(venta.Mesero, usuario?.NombreCompleto, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        // Es de otro mesero: se requiere autorización de Administrador o Cajero
+        return await PedirAutorizacionAsync(venta);
+    }
+
+    private async Task<bool> PedirAutorizacionAsync(VentaModel venta)
+    {
+        var vm = new AutorizacionPinDialogViewModel(_session);
+        vm.Initialize(
+            $"La mesa {venta.NumeroMesa} pertenece a {venta.Mesero}.\n" +
+            "Para ver su contenido, pide autorización a un Administrador o Cajero.");
+
+        var autorizado = await _dialogService.ShowDialogAsync<AutorizacionPinDialogView, AutorizacionPinDialogViewModel, bool>(vm);
+        return autorizado == true;
     }
 }
 
