@@ -11,5 +11,11 @@ namespace MiComanderaApp.Interfaces
         Task<R> LoginAsync(string pinCode);
         Task<bool> LogoutAsync();
         Task ClearSessionAsync();
+
+        /// <summary>
+        /// Verifica un PIN sin modificar la sesión actual.
+        /// Devuelve el modelo del usuario dueño del PIN, o null si es inválido.
+        /// </summary>
+        Task<R?> VerifyPinAsync(string pinCode);
     }
 }

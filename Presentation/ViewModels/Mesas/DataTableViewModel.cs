@@ -72,6 +72,18 @@ public partial class ProductoPedidoItem : ObservableObject
     public List<string> AcompanamientoNombres { get; set; } = new();
     public bool TieneDetalle => !string.IsNullOrEmpty(TerminoNombre) || AcompanamientoNombres.Count > 0;
 
+    /// <summary>
+    /// True cuando el producto ya fue enviado al servidor (viene de una comanda guardada).
+    /// Los productos nuevos (aún no enviados) van en false y son los únicos que se envían.
+    /// </summary>
+    public bool YaEnviado { get; set; }
+
+    /// <summary>
+    /// Id del ítem de comanda en la base de datos (solo si YaEnviado es true).
+    /// Se usa para eliminar el producto guardado.
+    /// </summary>
+    public int ComandaItemId { get; set; }
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TotalProducto))]
     private int _cantidad;
@@ -98,6 +110,7 @@ public partial class DataTableViewModel : ViewModelBase
     private readonly GetImpresorasUseCase _getImpresoras;
     private readonly ImprimirDocumentoUseCase _imprimirDocumento;
     private readonly GeneralSettingsStore _settings;
+    private readonly ISession<SessionModel> _session;
 
 
     // 2. Propiedades Reactivas del Lado Izquierdo (La Cuenta)
@@ -124,6 +137,7 @@ public partial class DataTableViewModel : ViewModelBase
     [ObservableProperty] private bool _ventaCerrada;
     private int _ventaId;
     private decimal _totalServidor;
+    private bool _datosCargados;
 
     // ============================================================
     // ESTADO DE COBRO EN LÍNEA (sin ventana modal)
@@ -229,7 +243,7 @@ public partial class DataTableViewModel : ViewModelBase
             ActualizarTotalCuenta();
 
             // No mantener el monto anterior; el valor entrante siempre debe quedar en cero
-        // Se deja a cero tras cualquier cambio de propina.
+            // Se deja a cero tras cualquier cambio de propina.
         }
 
         NotificarResumenPago();
@@ -273,6 +287,7 @@ public partial class DataTableViewModel : ViewModelBase
         GetImpresorasUseCase getImpresoras,
         ImprimirDocumentoUseCase imprimirDocumento,
         GeneralSettingsStore settings
+        ISession<SessionModel> session
         )
     {
         _getCatalogoUseCase = getCatalogoUseCase;
@@ -292,6 +307,7 @@ public partial class DataTableViewModel : ViewModelBase
         _imprimirDocumento = imprimirDocumento;
         _settings = settings;
         _ = _settings.RefreshAsync();
+        _session = session;
 
         // El cajero (y el administrador) ven las acciones de caja en la mesa
         var rol = _getUserUseCase.Execute()?.Rol ?? string.Empty;
@@ -304,12 +320,123 @@ public partial class DataTableViewModel : ViewModelBase
 
     public void Initialize(VentaModel venta, int cantidad)
     {
+        var mismaVenta = _ventaId == venta.VentaId;
+
         _ventaId = venta.VentaId;
         NumeroMesa = venta.NumeroMesa.ToString();
         CantidadPax = cantidad;
         Instancia = venta.Instancia.ToString();
         NombreMesaCustom = venta.Alias;
         NombreMesero = venta.Mesero;
+
+        // Si es una venta distinta (o aún no cargamos nada), traemos lo ya enviado al servidor.
+        // Si es la misma venta que ya estaba abierta, conservamos lo que el usuario tenga en curso.
+        if (!mismaVenta)
+        {
+            _datosCargados = false;
+            _totalServidor = 0;
+            ProductosPedidos.Clear();
+            _historialAgregados.Clear();
+            _ = CargarVentaAsync();
+        }
+    }
+
+    /// <summary>
+    /// Trae del servidor todo lo enviado previamente para la venta (productos,
+    /// observaciones, términos y acompañamientos) y lo refleja en la lista de pedidos.
+    /// </summary>
+    public async Task CargarVentaAsync()
+    {
+        if (_ventaId == 0) return;
+
+        try
+        {
+            var detalle = await _getVentaDetalle.Execute(_ventaId);
+
+            _datosCargados = true;
+            _totalServidor = detalle.TotalAmount;
+            NombreMesero = detalle.NombreMesero;
+
+            ProductosPedidos.Clear();
+            _historialAgregados.Clear();
+
+            foreach (var comanda in detalle.Comandas)
+            {
+                foreach (var item in comanda.Items)
+                {
+                    if (item.Cantidad <= 0) continue;
+
+                    var pedido = new ProductoPedidoItem
+                    {
+                        Indice = ProductosPedidos.Count + 1,
+                        Id = item.ProductoId.ToString(),
+                        Nombre = item.NombreProducto,
+                        PrecioUnitario = item.PrecioUnitario,
+                        Cantidad = item.Cantidad,
+                        TerminoNombre = item.Termino,
+                        AcompanamientoIds = item.AcompanamientoIds?.ToList() ?? new(),
+                        AcompanamientoNombres = await ObtenerNombresAcompanamientos(item.AcompanamientoIds),
+                        YaEnviado = true,
+                        ComandaItemId = item.Id
+                    };
+
+                    foreach (var obsId in item.Observaciones ?? new())
+                    {
+                        var observacion = await ObtenerObservacion(obsId);
+                        if (observacion != null)
+                            pedido.Observaciones.Add(observacion);
+                    }
+
+                    ProductosPedidos.Add(pedido);
+                }
+            }
+
+            ActualizarTotalCuenta();
+        }
+        catch (Exception ex)
+        {
+            System.Console.WriteLine($"No se pudo cargar la venta {_ventaId}: {ex.Message}");
+        }
+    }
+
+    private async Task<List<string>> ObtenerNombresAcompanamientos(List<int>? ids)
+    {
+        var nombres = new List<string>();
+        if (ids == null || ids.Count == 0) return nombres;
+
+        foreach (var id in ids.Distinct())
+        {
+            var acompanamiento = _cacheAcompanamientos?.FirstOrDefault(a => a.Id == id);
+            if (acompanamiento == null)
+            {
+                _cacheAcompanamientos ??= (await _getAcompanamientos.Execute()).Where(a => a.Active).ToList();
+                acompanamiento = _cacheAcompanamientos.FirstOrDefault(a => a.Id == id);
+            }
+            if (acompanamiento != null) nombres.Add(acompanamiento.Name);
+        }
+
+        return nombres;
+    }
+
+    private async Task<ObservacionItem?> ObtenerObservacion(int id)
+    {
+        if (id <= 0) return null;
+
+        var existente = Observations.FirstOrDefault(o => o.Id == id);
+        if (existente != null) return existente;
+
+        var todas = await _getAllObsUseCase.Execute();
+        var observacion = todas.FirstOrDefault(o => o.Id == id);
+        if (observacion == null) return null;
+
+        var item = new ObservacionItem
+        {
+            Id = observacion.Id,
+            Item = observacion.Observacion,
+            Precio = observacion.Precio
+        };
+        Observations.Add(item);
+        return item;
     }
 
     private async Task CargarDatosIniciales()
@@ -393,6 +520,12 @@ public partial class DataTableViewModel : ViewModelBase
         // (botones "Modificar propina" / "Quitar propina"); fuera del cobro es el
         // porcentaje configurado.
         TotalServicio = ModoPago ? PagoPropina : baseProductos * PorcentajeServicio;
+        TotalIpoconsumo = baseProductos - (baseProductos / 1.08m);
+        TotalNeto = baseProductos - TotalIpoconsumo;
+
+        // El servicio es la propina: durante el cobro sigue a la propina editable
+        // (botones "Modificar propina" / "Quitar propina"); fuera del cobro es el 10%.
+        TotalServicio = ModoPago ? PagoPropina : TotalNeto * 0.10m;
         TotalCuenta = baseProductos + TotalServicio;
     }
 
@@ -519,7 +652,7 @@ public partial class DataTableViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void AlternarModoSeleccion()
+    private async Task AlternarModoSeleccion()
     {
         if (ModoSeleccion == SelectionMode.Single)
         {
@@ -535,23 +668,96 @@ public partial class DataTableViewModel : ViewModelBase
                 .Cast<ProductoPedidoItem>()
                 .ToList();
 
-            foreach (var producto in productosParaEliminar)
+            // Si alguno ya está guardado en la base de datos, se necesita autorización
+            // (el Administrador no requiere PIN; cualquier otro rol sí).
+            if (!await AutorizarAnulacionAsync(productosParaEliminar, 0))
             {
-                ProductosPedidos.Remove(producto);
+                ModoSeleccion = SelectionMode.Single;
+                EsSeleccionMultiple = false;
+                return;
             }
+
+            await EliminarProductosAsync(productosParaEliminar);
+
             ProductosSeleccionados.Clear();
             LastSelect();
         }
         else
         {
             // No seleccionó nada: elimina lo último agregado
-            EliminarUltimoAgregado();
+            await EliminarUltimoAgregadoAsync();
         }
 
 
         ActualizarTotalCuenta();
         ModoSeleccion = SelectionMode.Single;
         EsSeleccionMultiple = false;
+    }
+
+    /// <summary>
+    /// Elimina los productos indicados de la lista. Si el producto ya estaba
+    /// guardado en la base de datos, también lo elimina del servidor.
+    /// </summary>
+    private async Task EliminarProductosAsync(List<ProductoPedidoItem> productos)
+    {
+        foreach (var producto in productos)
+        {
+            if (producto.YaEnviado && producto.ComandaItemId > 0)
+            {
+                try
+                {
+                    await _crearComanda.EliminarItem(producto.ComandaItemId);
+                }
+                catch (Exception ex)
+                {
+                    System.Console.WriteLine($"No se pudo eliminar el ítem {producto.ComandaItemId} de la base de datos: {ex.Message}");
+                }
+            }
+
+            ProductosPedidos.Remove(producto);
+        }
+    }
+
+    /// <summary>
+    /// Pide autorización cuando se intenta quitar de la lista un producto (u observación)
+    /// que ya está guardado en la base de datos. Si el usuario en sesión es Administrador
+    /// no se pide PIN; en caso contrario se solicita el PIN de un Administrador.
+    /// Devuelve true si hay que proceder con la anulación.
+    /// </summary>
+    private async Task<bool> AutorizarAnulacionAsync(List<ProductoPedidoItem> productos, int cantidadObservaciones)
+    {
+        var enviados = productos.Where(p => p.YaEnviado).ToList();
+
+        if (enviados.Count == 0 && cantidadObservaciones == 0)
+            return true;
+
+        // El Administrador puede anular sin PIN
+        var rolActual = _getUserUseCase.Execute()?.Rol ?? string.Empty;
+        if (rolActual == "Administrador")
+            return true;
+
+        string mensaje;
+
+        if (enviados.Count > 0)
+        {
+            var nombres = string.Join(", ", enviados.Select(p => p.Nombre));
+            mensaje = enviados.Count == 1
+                ? $"El producto \"{nombres}\" ya está guardado en la base de datos.\n\n" +
+                  "Para quitarlo necesitas autorización de un Administrador."
+                : $"Estos productos ya están guardados en la base de datos:\n{nombres}\n\n" +
+                  "Para quitarlos necesitas autorización de un Administrador.";
+        }
+        else
+        {
+            mensaje = "Esta observación ya está guardada en la base de datos.\n\n" +
+                      "Para quitarla necesitas autorización de un Administrador.";
+        }
+
+        var vm = new AutorizacionPinDialogViewModel(_session);
+        vm.Initialize(mensaje, "Quitar producto guardado", "Administrador");
+
+        var autorizado = await _dialogService.ShowDialogAsync<AutorizacionPinDialogView, AutorizacionPinDialogViewModel, bool>(vm);
+        return autorizado == true;
     }
 
     private void LastSelect()
@@ -562,17 +768,38 @@ public partial class DataTableViewModel : ViewModelBase
         if (ultimo == null) return;
         ProductoOn = ultimo?.Indice.ToString();
     }
-    private void EliminarUltimoAgregado()
+    private async Task EliminarUltimoAgregadoAsync()
     {
         if (_historialAgregados.Count == 0)
             return;
 
-        var ultimo = _historialAgregados.Pop();
+        var ultimo = _historialAgregados.Peek();
 
         switch (ultimo)
         {
             case ProductoPedidoItem producto:
-                ProductosPedidos.Remove(producto);
+                if (!await AutorizarAnulacionAsync(new List<ProductoPedidoItem> { producto }, 0))
+                    return;
+                break;
+
+            case ObservacionItem observacion:
+                var productoPadre = ProductosPedidos
+                    .FirstOrDefault(p => p.Observaciones.Contains(observacion));
+
+                if (productoPadre != null && productoPadre.YaEnviado)
+                {
+                    if (!await AutorizarAnulacionAsync(new List<ProductoPedidoItem>(), 1))
+                        return;
+                }
+                break;
+        }
+
+        ultimo = _historialAgregados.Pop();
+
+        switch (ultimo)
+        {
+            case ProductoPedidoItem producto:
+                await EliminarProductosAsync(new List<ProductoPedidoItem> { producto });
                 break;
 
             case ObservacionItem observacion:
@@ -600,6 +827,7 @@ public partial class DataTableViewModel : ViewModelBase
         {
             Observations.Add(new ObservacionItem
             {
+                Id = item.Id,
                 Item = item.Observacion,
                 Precio = item.Precio
             });
@@ -626,26 +854,36 @@ public partial class DataTableViewModel : ViewModelBase
     [RelayCommand]
     private async Task EnviarOrden()
     {
-        if (EnviandoOrden || ProductosPedidos.Count == 0 || _ventaId == 0) return;
+        if (EnviandoOrden || _ventaId == 0) return;
+
+        // Solo se envían los productos NUEVOS (los que ya estaban guardados no se repiten)
+        var nuevos = ProductosPedidos.Where(p => !p.YaEnviado).ToList();
+        if (nuevos.Count == 0) return;
 
         try
         {
             EnviandoOrden = true;
             var meseroId = _getUserUseCase.Execute().UserId;
 
-            var items = ProductosPedidos.Select(p => new ComandaItemRequest
+            var items = nuevos.Select(p => new ComandaItemRequest
             {
                 ProductoId = int.Parse(p.Id),
                 Cantidad = p.Cantidad,
                 TerminoId = p.TerminoId,
-                AcompanamientoIds = p.AcompanamientoIds.ToList()
+                AcompanamientoIds = p.AcompanamientoIds.ToList(),
+                Observaciones = p.Observaciones
+                    .Select(o => o.Id)
+                    .Where(id => id > 0)
+                    .Distinct()
+                    .ToList()
             }).ToList();
 
             await _crearComanda.Execute(_ventaId, meseroId, items);
 
-            ProductosPedidos.Clear();
-            _historialAgregados.Clear();
-            ActualizarTotalCuenta();
+            // Terminó el ciclo de envío: cerramos la sesión y volvemos al inicio
+            await _session.LogoutAsync();
+            _navigate.NavigateTo<LoginViewModel>();
+
         }
         finally
         {
@@ -654,15 +892,52 @@ public partial class DataTableViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void Cancelar()
+    private async Task Cancelar()
     {
+        if (!await ConfirmarSalidaAsync("cancelar"))
+            return;
+
         _navigate.NavigateTo<LoginViewModel>();
     }
 
     [RelayCommand]
-    private void Volver()
+    private async Task Volver()
     {
+        if (!await ConfirmarSalidaAsync("volver"))
+            return;
+
         _navigate.NavigateTo<TablesViewModel>();
+    }
+
+    /// <summary>
+    /// Pide permiso cuando hay productos agregados que aún no se han enviado
+    /// (guardado) al servidor. Devuelve true si hay que continuar con la acción.
+    /// </summary>
+    private async Task<bool> ConfirmarSalidaAsync(string accion)
+    {
+        var pendientes = ProductosPedidos.Where(p => !p.YaEnviado).ToList();
+
+        if (pendientes.Count == 0)
+            return true;
+
+        string mensaje;
+        if (pendientes.Count == 1)
+        {
+            mensaje = $"El producto \"{pendientes[0].Nombre}\" no ha sido enviado a cocina.\n\n" +
+                      $"¿Seguro que quieres {accion} y perderlo?";
+        }
+        else
+        {
+            var nombres = string.Join(", ", pendientes.Select(p => p.Nombre));
+            mensaje = $"Hay {pendientes.Count} productos sin enviar a cocina:\n{nombres}\n\n" +
+                      $"¿Seguro que quieres {accion} y perderlos?";
+        }
+
+        var vm = new ConfirmDialogViewModel();
+        vm.Initialize("Productos sin guardar", mensaje, "Sí, continuar");
+
+        var confirmado = await _dialogService.ShowDialogAsync<ConfirmDialogView, ConfirmDialogViewModel, bool>(vm);
+        return confirmado == true;
     }
 
     // ============================================================
@@ -700,6 +975,9 @@ public partial class DataTableViewModel : ViewModelBase
 
         // El cobro se resuelve dentro de la propia vista (panel de opciones),
         // sin abrir ninguna ventana modal.
+        if (!_datosCargados)
+            await CargarVentaAsync();
+
         var detalle = await _getVentaDetalle.Execute(_ventaId);
 
         // Si la venta ya está cobrada, solo volvemos a mostrar el comprobante
@@ -890,6 +1168,8 @@ public partial class DataTableViewModel : ViewModelBase
             var cerrada = await _getVentaDetalle.Execute(_ventaId);
             await MostrarDocumento("COMPROBANTE DE PAGO", new DocumentosVenta(_settings.Current).BuildComprobantePago, cerrada);
             Volver();
+            await MostrarDocumento("COMPROBANTE DE PAGO", DocumentosVenta.BuildComprobantePago, cerrada);
+            await Volver();
         }
         catch (Exception ex)
         {
