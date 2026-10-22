@@ -62,5 +62,10 @@ namespace MiComanderaApp.Infrastructure.Api
             ClearSessionAsync();
             return Task.FromResult(true);
         }
+
+        public Task<SessionModel?> VerifyPinAsync(string pinCode)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -23,5 +23,13 @@ namespace MiComanderaApp.Core.Application.UseCases.Venta
                 Items = items
             });
         }
+
+        /// <summary>
+        /// Elimina un ítem de comanda ya guardado en la base de datos.
+        /// </summary>
+        public Task<bool> EliminarItem(int comandaItemId)
+        {
+            return _repo.EliminarItemAsync(comandaItemId);
+        }
     }
 }

@@ -43,11 +43,14 @@ namespace MiComanderaApp.Core.Domain.Models
 
     public class ComandaItemDetalleModel
     {
+        public int Id { get; set; }
         public int ProductoId { get; set; }
         public string NombreProducto { get; set; } = string.Empty;
         public int Cantidad { get; set; }
         public decimal PrecioUnitario { get; set; }
         public string? Termino { get; set; }
+        public List<int> AcompanamientoIds { get; set; } = new();
+        public List<int> Observaciones { get; set; } = new();
         public decimal Subtotal => Cantidad * PrecioUnitario;
     }
 

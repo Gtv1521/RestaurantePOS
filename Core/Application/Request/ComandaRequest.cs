@@ -8,6 +8,9 @@ namespace MiComanderaApp.Core.Application.Request
         public int Cantidad { get; set; }
         public int? TerminoId { get; set; }
         public List<int> AcompanamientoIds { get; set; } = new();
+
+        // IDs de las observaciones del catálogo aplicadas al producto
+        public List<int> Observaciones { get; set; } = new();
     }
 
     public class ComandaCreateRequest

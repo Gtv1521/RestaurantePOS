@@ -36,5 +36,24 @@ namespace MiComanderaApp.Core.Infrastructure.Api
             }
             return true;
         }
+
+        /// <summary>
+        /// Elimina un ítem de comanda ya guardado en la base de datos.
+        /// </summary>
+        public async Task<bool> EliminarItemAsync(int comandaItemId)
+        {
+            var response = await _http.DeleteAsync($"{_url}/item/{comandaItemId}");
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw response.StatusCode switch
+                {
+                    HttpStatusCode.BadRequest => new BadRequestException(error),
+                    HttpStatusCode.NotFound => new NotFoundException(error),
+                    _ => new HttpRequestException($"Error {(int)response.StatusCode}: {error}")
+                };
+            }
+            return true;
+        }
     }
 }
