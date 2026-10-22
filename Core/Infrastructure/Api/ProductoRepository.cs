@@ -152,7 +152,9 @@ namespace MiComanderaApp.Core.Infrastructure.Api
                 imageUrl = data.ImageUrl,
                 conTermino = data.ConTermino,
                 hasAccompaniments = data.HasAccompaniments,
-                maxAccompaniments = data.MaxAccompaniments
+                maxAccompaniments = data.MaxAccompaniments,
+                printerIds = data.PrinterIds,
+                accompanimentPrinterIds = data.AccompanimentPrinterIds
             };
             var response = await _httpClient.PutAsJsonAsync(_url, payload);
             if (!response.IsSuccessStatusCode)

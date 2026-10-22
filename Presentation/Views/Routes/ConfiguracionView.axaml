@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="https://github.com/projektanker/icons.avalonia"
+             xmlns:vm="using:MiComanderaApp.ViewModels.Routes"
+             xmlns:vmConf="using:MiComanderaApp.ViewModels.Components.Configuracion"
+             xmlns:views="using:MiComanderaApp.Views.Components.Configuracion"
+             mc:Ignorable="d" d:DesignWidth="1400" d:DesignHeight="900"
+             Background="{DynamicResource FondoPrincipal}"
+             x:Class="MiComanderaApp.Views.Routes.ConfiguracionView"
+             x:DataType="vm:ConfiguracionViewModel">
+
+  <UserControl.DataTemplates>
+    <DataTemplate DataType="{x:Type vmConf:GeneralSettingsComponentViewModel}">
+      <views:GeneralSettingsComponentView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vmConf:PrintersComponentViewModel}">
+      <views:PrintersComponentView />
+    </DataTemplate>
+  </UserControl.DataTemplates>
+
+  <Grid RowDefinitions="Auto,*">
+
+    <Border Grid.Row="0" Background="{DynamicResource FondoTarjeta}" Height="60" Padding="20,0">
+      <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,*,Auto">
+        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="8">
+          <i:Icon Value="fa-solid fa-fire" Foreground="#E06A28" FontSize="20"/>
+          <TextBlock Text="RESTROPOS" Foreground="{DynamicResource TextoColor}" FontWeight="Bold" VerticalAlignment="Center" LetterSpacing="1"/>
+        </StackPanel>
+
+        <Button Grid.Column="1" Classes="NavBtn" Content="VOLVER" Command="{Binding VolverCommand}"/>
+        <Button Grid.Column="2" Classes="NavBtn" Classes.Active="{Binding IsGeneral}" Content="GENERAL" Command="{Binding ChangeViewCommand}" CommandParameter="General"/>
+        <Button Grid.Column="3" Classes="NavBtn" Classes.Active="{Binding IsImpresoras}" Content="IMPRESORAS" Command="{Binding ChangeViewCommand}" CommandParameter="Impresoras"/>
+        <StackPanel Grid.Column="6" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
+          <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right">
+            <TextBlock Text="{Binding User.NombreCompleto}" Foreground="{DynamicResource TextoColor}" FontWeight="SemiBold" FontSize="13"/>
+            <TextBlock Text="{Binding User.Rol}" Foreground="{DynamicResource TextoColor}" FontSize="11" HorizontalAlignment="Right"/>
+          </StackPanel>
+          <Button i:Attached.Icon="fa-solid fa-right-from-bracket" Foreground="#0A202D" FontSize="16" Cursor="Hand" Command="{Binding SalirCommand}"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <ContentControl Grid.Row="1" Content="{Binding VistaActual}" />
+  </Grid>
+</UserControl>

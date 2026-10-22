@@ -12,6 +12,7 @@ using MiComanderaApp.Core.Application.UseCases.Session;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
 using MiComanderaApp.Presentation.Messages;
+using MiComanderaApp.Presentation.Services;
 using MiComanderaApp.Request;
 using MiComanderaApp.ViewModels.Components;
 using MiComanderaApp.ViewModels.Orders;
@@ -26,6 +27,8 @@ public partial class TablesViewModel : ViewModelBase
     private readonly IViewModelFactory _factory;
     private readonly GetSessionSave _userSesion;
     private readonly IMessenger _messenger;
+    private readonly LoadingState _loadingState;
+
 
     [ObservableProperty] private string _viewTitle = "Mesas Abiertas";
     [ObservableProperty] private string _toggleButtonText = "Todas las Mesas";
@@ -44,18 +47,21 @@ public partial class TablesViewModel : ViewModelBase
     public bool PuedeVerCaja => UsuarioRol == "Administrador" || UsuarioRol == "Cajero";
     public bool PuedeVerMenu => UsuarioRol != "Cajero";
     public bool Administrar => UsuarioRol == "Administrador";
+    public LoadingState Loading => _loadingState;
 
 
     public TablesViewModel(
         INavigationService navigationService,
         IViewModelFactory factory,
         IMessenger messenger,
-        GetSessionSave userSesion)
+        GetSessionSave userSesion,
+        LoadingState loadingState)
     {
         _navigationService = navigationService;
         _factory = factory;
         _messenger = messenger;
         _userSesion = userSesion;
+        _loadingState = loadingState;
         _vistaActual = _factory.Create<AllTablesComponentViewModel>();
         InitializeComponent();
 
@@ -70,17 +76,25 @@ public partial class TablesViewModel : ViewModelBase
 
     private void OnTableOpened(object recipient, TableOpenedMessage message)
     {
-        // Cambiar a vista de mesas abiertas
-        IsShowingAllTables = false;
-        ToggleButtonText = "Mesas Abiertas";
-        ViewTitle = "Mesas Abiertas";
+        _loadingState.Show("Cargando Mesas");
+        try
+        {
+            // Cambiar a vista de mesas abiertas
+            IsShowingAllTables = false;
+            ToggleButtonText = "Mesas Abiertas";
+            ViewTitle = "Mesas Abiertas";
 
-        // Crear o actualizar el componente
-        var vm = _factory.Create<ActiveTablesComponentViewModel>();
-        vm.LoadSabeTable(message.Ventas);
+            // Crear o actualizar el componente
+            var vm = _factory.Create<ActiveTablesComponentViewModel>();
+            vm.LoadSabeTable(message.Ventas);
 
-        // Mostrar en la UI 
-        VistaActual = vm;
+            // Mostrar en la UI 
+            VistaActual = vm;
+        }
+        finally
+        {
+            _loadingState.Hide();
+        }
     }
 
     [RelayCommand]

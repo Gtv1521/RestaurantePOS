@@ -1,0 +1,252 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="https://github.com/projektanker/icons.avalonia"
+             xmlns:vm="using:MiComanderaApp.ViewModels.Components.Configuracion"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+             x:Class="MiComanderaApp.Views.Components.Configuracion.GeneralSettingsComponentView"
+             x:DataType="vm:GeneralSettingsComponentViewModel"
+             x:Name="Root">
+
+  <UserControl.Styles>
+    <Style Selector="Border.SettingCard">
+      <Setter Property="Background" Value="{DynamicResource FondoTarjeta}"/>
+      <Setter Property="CornerRadius" Value="12"/>
+      <Setter Property="Padding" Value="20"/>
+      <Setter Property="Width" Value="460"/>
+      <Setter Property="Margin" Value="0,0,20,20"/>
+    </Style>
+
+    <Style Selector="TextBlock.SectionTitle">
+      <Setter Property="FontSize" Value="16"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
+    </Style>
+
+    <Style Selector="TextBlock.FieldLabel">
+      <Setter Property="FontSize" Value="12"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
+      <Setter Property="Opacity" Value="0.8"/>
+    </Style>
+
+    <Style Selector="TextBox.Field">
+      <Setter Property="Background" Value="{DynamicResource FondoPrincipal}"/>
+      <Setter Property="CornerRadius" Value="8"/>
+      <Setter Property="Padding" Value="10,8"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
+    </Style>
+
+    <Style Selector="CheckBox.Field">
+      <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
+    </Style>
+
+    <Style Selector="Button.Outline">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="#BDC3C7"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
+      <Setter Property="CornerRadius" Value="6"/>
+      <Setter Property="Padding" Value="12,8"/>
+      <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+  </UserControl.Styles>
+
+  <Grid>
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+      <Grid RowDefinitions="Auto,Auto" Margin="24">
+
+        <!-- ENCABEZADO -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,20">
+          <StackPanel Grid.Column="0" Spacing="4">
+            <TextBlock Text="Configuraciones generales" FontSize="22" FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextoColor}"/>
+            <TextBlock Text="Datos del negocio, moneda, impuestos, servicio y ticket"
+                       FontSize="13" Opacity="0.7" Foreground="{DynamicResource TextoColor}"/>
+          </StackPanel>
+
+          <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+            <Button Classes="Outline" Command="{Binding CargarCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <i:Icon Value="fa-solid fa-rotate" FontSize="12" VerticalAlignment="Center"/>
+                <TextBlock Text="Recargar"/>
+              </StackPanel>
+            </Button>
+            <Button Background="{DynamicResource SaveBotton}" Padding="16,8" CornerRadius="6"
+                    IsEnabled="{Binding IsSaving, Converter={StaticResource InvertBoolConverter}}"
+                    Command="{Binding GuardarCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <i:Icon Value="fa-solid fa-floppy-disk" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
+                <TextBlock Text="Guardar" Foreground="White" FontWeight="SemiBold"/>
+              </StackPanel>
+            </Button>
+          </StackPanel>
+        </Grid>
+
+        <!-- CONTENIDO -->
+        <StackPanel Grid.Row="1">
+
+          <WrapPanel Orientation="Horizontal">
+
+            <!-- DATOS DEL NEGOCIO -->
+            <Border Classes="SettingCard">
+              <StackPanel Spacing="12">
+                <TextBlock Classes="SectionTitle" Text="Datos del negocio"/>
+
+                <StackPanel Spacing="4">
+                  <TextBlock Classes="FieldLabel" Text="Nombre del negocio"/>
+                  <TextBox Classes="Field" Text="{Binding BusinessName}" Watermark="Restaurante"/>
+                </StackPanel>
+
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                  <StackPanel Grid.Column="0" Spacing="4">
+                    <TextBlock Classes="FieldLabel" Text="NIT / Identificación"/>
+                    <TextBox Classes="Field" Text="{Binding TaxId}"/>
+                  </StackPanel>
+                  <StackPanel Grid.Column="1" Spacing="4">
+                    <TextBlock Classes="FieldLabel" Text="Teléfono"/>
+                    <TextBox Classes="Field" Text="{Binding Phone}"/>
+                  </StackPanel>
+                </Grid>
+
+                <StackPanel Spacing="4">
+                  <TextBlock Classes="FieldLabel" Text="Dirección"/>
+                  <TextBox Classes="Field" Text="{Binding Address}"/>
+                </StackPanel>
+
+                <StackPanel Spacing="4">
+                  <TextBlock Classes="FieldLabel" Text="Correo electrónico"/>
+                  <TextBox Classes="Field" Text="{Binding Email}"/>
+                </StackPanel>
+
+                <StackPanel Spacing="4">
+                  <TextBlock Classes="FieldLabel" Text="URL del logo (opcional)"/>
+                  <TextBox Classes="Field" Text="{Binding LogoUrl}" Watermark="https://..."/>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+
+            <!-- MONEDA -->
+            <Border Classes="SettingCard">
+              <StackPanel Spacing="12">
+                <TextBlock Classes="SectionTitle" Text="Moneda"/>
+
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                  <StackPanel Grid.Column="0" Spacing="4">
+                    <TextBlock Classes="FieldLabel" Text="Símbolo"/>
+                    <TextBox Classes="Field" Text="{Binding CurrencySymbol}" Watermark="$"/>
+                  </StackPanel>
+                  <StackPanel Grid.Column="1" Spacing="4">
+                    <TextBlock Classes="FieldLabel" Text="Código ISO"/>
+                    <TextBox Classes="Field" Text="{Binding CurrencyCode}" Watermark="COP"/>
+                  </StackPanel>
+                </Grid>
+
+                <StackPanel Spacing="4">
+                  <TextBlock Classes="FieldLabel" Text="Decimales"/>
+                  <NumericUpDown Value="{Binding DecimalPlaces}" Minimum="0" Maximum="4" Increment="1"/>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+
+            <!-- IMPUESTO AL CONSUMO -->
+            <Border Classes="SettingCard">
+              <StackPanel Spacing="12">
+                <TextBlock Classes="SectionTitle" Text="Impuesto al consumo"/>
+
+                <CheckBox Classes="Field" Content="Aplicar impuesto al consumo" IsChecked="{Binding TaxEnabled}"/>
+
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                  <StackPanel Grid.Column="0" Spacing="4">
+                    <TextBlock Classes="FieldLabel" Text="Porcentaje (%)"/>
+                    <TextBox Classes="Field" Text="{Binding TaxPercentage}"/>
+                  </StackPanel>
+                  <StackPanel Grid.Column="1" Spacing="4">
+                    <TextBlock Classes="FieldLabel" Text="Etiqueta"/>
+                    <TextBox Classes="Field" Text="{Binding TaxLabel}" Watermark="Impoconsumo"/>
+                  </StackPanel>
+                </Grid>
+
+                <CheckBox Classes="Field" Content="Incluido en el precio" IsChecked="{Binding TaxIncludedInPrice}"/>
+              </StackPanel>
+            </Border>
+
+            <!-- SERVICIO / PROPINA -->
+            <Border Classes="SettingCard">
+              <StackPanel Spacing="12">
+                <TextBlock Classes="SectionTitle" Text="Servicio / propina"/>
+
+                <CheckBox Classes="Field" Content="Aplicar cargo por servicio" IsChecked="{Binding ServiceChargeEnabled}"/>
+
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                  <StackPanel Grid.Column="0" Spacing="4">
+                    <TextBlock Classes="FieldLabel" Text="Porcentaje (%)"/>
+                    <TextBox Classes="Field" Text="{Binding ServiceChargePercentage}"/>
+                  </StackPanel>
+                  <StackPanel Grid.Column="1" Spacing="4">
+                    <TextBlock Classes="FieldLabel" Text="Etiqueta"/>
+                    <TextBox Classes="Field" Text="{Binding ServiceChargeLabel}" Watermark="Servicio"/>
+                  </StackPanel>
+                </Grid>
+              </StackPanel>
+            </Border>
+
+            <!-- TICKET -->
+            <Border Classes="SettingCard">
+              <StackPanel Spacing="12">
+                <TextBlock Classes="SectionTitle" Text="Ticket"/>
+
+                <StackPanel Spacing="4">
+                  <TextBlock Classes="FieldLabel" Text="Ancho (caracteres)"/>
+                  <NumericUpDown Value="{Binding TicketWidthChars}" Minimum="20" Maximum="80" Increment="1"/>
+                </StackPanel>
+
+                <StackPanel Spacing="4">
+                  <TextBlock Classes="FieldLabel" Text="Pie de ticket"/>
+                  <TextBox Classes="Field" AcceptsReturn="True" Height="80"
+                           TextWrapping="Wrap" Text="{Binding TicketFooter}"/>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+
+            <!-- OPERACIÓN -->
+            <Border Classes="SettingCard">
+              <StackPanel Spacing="12">
+                <TextBlock Classes="SectionTitle" Text="Operación"/>
+
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                  <StackPanel Grid.Column="0" Spacing="4">
+                    <TextBlock Classes="FieldLabel" Text="Comensales por defecto"/>
+                    <NumericUpDown Value="{Binding DefaultPax}" Minimum="1" Maximum="100" Increment="1"/>
+                  </StackPanel>
+                  <StackPanel Grid.Column="1" Spacing="4">
+                    <TextBlock Classes="FieldLabel" Text="Puerto de impresora por defecto"/>
+                    <NumericUpDown Value="{Binding DefaultPrinterPort}" Minimum="1" Maximum="65535" Increment="1"/>
+                  </StackPanel>
+                </Grid>
+
+                <TextBlock FontSize="11" Opacity="0.6" Foreground="{DynamicResource TextoColor}"
+                           Text="{Binding UpdatedAt, StringFormat='Última actualización: {0:g}'}"/>
+              </StackPanel>
+            </Border>
+
+          </WrapPanel>
+
+          <!-- MENSAJE -->
+          <TextBlock Margin="0,4,0,0" FontSize="13" FontWeight="SemiBold" Foreground="#27AE60"
+                     Text="{Binding Mensaje}" IsVisible="{Binding MensajeExito}"/>
+          <TextBlock Margin="0,4,0,0" FontSize="13" FontWeight="SemiBold" Foreground="#E74C3C"
+                     Text="{Binding Mensaje}" IsVisible="{Binding MensajeError}"/>
+        </StackPanel>
+      </Grid>
+    </ScrollViewer>
+
+    <!-- OVERLAY DE CARGA -->
+    <Border IsVisible="{Binding IsLoading}" Background="#80000000">
+      <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="15">
+        <ProgressBar IsIndeterminate="True" Width="220" Height="4"/>
+        <TextBlock Text="Cargando configuración..." Foreground="White" FontWeight="SemiBold"/>
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

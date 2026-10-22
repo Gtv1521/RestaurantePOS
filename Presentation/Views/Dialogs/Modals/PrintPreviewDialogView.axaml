@@ -73,7 +73,7 @@
                           PlaceholderText="Seleccionar impresora">
                   <ComboBox.ItemTemplate>
                     <DataTemplate>
-                      <TextBlock Text="{Binding NombreConCategoria}"/>
+                      <TextBlock Text="{Binding NombreCompleto}"/>
                     </DataTemplate>
                   </ComboBox.ItemTemplate>
                 </ComboBox>

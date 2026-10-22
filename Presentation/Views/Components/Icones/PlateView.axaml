@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="200"
+             x:Class="MiComanderaApp.Presentation.Views.Components.Icones.PlateView">
+
+  <Grid Width="200" Height="200">
+    <!-- Plato circular -->
+    <Ellipse Width="180" Height="180"
+             Fill="{DynamicResource TextoColor}"
+             Opacity="0.16"/>
+    <Ellipse Width="180" Height="180"
+             Stroke="{DynamicResource TextoColor}"
+             StrokeThickness="2"
+             Opacity="0.5"/>
+
+    <!-- Borde interno -->
+    <Ellipse Width="130" Height="130"
+             Stroke="{DynamicResource TextoColor}"
+             StrokeThickness="1.5"
+             Opacity="0.35"/>
+
+    <!-- Centro del plato -->
+    <Ellipse Width="40" Height="40"
+             Fill="{DynamicResource TextoColor}"
+             Opacity="0.25"/>
+  </Grid>
+</UserControl>

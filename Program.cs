@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using System;
 using Avalonia.Diagnostics;
 using Microsoft.Extensions.Hosting;
@@ -58,6 +58,9 @@ using MiComanderaApp.Presentation.ViewModels.Components.Admin;
 using MiComanderaApp.Core.Application.UseCases.User;
 using MiComanderaApp.Request;
 using MiComanderaApp.Presentation.Views.Components.Generales;
+using MiComanderaApp.ViewModels.Components.Configuracion;
+using MiComanderaApp.Core.Application.UseCases.Configuracion;
+using MiComanderaApp.Core.Application.Services;
 
 namespace MiComanderaApp;
 
@@ -111,6 +114,7 @@ sealed class Program
                     type => (ViewModelBase)provider.GetRequiredService(type));
 
                 services.AddSingleton<IWindowProvider, WindowProvider>();
+                services.AddSingleton<LoadingState>();
                 services.AddSingleton<IDialogService, DialogService>();
                 services.AddSingleton<INavigationService, NavigationService>();
                 services.AddSingleton<IFocusService, FocusService>();
@@ -140,6 +144,10 @@ sealed class Program
                 services.AddTransient<ConfirmDialogViewModel>();
                 services.AddTransient<AutorizacionPinDialogViewModel>();
                 services.AddTransient<ReportesComponentViewModel>();
+
+                services.AddTransient<ConfiguracionViewModel>();
+                services.AddTransient<GeneralSettingsComponentViewModel>();
+                services.AddTransient<PrintersComponentViewModel>();
 
                 // modal
                 services.AddTransient<NewUserModalViewModel>();
@@ -209,7 +217,16 @@ sealed class Program
                 services.AddScoped<CerrarVentaUseCase>();
                 services.AddScoped<ImpresoraRepository>();
                 services.AddScoped<GetImpresorasUseCase>();
+                services.AddScoped<CreateImpresoraUseCase>();
+                services.AddScoped<UpdateImpresoraUseCase>();
+                services.AddScoped<DeleteImpresoraUseCase>();
+                services.AddScoped<DiscoverImpresorasUseCase>();
+                services.AddScoped<RegisterDiscoveredImpresoraUseCase>();
                 services.AddScoped<ImprimirDocumentoUseCase>();
+                services.AddSingleton<GeneralSettingsRepository>();
+                services.AddScoped<GetGeneralSettingsUseCase>();
+                services.AddScoped<UpdateGeneralSettingsUseCase>();
+                services.AddSingleton<GeneralSettingsStore>();
                 services.AddScoped<StockRepository>();
                 services.AddScoped<AjustarStockUseCase>();
                 services.AddScoped<InventarioRepository>();

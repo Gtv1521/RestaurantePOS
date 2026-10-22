@@ -64,31 +64,12 @@ namespace MiComanderaApp.ViewModels.Dialogs.Modals
             CargandoImpresoras = true;
             try
             {
-                // Mapping of known category IDs to names (from API: 1=Entradas, 2=Platos Principales, 3=Bebidas, 4=Postres)
-                var categoriaMap = new Dictionary<int, string>
-            {
-                {1, "Entradas"},
-                {2, "Platos Principales"},
-                {3, "Bebidas"},
-                {4, "Postres"}
-            };
                 var impresoras = await _getImpresoras.Execute();
                 Impresoras.Clear();
                 foreach (var impresora in impresoras.Where(i => i.Active))
                 {
-                    // Build category display text from CategoryIds
-                    string categoriaTexto = "";
-                    if (impresora.CategoryIds.Any())
-                    {
-                        var nombres = impresora.CategoryIds.Where(cid => categoriaMap.ContainsKey(cid)).Select(cid => categoriaMap[cid]).ToList();
-                        if (nombres.Any())
-                            categoriaTexto = $" - {string.Join(", ", nombres)}";
-                    }
-                    ;
-                    impresora.NombreConCategoria = $"{impresora.NombreCompleto}{categoriaTexto}";
                     Impresoras.Add(impresora);
                 }
-                ;
                 ImpresoraSeleccionada = Impresoras.FirstOrDefault();
                 MensajeError = false;
                 Mensaje = Impresoras.Count == 0 ? "No hay impresoras configuradas. Podés copiar el documento." : null;

@@ -92,6 +92,13 @@ public partial class AdminDashboardViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private void IrAConfiguracion()
+    {
+        var vm = _factory.Create<ConfiguracionViewModel>();
+        _navigation.NavigateTo(vm);
+    }
+
+    [RelayCommand]
     private void IrAInventario()
     {
         var vm = _factory.Create<InventarioComponentViewModel>();

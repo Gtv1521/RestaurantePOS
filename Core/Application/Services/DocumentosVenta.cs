@@ -8,39 +8,53 @@ namespace MiComanderaApp.Core.Application.Services
 {
     /// <summary>
     /// Genera los textos de facturas, prefacturas y comprobantes de pago
-    /// con formato para impresora térmica (42 caracteres de ancho).
+    /// con formato para impresora térmica. El ancho y los datos del negocio
+    /// se toman de la configuración general.
     /// </summary>
-    public static class DocumentosVenta
+    public class DocumentosVenta
     {
-        private const int Ancho = 42;
-        private static readonly string Separador = new string('-', Ancho);
+        private readonly int _ancho;
+        private readonly string _nombreNegocio;
+        private readonly string _pie;
+        private readonly string _etiquetaImpuesto;
 
-        public static string BuildPrefactura(VentaDetalleModel venta) =>
+        public DocumentosVenta(GeneralSettingsModel? settings)
+        {
+            _ancho = settings?.TicketWidthChars is > 0 ? settings.TicketWidthChars : 42;
+            _nombreNegocio = string.IsNullOrWhiteSpace(settings?.BusinessName) ? "RESTAURANTE" : settings!.BusinessName;
+            _pie = string.IsNullOrWhiteSpace(settings?.TicketFooter) ? "¡GRACIAS POR SU VISITA!" : settings!.TicketFooter;
+            _etiquetaImpuesto = string.IsNullOrWhiteSpace(settings?.TaxLabel) ? "Impuesto" : settings!.TaxLabel;
+        }
+
+        private string Separador => new string('-', _ancho);
+        private string SeparadorDoble => new string('=', _ancho);
+
+        public string BuildPrefactura(VentaDetalleModel venta) =>
             Encabezado(venta, "PREFACTURA", "Documento no fiscal - NO VÁLIDO COMO FACTURA")
             + Cuerpo(venta)
             + Totales(venta)
-            + Pie(venta, $"PREFACTURA #{venta.VentaId}");
+            + Pie($"PREFACTURA #{venta.VentaId}");
 
-        public static string BuildFactura(VentaDetalleModel venta) =>
+        public string BuildFactura(VentaDetalleModel venta) =>
             Encabezado(venta, "FACTURA", venta.TienePagos ? "Documento fiscal" : "Documento no cobrado")
             + DatosCliente(venta)
             + Cuerpo(venta)
             + Totales(venta)
             + (venta.TienePagos ? Pagos(venta) : "")
-            + Pie(venta, $"FACTURA #{venta.VentaId}");
+            + Pie($"FACTURA #{venta.VentaId}");
 
-        public static string BuildComprobantePago(VentaDetalleModel venta) =>
+        public string BuildComprobantePago(VentaDetalleModel venta) =>
             Encabezado(venta, "COMPROBANTE DE PAGO", "Gracias por su compra")
             + DatosCliente(venta)
             + Cuerpo(venta)
             + Totales(venta)
             + Pagos(venta)
-            + Pie(venta, $"PAGO #{venta.VentaId}");
+            + Pie($"PAGO #{venta.VentaId}");
 
-        private static string Encabezado(VentaDetalleModel venta, string titulo, string subtitulo)
+        private string Encabezado(VentaDetalleModel venta, string titulo, string subtitulo)
         {
             var sb = new StringBuilder();
-            sb.AppendLine(Centrar("RESTAURANTE"));
+            sb.AppendLine(Centrar(_nombreNegocio));
             sb.AppendLine(Centrar(titulo));
             sb.AppendLine(Centrar(subtitulo));
             sb.AppendLine(Separador);
@@ -53,7 +67,7 @@ namespace MiComanderaApp.Core.Application.Services
             return sb.ToString();
         }
 
-        private static string DatosCliente(VentaDetalleModel venta)
+        private string DatosCliente(VentaDetalleModel venta)
         {
             var sb = new StringBuilder();
             sb.AppendLine("CLIENTE");
@@ -65,7 +79,7 @@ namespace MiComanderaApp.Core.Application.Services
             return sb.ToString();
         }
 
-        private static string Cuerpo(VentaDetalleModel venta)
+        private string Cuerpo(VentaDetalleModel venta)
         {
             var sb = new StringBuilder();
             sb.AppendLine($"{"CANT",-4}{"DESCRIPCION",-18}{"P.U.",9}{"IMPORTE",11}");
@@ -88,21 +102,21 @@ namespace MiComanderaApp.Core.Application.Services
             return sb.ToString();
         }
 
-        private static string Totales(VentaDetalleModel venta)
+        private string Totales(VentaDetalleModel venta)
         {
             var sb = new StringBuilder();
             sb.AppendLine($"{"Subtotal",30}{venta.Subtotal,12:N2}");
             if (venta.Descuento > 0)
                 sb.AppendLine($"{"Descuento",30}{-venta.Descuento,12:N2}");
             if (venta.IVA > 0)
-                sb.AppendLine($"{"IVA",30}{venta.IVA,12:N2}");
-            sb.AppendLine(new string('=', Ancho));
+                sb.AppendLine($"{_etiquetaImpuesto,30}{venta.IVA,12:N2}");
+            sb.AppendLine(SeparadorDoble);
             sb.AppendLine($"{"TOTAL",30}{venta.TotalAmount,12:N2}");
-            sb.AppendLine(new string('=', Ancho));
+            sb.AppendLine(SeparadorDoble);
             return sb.ToString();
         }
 
-        private static string Pagos(VentaDetalleModel venta)
+        private string Pagos(VentaDetalleModel venta)
         {
             var sb = new StringBuilder();
             sb.AppendLine("PAGOS");
@@ -125,10 +139,10 @@ namespace MiComanderaApp.Core.Application.Services
                 return (Linea: metodo, Monto: p.Monto);
             });
 
-        private static string Pie(VentaDetalleModel venta, string referencia)
+        private string Pie(string referencia)
         {
             var sb = new StringBuilder();
-            sb.AppendLine(Centrar("¡GRACIAS POR SU VISITA!"));
+            sb.AppendLine(Centrar(_pie));
             sb.AppendLine(Centrar(referencia));
             sb.AppendLine(Centrar($"{DateTime.Now:dd/MM/yyyy HH:mm}"));
             sb.AppendLine();
@@ -136,8 +150,8 @@ namespace MiComanderaApp.Core.Application.Services
             return sb.ToString();
         }
 
-        private static string Centrar(string texto) =>
-            texto.Length >= Ancho ? texto : new string(' ', (Ancho - texto.Length) / 2) + texto;
+        private string Centrar(string texto) =>
+            texto.Length >= _ancho ? texto : new string(' ', (_ancho - texto.Length) / 2) + texto;
 
         private static string Cortar(string texto, int max) =>
             texto.Length <= max ? texto : texto.Substring(0, max - 3) + "...";

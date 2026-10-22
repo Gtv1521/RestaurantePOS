@@ -1,0 +1,303 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="https://github.com/projektanker/icons.avalonia"
+             xmlns:vm="using:MiComanderaApp.ViewModels.Components.Configuracion"
+             xmlns:models="using:MiComanderaApp.Core.Domain.Models"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+             x:Class="MiComanderaApp.Views.Components.Configuracion.PrintersComponentView"
+             x:DataType="vm:PrintersComponentViewModel"
+             x:Name="Root">
+
+  <UserControl.Styles>
+    <Style Selector="Border.Card">
+      <Setter Property="Background" Value="{DynamicResource FondoTarjeta}"/>
+      <Setter Property="CornerRadius" Value="12"/>
+      <Setter Property="Padding" Value="18"/>
+      <Setter Property="Margin" Value="0,0,0,14"/>
+    </Style>
+
+    <Style Selector="TextBlock.SectionTitle">
+      <Setter Property="FontSize" Value="16"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
+    </Style>
+
+    <Style Selector="TextBlock.FieldLabel">
+      <Setter Property="FontSize" Value="12"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
+      <Setter Property="Opacity" Value="0.8"/>
+    </Style>
+
+    <Style Selector="TextBox.Field">
+      <Setter Property="Background" Value="{DynamicResource FondoPrincipal}"/>
+      <Setter Property="CornerRadius" Value="8"/>
+      <Setter Property="Padding" Value="10,8"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
+    </Style>
+
+    <Style Selector="TextBlock.PrinterName">
+      <Setter Property="FontSize" Value="15"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
+    </Style>
+
+    <Style Selector="TextBlock.PrinterMeta">
+      <Setter Property="FontSize" Value="12"/>
+      <Setter Property="Opacity" Value="0.7"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
+    </Style>
+
+    <Style Selector="Button.IconDanger">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="Foreground" Value="#E74C3C"/>
+      <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+
+    <Style Selector="Button.Outline">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="#BDC3C7"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextoColor}"/>
+      <Setter Property="CornerRadius" Value="6"/>
+      <Setter Property="Padding" Value="12,8"/>
+      <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+  </UserControl.Styles>
+
+  <Grid>
+    <Grid RowDefinitions="Auto,*" Margin="24">
+
+      <!-- ENCABEZADO -->
+      <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,20">
+        <StackPanel Grid.Column="0" Spacing="4">
+          <TextBlock Text="Configuración de impresoras" FontSize="22" FontWeight="SemiBold"
+                     Foreground="{DynamicResource TextoColor}"/>
+          <TextBlock Text="Administrá las impresoras y su impresora de respaldo"
+                     FontSize="13" Opacity="0.7" Foreground="{DynamicResource TextoColor}"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+          <Button Classes="Outline" Command="{Binding CargarCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <i:Icon Value="fa-solid fa-rotate" FontSize="12" VerticalAlignment="Center"/>
+              <TextBlock Text="Recargar"/>
+            </StackPanel>
+          </Button>
+          <Button Classes="Outline" Command="{Binding MostrarDescubrimientoCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <i:Icon Value="fa-solid fa-magnifying-glass" FontSize="12" VerticalAlignment="Center"/>
+              <TextBlock Text="Buscar impresoras"/>
+            </StackPanel>
+          </Button>
+          <Button Background="{DynamicResource BotonAdd}" Padding="16,8" CornerRadius="6"
+                  Command="{Binding NuevoCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <i:Icon Value="fa-solid fa-plus" Foreground="{DynamicResource TextoColor}" FontSize="12" VerticalAlignment="Center"/>
+              <TextBlock Text="Nueva impresora" Foreground="{DynamicResource TextoColor}" FontWeight="SemiBold"/>
+            </StackPanel>
+          </Button>
+        </StackPanel>
+      </Grid>
+
+      <!-- CUERPO -->
+      <Grid Grid.Row="1" RowDefinitions="Auto,*" RowSpacing="16">
+
+        <!-- PANEL DE DESCUBRIMIENTO -->
+        <Border Grid.Row="0" Classes="Card" IsVisible="{Binding MostrandoDescubrimiento}">
+          <StackPanel Spacing="12">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+              <StackPanel Grid.Column="0" Spacing="4">
+                <TextBlock Classes="SectionTitle" Text="Buscar impresoras en la red"/>
+                <TextBlock Classes="PrinterMeta" Text="Dejá el rango vacío para escanear la red local, o ingresá uno (ej: 192.168.1.0/24)."/>
+              </StackPanel>
+              <TextBox Grid.Column="1" Classes="Field" Width="200" VerticalAlignment="Bottom"
+                       Text="{Binding Subnet}" Watermark="192.168.1.0/24"/>
+              <Button Grid.Column="2" VerticalAlignment="Bottom" Background="{DynamicResource BotonAdd}"
+                      Padding="16,8" CornerRadius="6"
+                      IsEnabled="{Binding IsDiscovering, Converter={StaticResource InvertBoolConverter}}"
+                      Command="{Binding DescubrirCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <i:Icon Value="fa-solid fa-wifi" Foreground="{DynamicResource TextoColor}" FontSize="12" VerticalAlignment="Center"/>
+                  <TextBlock Text="Escanear" Foreground="{DynamicResource TextoColor}" FontWeight="SemiBold"/>
+                </StackPanel>
+              </Button>
+            </Grid>
+
+            <ProgressBar IsIndeterminate="True" Height="4" IsVisible="{Binding IsDiscovering}"/>
+
+            <ScrollViewer MaxHeight="220" VerticalScrollBarVisibility="Auto">
+              <ItemsControl ItemsSource="{Binding Descubiertas}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="models:ImpresoraDescubiertaModel">
+                    <Border Background="{DynamicResource FondoPrincipal}" CornerRadius="8" Padding="12" Margin="0,0,0,8">
+                      <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Grid.Column="0" Spacing="3">
+                          <StackPanel Orientation="Horizontal" Spacing="8">
+                            <i:Icon Value="fa-solid fa-network-wired" FontSize="12" VerticalAlignment="Center"
+                                    Foreground="{DynamicResource TextoColor}"/>
+                            <TextBlock Classes="PrinterName" FontSize="13" Text="{Binding Name}"/>
+                            <Border Background="{DynamicResource BotonAdd}" CornerRadius="4" Padding="6,1" VerticalAlignment="Center">
+                              <TextBlock Text="{Binding ConnectionTypeTexto}" FontSize="10" Foreground="White"/>
+                            </Border>
+                            <TextBlock Classes="PrinterMeta" Text="{Binding EstadoTexto}" VerticalAlignment="Center"/>
+                          </StackPanel>
+                          <TextBlock Classes="PrinterMeta" Text="{Binding DireccionCompleta}"/>
+                        </StackPanel>
+
+                        <Button Grid.Column="1" Classes="Outline" VerticalAlignment="Center"
+                                Command="{Binding #Root.DataContext.UsarDescubiertaCommand}"
+                                CommandParameter="{Binding}">
+                          <TextBlock Text="Usar"/>
+                        </Button>
+                      </Grid>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+
+            <TextBlock Text="No se encontraron impresoras todavía." 
+                       IsVisible="{Binding HayDescubiertas, Converter={StaticResource InvertBoolConverter}}"
+                       Foreground="{DynamicResource TextoColor}" Opacity="0.7"/>
+          </StackPanel>
+        </Border>
+
+        <!-- LISTA + FORMULARIO -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,380" ColumnSpacing="20">
+
+        <!-- LISTA -->
+        <ScrollViewer Grid.Column="0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+          <StackPanel>
+            <ItemsControl ItemsSource="{Binding Impresoras}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="models:ImpresoraModel">
+                  <Border Classes="Card">
+                    <Grid ColumnDefinitions="*,Auto">
+                      <StackPanel Grid.Column="0" Spacing="4">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                          <i:Icon Value="fa-solid fa-print" FontSize="14" VerticalAlignment="Center"
+                                  Foreground="{DynamicResource TextoColor}"/>
+                          <TextBlock Classes="PrinterName" Text="{Binding Name}"/>
+                          <Border Background="{DynamicResource BotonAdd}" CornerRadius="4" Padding="6,1" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding ConnectionTypeTexto}" FontSize="10" Foreground="White"/>
+                          </Border>
+                          <Border IsVisible="{Binding Active}" Background="#27AE60" CornerRadius="4" Padding="6,1" VerticalAlignment="Center">
+                            <TextBlock Text="Activa" FontSize="10" Foreground="White"/>
+                          </Border>
+                          <Border IsVisible="{Binding !Active}" Background="#E74C3C" CornerRadius="4" Padding="6,1" VerticalAlignment="Center">
+                            <TextBlock Text="Inactiva" FontSize="10" Foreground="White"/>
+                          </Border>
+                        </StackPanel>
+                        <TextBlock Classes="PrinterMeta" Text="{Binding Address}"/>
+                        <TextBlock Classes="PrinterMeta"
+                                   Text="{Binding BackupPrinterName, StringFormat='Respaldo: {0}'}"/>
+                      </StackPanel>
+
+                      <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <Button Classes="Outline"
+                                Command="{Binding #Root.DataContext.EditarCommand}"
+                                CommandParameter="{Binding}">
+                          <i:Icon Value="fa-solid fa-pen" FontSize="12"/>
+                        </Button>
+                        <Button Classes="IconDanger"
+                                Command="{Binding #Root.DataContext.EliminarCommand}"
+                                CommandParameter="{Binding}">
+                          <i:Icon Value="fa-solid fa-trash" FontSize="12"/>
+                        </Button>
+                      </StackPanel>
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <TextBlock Text="No hay impresoras configuradas." IsVisible="{Binding HayImpresoras, Converter={StaticResource InvertBoolConverter}}"
+                       Foreground="{DynamicResource TextoColor}" Opacity="0.7" Margin="4,20,0,0"/>
+          </StackPanel>
+        </ScrollViewer>
+
+        <!-- FORMULARIO -->
+        <Border Grid.Column="1" Classes="Card" IsVisible="{Binding IsEditing}" VerticalAlignment="Top">
+          <StackPanel Spacing="12">
+            <TextBlock Classes="SectionTitle" Text="{Binding TituloFormulario}"/>
+
+            <StackPanel Spacing="4">
+              <TextBlock Classes="FieldLabel" Text="Nombre"/>
+              <TextBox Classes="Field" Text="{Binding Name}" Watermark="Impresora principal"/>
+            </StackPanel>
+
+            <StackPanel Spacing="4">
+              <TextBlock Classes="FieldLabel" Text="Tipo de conexión"/>
+              <ComboBox SelectedIndex="{Binding ConnectionType}" HorizontalAlignment="Stretch">
+                <ComboBoxItem Content="Red (TCP/IP)"/>
+                <ComboBoxItem Content="USB"/>
+              </ComboBox>
+            </StackPanel>
+
+            <StackPanel Spacing="4">
+              <TextBlock Classes="FieldLabel" Text="Dirección (IP o cola USB)"/>
+              <TextBox Classes="Field" Text="{Binding Address}" Watermark="192.168.1.50"/>
+            </StackPanel>
+
+            <StackPanel Spacing="4">
+              <TextBlock Classes="FieldLabel" Text="Puerto"/>
+              <TextBox Classes="Field" Text="{Binding Port}" Watermark="9100"/>
+            </StackPanel>
+
+            <CheckBox Content="Impresora activa" IsChecked="{Binding Active}"
+                      Foreground="{DynamicResource TextoColor}"/>
+
+            <StackPanel Spacing="4">
+              <TextBlock Classes="FieldLabel" Text="Impresora de respaldo (opcional)"/>
+              <ComboBox ItemsSource="{Binding ImpresorasDisponiblesParaRespaldo}"
+                        SelectedItem="{Binding RespaldoSeleccionado}"
+                        HorizontalAlignment="Stretch" PlaceholderText="Sin respaldo">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate x:DataType="models:ImpresoraModel">
+                    <TextBlock Text="{Binding Name}"/>
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+            </StackPanel>
+
+            <TextBlock FontSize="13" FontWeight="SemiBold" Foreground="#27AE60"
+                       Text="{Binding Mensaje}" IsVisible="{Binding MensajeExito}"/>
+            <TextBlock FontSize="13" FontWeight="SemiBold" Foreground="#E74C3C" TextWrapping="Wrap"
+                       Text="{Binding Mensaje}" IsVisible="{Binding MensajeError}"/>
+
+            <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
+              <Button Classes="Outline" Content="Cancelar" Command="{Binding CancelarCommand}"/>
+              <Button Background="{DynamicResource SaveBotton}" Padding="16,8" CornerRadius="6"
+                      IsEnabled="{Binding IsSaving, Converter={StaticResource InvertBoolConverter}}"
+                      Command="{Binding GuardarCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <i:Icon Value="fa-solid fa-floppy-disk" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
+                  <TextBlock Text="Guardar" Foreground="White" FontWeight="SemiBold"/>
+                </StackPanel>
+              </Button>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+        </Grid>
+      </Grid>
+    </Grid>
+
+    <!-- MENSAJE GLOBAL (cuando no se edita) -->
+    <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="24,0,0,16">
+      <TextBlock FontSize="13" FontWeight="SemiBold" Foreground="#27AE60"
+                 Text="{Binding Mensaje}" IsVisible="{Binding MensajeExito}"/>
+      <TextBlock FontSize="13" FontWeight="SemiBold" Foreground="#E74C3C" TextWrapping="Wrap"
+                 Text="{Binding Mensaje}" IsVisible="{Binding MensajeError}"/>
+    </StackPanel>
+
+    <!-- OVERLAY DE CARGA -->
+    <Border IsVisible="{Binding IsLoading}" Background="#80000000">
+      <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="15">
+        <ProgressBar IsIndeterminate="True" Width="220" Height="4"/>
+        <TextBlock Text="Cargando impresoras..." Foreground="White" FontWeight="SemiBold"/>
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>
