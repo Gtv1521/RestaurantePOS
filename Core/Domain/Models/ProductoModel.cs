@@ -21,6 +21,12 @@ namespace MiComanderaApp.Models
         public bool TieneTerminos { get; set; }
         public bool TieneObservaciones { get; set; }
         public int MaxAccompaniments { get; set; } = 2;
+
+        /// <summary>Impresoras que imprimen el plato completo.</summary>
+        public List<int> PrinterIds { get; set; } = new();
+
+        /// <summary>Impresoras que imprimen solo los acompañamientos.</summary>
+        public List<int> AccompanimentPrinterIds { get; set; } = new();
         public List<AcompanamientoPermitidoModel> Acompanamientos { get; set; } = new();
     }
 
