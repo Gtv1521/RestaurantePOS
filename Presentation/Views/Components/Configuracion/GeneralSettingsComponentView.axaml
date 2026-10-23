@@ -225,6 +225,29 @@
                   </StackPanel>
                 </Grid>
 
+                <StackPanel Spacing="4">
+                  <TextBlock Classes="FieldLabel" Text="Impresora de facturas (caja)"/>
+                  <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                    <ComboBox Grid.Column="0"
+                              ItemsSource="{Binding Impresoras}"
+                              SelectedItem="{Binding ImpresoraFacturaSeleccionada}"
+                              PlaceholderText="Preguntar siempre"
+                              HorizontalAlignment="Stretch">
+                      <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                          <TextBlock Text="{Binding NombreCompleto}"/>
+                        </DataTemplate>
+                      </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <Button Grid.Column="1"
+                            Content="Quitar"
+                            IsVisible="{Binding !FacturaSinImpresoraFija}"
+                            Command="{Binding QuitarImpresoraFacturaCommand}"/>
+                  </Grid>
+                  <TextBlock FontSize="11" Opacity="0.6" Foreground="{DynamicResource TextoColor}"
+                             Text="Si no eliges una impresora, la caja preguntará al imprimir la factura."/>
+                </StackPanel>
+
                 <TextBlock FontSize="11" Opacity="0.6" Foreground="{DynamicResource TextoColor}"
                            Text="{Binding UpdatedAt, StringFormat='Última actualización: {0:g}'}"/>
               </StackPanel>
