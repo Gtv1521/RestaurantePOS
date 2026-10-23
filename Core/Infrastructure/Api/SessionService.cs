@@ -63,9 +63,25 @@ namespace MiComanderaApp.Infrastructure.Api
             return Task.FromResult(true);
         }
 
-        public Task<SessionModel?> VerifyPinAsync(string pinCode)
+        /// <summary>
+        /// Verifica un PIN contra la API sin modificar la sesión actual.
+        /// Devuelve el usuario dueño del PIN, o null si el PIN es inválido.
+        /// </summary>
+        public async Task<SessionModel?> VerifyPinAsync(string pinCode)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync($"{_url}/Login", new { pin = pinCode });
+
+                if (!response.IsSuccessStatusCode)
+                    return null;
+
+                return await response.Content.ReadFromJsonAsync<SessionModel?>();
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

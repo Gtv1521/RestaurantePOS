@@ -38,6 +38,9 @@ namespace MiComanderaApp.Core.Domain.Models
         public int DefaultPax { get; set; }
         public int DefaultPrinterPort { get; set; }
 
+        /// <summary>Impresora de caja para facturas y comprobantes. Null/0 = preguntar.</summary>
+        public int? DefaultInvoicePrinterId { get; set; }
+
         // ===== Auditoría =====
         public DateTime UpdatedAt { get; set; }
     }

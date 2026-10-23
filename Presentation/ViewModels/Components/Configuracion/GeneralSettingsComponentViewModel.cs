@@ -1,15 +1,20 @@
 using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MiComanderaApp.Core.Application.Request;
 using MiComanderaApp.Core.Application.Services;
+using MiComanderaApp.Core.Application.UseCases.Print;
+using MiComanderaApp.Core.Domain.Models;
 
 namespace MiComanderaApp.ViewModels.Components.Configuracion;
 
 public partial class GeneralSettingsComponentViewModel : ViewModelBase
 {
     private readonly GeneralSettingsStore _store;
+    private readonly GetImpresorasUseCase _getImpresoras;
 
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private bool _isSaving;
@@ -66,9 +71,30 @@ public partial class GeneralSettingsComponentViewModel : ViewModelBase
     [ObservableProperty] private int _defaultPax;
     [ObservableProperty] private int _defaultPrinterPort;
 
-    public GeneralSettingsComponentViewModel(GeneralSettingsStore store)
+    // ===== Impresora de facturas (caja) =====
+    [ObservableProperty] private int? _defaultInvoicePrinterId;
+    public ObservableCollection<ImpresoraModel> Impresoras { get; } = new();
+
+    /// <summary>Opción "Preguntar siempre" para el selector de impresora de facturas.</summary>
+    public bool FacturaSinImpresoraFija => DefaultInvoicePrinterId is null or <= 0;
+
+    /// <summary>Impresora elegida en el combo. Null = preguntar siempre.</summary>
+    public ImpresoraModel? ImpresoraFacturaSeleccionada
+    {
+        get => DefaultInvoicePrinterId is int id && id > 0
+            ? Impresoras.FirstOrDefault(i => i.Id == id)
+            : null;
+        set
+        {
+            DefaultInvoicePrinterId = value?.Id;
+            OnPropertyChanged(nameof(ImpresoraFacturaSeleccionada));
+        }
+    }
+
+    public GeneralSettingsComponentViewModel(GeneralSettingsStore store, GetImpresorasUseCase getImpresoras)
     {
         _store = store;
+        _getImpresoras = getImpresoras;
         _ = CargarAsync();
     }
 
@@ -114,8 +140,11 @@ public partial class GeneralSettingsComponentViewModel : ViewModelBase
 
             DefaultPax = settings.DefaultPax;
             DefaultPrinterPort = settings.DefaultPrinterPort;
+            DefaultInvoicePrinterId = settings.DefaultInvoicePrinterId;
 
             UpdatedAt = settings.UpdatedAt;
+
+            await CargarImpresorasAsync();
         }
         catch (Exception ex)
         {
@@ -164,6 +193,7 @@ public partial class GeneralSettingsComponentViewModel : ViewModelBase
 
                 DefaultPax = DefaultPax,
                 DefaultPrinterPort = DefaultPrinterPort,
+                DefaultInvoicePrinterId = DefaultInvoicePrinterId > 0 ? DefaultInvoicePrinterId : null,
             };
 
             var updated = await _store.SaveAsync(request);
@@ -180,6 +210,52 @@ public partial class GeneralSettingsComponentViewModel : ViewModelBase
         finally
         {
             IsSaving = false;
+        }
+    }
+
+    partial void OnDefaultInvoicePrinterIdChanged(int? value)
+    {
+        OnPropertyChanged(nameof(FacturaSinImpresoraFija));
+        OnPropertyChanged(nameof(ImpresoraFacturaSeleccionada));
+    }
+
+    /// <summary>Vuelve a "Preguntar siempre" (sin impresora fija de facturas).</summary>
+    [RelayCommand]
+    private void QuitarImpresoraFactura()
+    {
+        DefaultInvoicePrinterId = null;
+    }
+
+    /// <summary>Carga las impresoras activas para elegir la de facturas.</summary>
+    private async Task CargarImpresorasAsync()
+    {
+        try
+        {
+            var impresoras = await _getImpresoras.Execute();
+            Impresoras.Clear();
+            foreach (var impresora in impresoras.Where(i => i.Active))
+            {
+                Impresoras.Add(impresora);
+            }
+
+            // Si aún no hay una impresora de facturas elegida, se preselecciona
+            // la que se llame "caja" o, si solo hay una, esa misma.
+            if (FacturaSinImpresoraFija)
+            {
+                var sugerida = Impresoras.FirstOrDefault(i =>
+                        i.Name.Contains("caja", StringComparison.OrdinalIgnoreCase))
+                    ?? (Impresoras.Count == 1 ? Impresoras[0] : null);
+
+                if (sugerida != null)
+                    DefaultInvoicePrinterId = sugerida.Id;
+            }
+
+            // Refrescar la selección una vez cargada la lista.
+            OnPropertyChanged(nameof(ImpresoraFacturaSeleccionada));
+        }
+        catch
+        {
+            // Si falla la carga de impresoras se mantiene la lista vacía.
         }
     }
 }
