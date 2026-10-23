@@ -238,11 +238,13 @@ sealed class Program
                 services.AddSingleton<ProductEvents>();
                 services.AddSingleton<OrderEvents>();
                 services.AddSingleton<TablesEvents>();
+                services.AddSingleton<AvailabilityEvents>();
 
                 // Mapeo de interfaz → concreto (misma instancia)
                 services.AddSingleton<ISignalREventHandler>(sp => sp.GetRequiredService<ProductEvents>());
                 services.AddSingleton<ISignalREventHandler>(sp => sp.GetRequiredService<OrderEvents>());
                 services.AddSingleton<ISignalREventHandler>(sp => sp.GetRequiredService<TablesEvents>());
+                services.AddSingleton<ISignalREventHandler>(sp => sp.GetRequiredService<AvailabilityEvents>());
 
 
                 services.AddSingleton<MainWindow>();

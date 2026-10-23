@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="https://github.com/projektanker/icons.avalonia"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mesas="using:MiComanderaApp.ViewModels.Mesas"
              xmlns:modals="using:MiComanderaApp.ViewModels.Dialogs.Modals"
@@ -273,10 +274,35 @@
                     <Button MinHeight="70"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
-                            Classes="btn-verde"
-                            Content="{Binding Nombre}"
                             Command="{Binding #Root.DataContext.AgregarProductoCommand}"
-                            CommandParameter="{Binding}"/>
+                            CommandParameter="{Binding}"
+                            Classes="btn-verde">
+                      <Grid>
+                        <!-- CAPA BASE: nombre + cantidad (ocupa toda la celda) -->
+                        <StackPanel VerticalAlignment="Center"
+                                    HorizontalAlignment="Stretch"
+                                    Margin="8,8,24,8"
+                                    Spacing="2">
+                          <TextBlock Text="{Binding Nombre}"
+                                     TextWrapping="Wrap"
+                                     FontWeight="SemiBold"
+                                     Foreground="{DynamicResource TextoBrush}"/>
+                          <TextBlock Text="{Binding TextoCantidad}"
+                                     FontSize="12"
+                                     Opacity="0.85"
+                                     Foreground="{DynamicResource TextoBrush}"/>
+                        </StackPanel>
+
+                        <!-- CAPA SUPERPUESTA: icono X encima del bloque anterior -->
+                        <i:Icon Value="fa-solid fa-xmark"
+                                FontSize="16"
+                                Foreground="Red"
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Right"
+                                Margin="4"
+                                IsVisible="{Binding MostrarIconoX, FallbackValue=False}"/>
+                      </Grid>
+                    </Button>
 
                   </DataTemplate>
                 </ItemsControl.ItemTemplate>

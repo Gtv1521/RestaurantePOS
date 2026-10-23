@@ -13,6 +13,14 @@ namespace MiComanderaApp.Models
         public double Price { get; set; }
         public string CategoryName { get; set; } = string.Empty;
         public bool IsAvailable { get; set; }
+
+        /// <summary>Unidades disponibles (según el modo de disponibilidad del producto).</summary>
+        public int CantidadDisponible { get; set; }
+
+        /// <summary>0 = por insumos, 1 = cantidad preparada, 2 = ilimitado.</summary>
+        public int AvailabilityMode { get; set; }
+
+        public int? PreparedQuantity { get; set; }
         public double TaxPercentage { get; set; } = 18; // Default IVA 18%
         public string Description { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;

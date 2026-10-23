@@ -22,6 +22,7 @@ using MiComanderaApp.Core.Application.UseCases.Termino;
 using MiComanderaApp.Core.Application.UseCases.Venta;
 using MiComanderaApp.Core.Domain.Interfaces;
 using MiComanderaApp.Core.Domain.Models;
+using MiComanderaApp.Core.Infrastructure.SignalR.Events;
 using MiComanderaApp.Interfaces;
 using MiComanderaApp.Models;
 using MiComanderaApp.ViewModels.Dialogs.Modals;
@@ -31,7 +32,7 @@ using MiComanderaApp.Views.Dialogs.Modals;
 namespace MiComanderaApp.ViewModels.Mesas;
 
 
-public class ProductoItem
+public partial class ProductoItem : ObservableObject
 {
     public string Id { get; set; } = string.Empty;
     public string Nombre { get; set; } = string.Empty;
@@ -39,6 +40,35 @@ public class ProductoItem
     public bool TieneTerminos { get; set; }
     public bool TieneAcompanamientos { get; set; }
     public int MaxAccompaniments { get; set; } = 2;
+
+    /// <summary>False = agotado / deshabilitado: no se puede agregar a la cuenta.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PuedeAgregar))]
+    [NotifyPropertyChangedFor(nameof(TextoCantidad))]
+    private bool _isAvailable = true;
+
+    /// <summary>Unidades disponibles según el servidor (999 = ilimitado).</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PuedeAgregar))]
+    [NotifyPropertyChangedFor(nameof(TextoCantidad))]
+    private int _cantidadDisponible = 999;
+
+    /// <summary>True cuando hay stock y el producto está activo.</summary>
+    public bool PuedeAgregar => IsAvailable && CantidadDisponible > 0;
+
+    /// <summary>Texto de disponibilidad mostrado bajo el nombre (vacío si es ilimitado).</summary>
+    public string TextoCantidad =>
+        CantidadDisponible is > 0 and < 999 ? $"Disp: {CantidadDisponible}" : string.Empty;
+
+    /// <summary>True cuando el producto está agotado y debe mostrarse el ícono X rojo.</summary>
+    public bool MostrarIconoX => !IsAvailable || CantidadDisponible <= 0;
+
+    /// <summary>Actualiza la disponibilidad desde un producto del servidor.</summary>
+    public void ActualizarDisponibilidad(ProductoModel producto)
+    {
+        IsAvailable = producto.IsAvailable;
+        CantidadDisponible = producto.CantidadDisponible;
+    }
 }
 
 public class CategoriaItem
@@ -110,6 +140,7 @@ public partial class DataTableViewModel : ViewModelBase
     private readonly GetImpresorasUseCase _getImpresoras;
     private readonly ImprimirDocumentoUseCase _imprimirDocumento;
     private readonly GeneralSettingsStore _settings;
+    private readonly AvailabilityEvents _availabilityEvents;
     private readonly ISession<SessionModel> _session;
 
 
@@ -135,6 +166,7 @@ public partial class DataTableViewModel : ViewModelBase
     [ObservableProperty] private bool _enviandoOrden;
     [ObservableProperty] private bool _esCaja;
     [ObservableProperty] private bool _ventaCerrada;
+    [ObservableProperty] private string? _productoNoDisponibleMensaje;
     private int _ventaId;
     private decimal _totalServidor;
     private bool _datosCargados;
@@ -286,7 +318,8 @@ public partial class DataTableViewModel : ViewModelBase
         CerrarVentaUseCase cerrarVenta,
         GetImpresorasUseCase getImpresoras,
         ImprimirDocumentoUseCase imprimirDocumento,
-        GeneralSettingsStore settings
+        GeneralSettingsStore settings,
+        AvailabilityEvents availabilityEvents,
         ISession<SessionModel> session
         )
     {
@@ -307,6 +340,8 @@ public partial class DataTableViewModel : ViewModelBase
         _imprimirDocumento = imprimirDocumento;
         _settings = settings;
         _ = _settings.RefreshAsync();
+        _availabilityEvents = availabilityEvents;
+        _availabilityEvents.AvailabilityChanged += OnAvailabilityChanged;
         _session = session;
 
         // El cajero (y el administrador) ven las acciones de caja en la mesa
@@ -470,7 +505,9 @@ public partial class DataTableViewModel : ViewModelBase
                 Precio = (decimal)item.Price,
                 TieneTerminos = item.TieneTerminos,
                 TieneAcompanamientos = item.TieneAcompanamientos,
-                MaxAccompaniments = item.MaxAccompaniments
+                MaxAccompaniments = item.MaxAccompaniments,
+                IsAvailable = item.IsAvailable,
+                CantidadDisponible = item.CantidadDisponible
             });
         }
     }
@@ -479,6 +516,22 @@ public partial class DataTableViewModel : ViewModelBase
     private void ChangeProd(int cantidad)
     {
         CantidadProd = cantidad;
+    }
+
+    /// <summary>
+    /// Refresca la disponibilidad de un producto cuando el servidor notifica
+    /// un cambio (venta que descuenta stock o edición del producto).
+    /// </summary>
+    private void OnAvailabilityChanged(ProductoModel producto)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            var item = ProductosCatalogo.FirstOrDefault(p => p.Id == producto.Id.ToString());
+            if (item != null)
+            {
+                item.ActualizarDisponibilidad(producto);
+            }
+        });
     }
 
     public string TextoBotonAnular =>
@@ -534,6 +587,20 @@ public partial class DataTableViewModel : ViewModelBase
     private async Task AgregarProducto(ProductoItem productoSeleccionado)
     {
         if (productoSeleccionado == null) return;
+
+        // No se puede agregar un producto agotado o deshabilitado en tiempo real.
+        if (!productoSeleccionado.PuedeAgregar)
+        {
+            ProductoNoDisponibleMensaje = $"'{productoSeleccionado.Nombre}' no está disponible.";
+            return;
+        }
+
+        // Nueve noventa y nueve (999) significa "ilimitado" en el servidor.
+        if (productoSeleccionado.CantidadDisponible < 999 && CantidadProd > productoSeleccionado.CantidadDisponible)
+        {
+            ProductoNoDisponibleMensaje = $"'{productoSeleccionado.Nombre}' solo hay {productoSeleccionado.CantidadDisponible} unidad(es) disponible(s).";
+            return;
+        }
 
         if (CantidadProd == null || CantidadProd <= 0) CantidadProd = 1;
 
@@ -1166,9 +1233,11 @@ public partial class DataTableViewModel : ViewModelBase
 
             ModoPago = false;
             var cerrada = await _getVentaDetalle.Execute(_ventaId);
+
+            // Impresión automática en la impresora de caja configurada (si existe).
+            await AutoImprimirFacturaAsync(cerrada);
+
             await MostrarDocumento("COMPROBANTE DE PAGO", new DocumentosVenta(_settings.Current).BuildComprobantePago, cerrada);
-            Volver();
-            await MostrarDocumento("COMPROBANTE DE PAGO", DocumentosVenta.BuildComprobantePago, cerrada);
             await Volver();
         }
         catch (Exception ex)
@@ -1264,6 +1333,59 @@ public partial class DataTableViewModel : ViewModelBase
 
         await _dialogService.ShowDialogAsync<PrintPreviewDialogView, PrintPreviewDialogViewModel, bool?>(
             vm, new PixelPoint(300, 10));
+    }
+
+    /// <summary>
+    /// Imprime la factura/comprobante automáticamente. Prioridad:
+    ///  1. La impresora configurada en Configuración General.
+    ///  2. Una impresora cuyo nombre contenga "caja".
+    ///  3. Si no hay ninguna, no imprime (el usuario puede usar la vista previa).
+    /// </summary>
+    private async Task AutoImprimirFacturaAsync(VentaDetalleModel detalle)
+    {
+        var impresoraId = await ResolverImpresoraFacturaAsync();
+        if (impresoraId is not int id || id <= 0)
+            return;
+
+        try
+        {
+            var texto = new DocumentosVenta(_settings.Current).BuildFactura(detalle);
+            await _imprimirDocumento.Execute(id, texto);
+        }
+        catch (Exception ex)
+        {
+            // Si la impresión automática falla, no se interrumpe el cobro:
+            // el usuario aún puede imprimir desde la vista previa.
+            // Mostramos un mensaje al usuario indicando el fallo.
+            var vm = new ConfirmDialogViewModel();
+            vm.Initialize("Error de impresión", $"No se pudo imprimir la factura automáticamente: {ex.Message}", "Aceptar", "Cancelar");
+            var confirmado = await _dialogService.ShowDialogAsync<ConfirmDialogView, ConfirmDialogViewModel, bool>(vm);
+            // No es necesario actuar sobre el resultado, solo mostrar el mensaje
+        }
+    }
+
+    /// <summary>
+    /// Devuelve el id de la impresora de facturas: la configurada o, si no hay,
+    /// la primera impresora activa cuyo nombre contenga "caja".
+    /// </summary>
+    private async Task<int?> ResolverImpresoraFacturaAsync()
+    {
+        var configurada = _settings.Current.DefaultInvoicePrinterId;
+        if (configurada is int id && id > 0)
+            return id;
+
+        try
+        {
+            var impresoras = await _getImpresoras.Execute();
+            return impresoras
+                .FirstOrDefault(i => i.Active &&
+                    i.Name.Contains("caja", StringComparison.OrdinalIgnoreCase))
+                ?.Id;
+        }
+        catch
+        {
+            return null;
+        }
     }
 
 }
